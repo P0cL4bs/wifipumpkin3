@@ -1,0 +1,13 @@
+configparser-3.5.0-py3.6-nspkg.pth,sha256=JpsVvKKmYIJ0uK7Fig4dQuQEc4TCDz21QAJxx2D3OCo,554
+backports/configparser/__init__.py,sha256=mNPEQI06rWsr0mI3KvwMUxhfbejpU2ndwSQQdVhXFf8,55060
+backports/configparser/helpers.py,sha256=i3ZCUYknXACKE5Y_G_sxbMKLlRvaPH1rHCMq63NkoJY,5248
+configparser-3.5.0.dist-info/DESCRIPTION.rst,sha256=4DFlmdtp7VP2__ElnYgjqY0d6zy_E6Lsn4MgexE3Qf8,11584
+configparser-3.5.0.dist-info/METADATA,sha256=eISMzrc0_Pzk0X0dR4DuDPQhxeFSn7AedlHtY4MEKxA,12673
+configparser-3.5.0.dist-info/RECORD,,
+configparser-3.5.0.dist-info/WHEEL,sha256=0mO7-aKM6K9CHeURc5NDYZyLWH5lmR-r4TtPinHxz7Y,93
+configparser-3.5.0.dist-info/metadata.json,sha256=CYCEvKKBy88eIiLxDe7G4qShZPHgZtIqvtXojLJzZcI,1223
+configparser-3.5.0.dist-info/namespace_packages.txt,sha256=cGjaLMOoBR1FK0ApojtzWVmViTtJ7JGIK_HwXiEsvtU,10
+configparser-3.5.0.dist-info/top_level.txt,sha256=cGjaLMOoBR1FK0ApojtzWVmViTtJ7JGIK_HwXiEsvtU,10
+configparser-3.5.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+backports/configparser/__pycache__/helpers.cpython-36.pyc,,
+backports/configparser/__pycache__/__init__.cpython-36.pyc,,

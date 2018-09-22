@@ -1,0 +1,9 @@
+netifaces
+netaddr
+dhcplib
+ipaddress
+#scapy_http
+configparser
+tabulate
+beautifultable
+urwid==1.1.2
