@@ -97,7 +97,9 @@ class DHCPProtocol(QObject):
             if ipaddr == '0.0.0.0':
                 ipaddr = '255.255.255.255'
             addr = (ipaddr, port)
-            self.transport.sendto(packet.encode_packet(), addr)
+            try:
+                self.transport.sendto(packet.encode_packet(), addr)
+            except: pass
 
     def getHostnamePakcet(self, packet):
         for (option_id, data) in sorted(packet._options.items()):

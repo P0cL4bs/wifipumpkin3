@@ -20,9 +20,8 @@ class FrameworkBash(ConsoleUI):
 
 
     def getAccessPointStatus(self,status):
-        self.ui_table.setupThreads()
-        self.ui_monitor.setupThreads()
-        print('getAccessPointStatus() -> True')
+        self.ui_table.startThreads()
+        self.ui_monitor.startThreads()
         
 
     def do_start(self,args):
@@ -43,4 +42,5 @@ class FrameworkBash(ConsoleUI):
         ''' stop access point '''
         self.ac.stop()
         self.ui_table.stop()
+        self.ui_monitor.stop()
         self.sniffs.stop()

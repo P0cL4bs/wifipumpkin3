@@ -1,7 +1,7 @@
 import socket
 import core.utility.constants as C
 from core.utility.printer import display_messages,colors
-from PyQt4.QtCore import pyqtSignal,QObject
+from PyQt4.QtCore import pyqtSignal,QObject,QThread
 from mitmproxy import proxy, flow, options
 from mitmproxy.proxy.server import ProxyServer
 from core.utility.collection import SettingsINI
@@ -9,11 +9,11 @@ from core.servers.proxy.http.controller.handler import MasterHandler
 from core.servers.proxy.tcp.intercept import TH_SniffingPackets
 
 
-class PumpkinProxy(QObject):
+class PumpkinProxy(QThread):
     '''Thread: run Pumpkin-Proxy mitmproxy on brackground'''
     send = []
     def __init__(self,session=None):
-        QObject.__init__(self)
+        QThread.__init__(self)
         self.session = session
 
     def start(self):
@@ -27,7 +27,6 @@ class PumpkinProxy(QObject):
 
     def stop(self):
         self.server.socket.close()
-        self.server.shutdown()
         self.m.shutdown()
         print(display_messages(' {} successfully stopped.'.format(self.objectName()),info=True))
 
@@ -67,3 +66,4 @@ class SniffingPackets(QObject):
     def stop(self):
         for thread in self.list_sniffing['Thread']:
             thread.stop()
+        self.list_sniffing['Thread'] = []
