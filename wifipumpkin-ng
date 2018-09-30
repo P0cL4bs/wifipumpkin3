@@ -5,21 +5,28 @@ getLogger('scapy.runtime').setLevel(ERROR)
 import argparse
 import sys
 from PyQt4 import QtGui
-from core.main import FrameworkBash
+from core.main import PumpkinShell
 from core.utility.printer import banner, setcolor
 from core.packets.dhcpserver import IpAddressClass
+from core.utility.collection import SettingsINI
+import core.utility.constants as C
 
 _author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
 _version = setcolor('0.1',color='yellow')
+__codename__ = setcolor('sab1no',color='red')
 banner()
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
+    conf       = SettingsINI(C.CONFIG_INI)
+    ifacedefault = conf.get('accesspoint','interfaceAP')
+    session_default = conf.get('accesspoint','current_session')
     parser = argparse.ArgumentParser(description="WiFi-Pumpkin - pure line-oriented command")
-    parser.add_argument('-i',  dest='interface',help='set interface for create AP',default=None)
-    parser.add_argument('-s',  dest='session',type=int,help='set session for continue attack',default=None)
+    parser.add_argument('-i',  dest='interface',help='set interface for create AP',default=ifacedefault)
+    parser.add_argument('-s',  dest='session',help='set session for continue attack',default=session_default)
     parser.add_argument('-v','--version', action='version', dest='version',version='%(prog)s v{}'.format(_version))
-    prompt = FrameworkBash(parser.parse_args())
+    prompt = PumpkinShell(parser.parse_args())
     print('Author: {} P0cL4bs Team'.format(_author))
     print('Version: {} dev'.format(_version))
+    print('Codename: {}'.format(__codename__))
     prompt.cmdloop('Starting prompt...')
     sys.exit(app.exec_())

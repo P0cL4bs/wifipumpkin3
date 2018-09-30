@@ -2,6 +2,7 @@ from cmd import Cmd
 from core.utility.printer import *
 from core.utility.collection import SettingsINI
 import core.utility.constants as C
+from os import popen
 
 class ConsoleUI(Cmd):
     ''' shell console UI '''
@@ -65,8 +66,12 @@ class ConsoleUI(Cmd):
             self.stdout.write('    {:<10}	{}\n'.format(command, doc))
         print('\n')
 
-    def default(self, args):
-        pass
+    def default(self, args=str):
+        for goodArgs in C.SYSTEMCOMMAND:
+            if (args.startswith(goodArgs)):
+                output = popen(args).read()
+                if (len(output) > 0):
+                    print(output) 
 
     def precmd(self, line):
         newline=line.strip()

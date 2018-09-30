@@ -21,12 +21,14 @@ import time
 
 
 class AccessPoint(Linux):
-    sendStatusPoint = pyqtSignal(object)
-    def __init__(self,interface):
+    sendStatusPoint = pyqtSignal(bool)
+    sendStatusIface = pyqtSignal(bool)
+    def __init__(self,parent):
         super(AccessPoint, self)
         QObject.__init__(self)
-        self.ifaceHostapd   = interface
+        self.parent         = parent
         self.conf           = SettingsINI(C.CONFIG_INI)
+        self.ifaceHostapd   = self.conf.get('accesspoint','interfaceAP')
         self.threadsAP      = {'RougeAP': []}
         self.DHCP           = self.getDHCPConfig()
         self.queue          = []

@@ -27,6 +27,8 @@ dir_path          = os.getcwd()
 GEOMETRYH = 820
 GEOMETRYW = 500
 
+SYSTEMCOMMAND = ['ifconfig','iw','iwconfig', 'route']
+
 MENU_STYLE = 'QListWidget::item {border-style: solid; border-width:1px; ' \
              'border-color:#3A3939;}QListWidget::item:selected {border-style:' \
              ' solid;color:#ff6600;  background-color: #3A3939; border-width:1px; border-radius: 2px; border: 1px solid #ff6600;}QListWidget ' \
