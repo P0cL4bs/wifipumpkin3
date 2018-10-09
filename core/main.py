@@ -5,6 +5,7 @@ from core.widgets.window import ui_TableMonitorClient,ui_MonitorSniffer
 from core.utility.collection import SettingsINI
 import core.utility.constants  as C
 from core.utility.printer import display_messages
+from termcolor import colored
 
 class PumpkinShell(ConsoleUI):
     """
@@ -16,6 +17,8 @@ class PumpkinShell(ConsoleUI):
         self.options    = options
         self.sniffs     = SniffingPackets(self)
         self.conf       = SettingsINI(C.CONFIG_INI)
+        self.conf_pproxy    = SettingsINI(C.CONFIG_PP_INI)
+        self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
         self.ac         = AccessPoint(self)
         self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
         self.ui_table   = ui_TableMonitorClient(self)
@@ -89,6 +92,34 @@ class PumpkinShell(ConsoleUI):
                 print(display_messages('unknown command: {} '.format(command),error=True))
         except IndexError:
             pass
+    
+    def do_show(self, args):
+        print(display_messages('Plugins:',info=True,sublime=True))
+        for plugin in self.conf.get_all_childname('plugins'):
+            if ('_plugin' in plugin):
+                print('{0:20} = {1}'.format(plugin,
+                self.getColorStatusPlugins(self.conf.get('plugins',plugin,format=bool))))
+        pass
+
+    def do_plugins(self, args=str):
+        if (len(args.split()) > 0):
+            try:
+                plugin_name,plugin_status = list(args.split())[0],list(args.split())[1]
+                if (plugin_status not in ['true','false','True','False']):
+                    return print(display_messages('sintax command error',error=True))
+                if (plugin_name in self.conf_pproxy.get_all_childname('plugins')):
+                    return self.conf_pproxy.set('plugins',plugin_name, plugin_status)
+                print(display_messages('plugin {} not found'.format(plugin_name),error=True))
+                return
+            except IndexError:
+                print(display_messages('sintax command error',error=True))
+            return 
+        print(display_messages('PumpkinProxy plugins:',info=True,sublime=True))
+        for plugin in self.conf_pproxy.get_all_childname('plugins'):
+            print('{0:20} = {1}'.format(plugin,
+            self.getColorStatusPlugins(self.conf_pproxy.get('plugins',
+            plugin,format=bool))))
+        print('\n')
 
     def complete_set(self, text, args, start_index, end_index):
         if text:
@@ -96,6 +127,13 @@ class PumpkinShell(ConsoleUI):
                     if command.startswith(text)]
         else:
             return list(self.commands.keys())
+
+    def complete_plugins(self, text, args, start_index, end_index):
+        if (text):
+            return [command for command in self.conf_pproxy.get_all_childname('plugins') if 
+            command.startswith(text)]
+        else:
+            return self.conf_pproxy.get_all_childname('plugins')
 
     def do_exit(self, args):
         ''' exit program and all threads'''

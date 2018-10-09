@@ -95,7 +95,7 @@ class ui_MonitorSniffer(object):
         ]
     def __init__(self, parent):
         self.parent = parent
-        self.conf  = SettingsINI(C.TCPPROXY_INI)
+        self.conf  = SettingsINI(C.CONFIG_TP_INI)
         self.tbUrlMonitor = TableWidget()
         self.tbUrlMonitor.setup()
         self.__threadServices = []

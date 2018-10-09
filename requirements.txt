@@ -7,3 +7,4 @@ configparser
 tabulate
 beautifultable
 urwid==1.1.2
+termcolor

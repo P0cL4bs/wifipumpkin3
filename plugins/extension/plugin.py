@@ -7,7 +7,7 @@ import core.utility.constants as C
 class PluginTemplate(QObject):
 	name		= 'plugin master'
 	version		= '1.0'
-	config		= SettingsINI(C.PUMPPROXY_INI)
+	config		= SettingsINI(C.CONFIG_PP_INI)
 	loggers 	= {}
 	send_output = pyqtSignal(object)
 

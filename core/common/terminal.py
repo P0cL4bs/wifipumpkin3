@@ -27,9 +27,7 @@ class ConsoleUI(Cmd):
 
     def do_back(self,args):
         """ unload module on session"""
-        self.session['ModuleHandler'] = ''
-        self.session['Commands'] = []
-        self.updatePrompt()
+        pass
 
     ## Override methods in Cmd object ##
     def preloop(self):

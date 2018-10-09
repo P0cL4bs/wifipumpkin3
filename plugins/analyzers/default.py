@@ -4,12 +4,13 @@ from sys import stdout
 from scapy.all import hexdump
 from core.utility.collection import SettingsINI
 from PyQt4.QtCore import pyqtSignal
+import core.utility.constants as C
 
 class PSniffer(object):
     ''' plugins data sniffers'''
     name    = 'plugin TCP proxy master'
     version = '1.0'
-    config  = SettingsINI('core/config/app/proxy.ini')
+    config  = SettingsINI(C.CONFIG_TP_INI)
     loggers = {}
     output  = pyqtSignal(object)
     session = None
