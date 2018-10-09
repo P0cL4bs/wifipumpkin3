@@ -121,6 +121,12 @@ class PumpkinShell(ConsoleUI):
             plugin,format=bool))))
         print('\n')
 
+    def getColorStatusPlugins(self, status):
+        if (status): 
+            return colored(status,'green')
+        return colored(status, 'red')
+
+
     def complete_set(self, text, args, start_index, end_index):
         if text:
             return [command for command in self.commands.keys()
