@@ -47,7 +47,7 @@ class ThreadController(Thread):
 class MasterHandler(master.Master):
     def __init__(self,opts, server,session):
         master.Master.__init__(self,opts, server)
-        self.config  = SettingsINI(C.PUMPPROXY_INI)
+        self.config  = SettingsINI(C.CONFIG_PP_INI)
         self.session = session
         self.plugins = []
         self.initializePlugins()

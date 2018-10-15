@@ -4,7 +4,7 @@ from core.common.terminal import ConsoleUI
 from core.widgets.window import ui_TableMonitorClient,ui_MonitorSniffer
 from core.utility.collection import SettingsINI
 import core.utility.constants  as C
-from core.utility.printer import display_messages
+from core.utility.printer import display_messages,setcolor
 from termcolor import colored
 
 class PumpkinShell(ConsoleUI):
@@ -93,38 +93,42 @@ class PumpkinShell(ConsoleUI):
         except IndexError:
             pass
     
-    def do_show(self, args):
-        print(display_messages('Plugins:',info=True,sublime=True))
-        for plugin in self.conf.get_all_childname('plugins'):
-            if ('_plugin' in plugin):
-                print('{0:20} = {1}'.format(plugin,
-                self.getColorStatusPlugins(self.conf.get('plugins',plugin,format=bool))))
-        pass
+    # def do_show(self, args):
+    #     print(display_messages('Plugins:',info=True,sublime=True))
+    #     for plugin in self.conf.get_all_childname('plugins'):
+    #         if ('_plugin' in plugin):
+    #             print('{0:20} = {1}'.format(plugin,
+    #             self.getColorStatusPlugins(self.conf.get('plugins',plugin,format=bool))))
+    #     pass
 
     def do_plugins(self, args=str):
+        ''' show/edit all plugins abaliable for attack '''
         if (len(args.split()) > 0):
             try:
                 plugin_name,plugin_status = list(args.split())[0],list(args.split())[1]
                 if (plugin_status not in ['true','false','True','False']):
-                    return print(display_messages('sintax command error',error=True))
+                    return print(display_messages('wifipumpkin-ng: error: unrecognized arguments {}'.format(plugin_status),error=True))
                 if (plugin_name in self.conf_pproxy.get_all_childname('plugins')):
                     return self.conf_pproxy.set('plugins',plugin_name, plugin_status)
-                print(display_messages('plugin {} not found'.format(plugin_name),error=True))
-                return
+                return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
             except IndexError:
-                print(display_messages('sintax command error',error=True))
-            return 
+                return self.help_plugins()
         print(display_messages('PumpkinProxy plugins:',info=True,sublime=True))
         for plugin in self.conf_pproxy.get_all_childname('plugins'):
             print('{0:20} = {1}'.format(plugin,
             self.getColorStatusPlugins(self.conf_pproxy.get('plugins',
             plugin,format=bool))))
         print('\n')
+    
+    def help_plugins(self):
+        print('\n'.join([ 'usage: plugins [module name ] [(True/False)]',
+                    'wifipumpkin-ng: error: unrecognized arguments',
+                    ]))
 
     def getColorStatusPlugins(self, status):
         if (status): 
-            return colored(status,'green')
-        return colored(status, 'red')
+            return setcolor(status,color='green')
+        return setcolor(status,color= 'red')
 
 
     def complete_set(self, text, args, start_index, end_index):

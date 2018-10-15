@@ -23,7 +23,7 @@ class TH_SniffingPackets(QThread):
         self.interface  = interface
         self.session    = session
         self.stopped    = False
-        self.config     = SettingsINI(C.TCPPROXY_INI)
+        self.config     = SettingsINI(C.CONFIG_TP_INI)
         self.msg_output = []
         self.queue_plugins = queue.Queue()
 
