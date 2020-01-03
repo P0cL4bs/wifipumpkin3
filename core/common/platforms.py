@@ -7,8 +7,8 @@ from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
 from re import search,compile,VERBOSE,IGNORECASE
 import netifaces
 from scapy.all import *
-from PyQt4 import QtCore
-from PyQt4 import QtGui
+from PyQt5 import QtCore
+from PyQt5 import QtGui
 import logging
 import signal
 import configparser

@@ -3,7 +3,7 @@ import logging
 from sys import stdout
 from scapy.all import hexdump
 from core.utility.collection import SettingsINI
-from PyQt4.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 import core.utility.constants as C
 
 class PSniffer(object):

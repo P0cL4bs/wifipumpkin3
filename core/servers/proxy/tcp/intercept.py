@@ -1,4 +1,4 @@
-from PyQt4.QtCore import QThread,pyqtSignal
+from PyQt5.QtCore import QThread,pyqtSignal
 from time import sleep,asctime,strftime
 from threading import Thread
 import queue
@@ -68,7 +68,7 @@ class TH_SniffingPackets(QThread):
         for p in self.plugin_classes:
             plugin_load = p()
             self.plugins[plugin_load.Name] = plugin_load
-            self.plugins[plugin_load.Name].output = self.queue_plugins
+            self.plugins[plugin_load.Name].output = self.output_plugins
             self.plugins[plugin_load.Name].session = self.session
 
         for name in self.plugins.keys():

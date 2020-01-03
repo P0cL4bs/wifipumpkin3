@@ -4,7 +4,7 @@ from logging import getLogger,ERROR
 getLogger('scapy.runtime').setLevel(ERROR)
 import argparse
 import sys
-from PyQt4 import QtGui
+from PyQt5 import QtGui,QtCore
 from core.main import PumpkinShell
 from core.utility.printer import banner, setcolor
 from core.packets.dhcpserver import IpAddressClass
@@ -15,8 +15,9 @@ _author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
 _version = setcolor('0.1',color='yellow')
 __codename__ = setcolor('sab1no',color='red')
 banner()
+
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtCore.QCoreApplication(sys.argv)
     conf       = SettingsINI(C.CONFIG_INI)
     ifacedefault = conf.get('accesspoint','interfaceAP')
     session_default = conf.get('accesspoint','current_session')

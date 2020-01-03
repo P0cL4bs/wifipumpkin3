@@ -6,26 +6,69 @@ from core.utility.collection import SettingsINI
 import core.utility.constants  as C
 from core.utility.printer import display_messages,setcolor
 from termcolor import colored
+import npyscreen, threading
 
-class PumpkinShell(ConsoleUI):
+from core.common.defaultwidget import *
+
+from core.controllers.wirelessmodecontroller import *
+from core.controllers.dhcpcontroller import *
+from core.servers.dhcp.dhcp import *
+
+
+approot = QtCore.QCoreApplication.instance()
+
+class TestApp(npyscreen.NPSApp):
+    def main(self):
+        # These lines create the form and populate it with widgets.
+        # A fairly complex screen in only 8 or so lines of code - a line for each control.
+        F  = npyscreen.Form(name = "Welcome to Npyscreen",)
+        t  = F.add(npyscreen.TitleText, name = "Text:",)
+        fn = F.add(npyscreen.TitleFilename, name = "Filename:")
+        fn2 = F.add(npyscreen.TitleFilenameCombo, name="Filename2:")
+        dt = F.add(npyscreen.TitleDateCombo, name = "Date:")
+        s  = F.add(npyscreen.TitleSlider, out_of=12, name = "Slider")
+        ml = F.add(npyscreen.MultiLineEdit,
+               value = """try typing here!\nMutiline text, press ^R to reformat.\n""",
+               max_height=5, rely=9)
+        ms = F.add(npyscreen.TitleSelectOne, max_height=4, value = [1,], name="Pick One",
+                values = ["Option1","Option2","Option3"], scroll_exit=True)
+        ms2= F.add(npyscreen.TitleMultiSelect, max_height =-2, value = [1,], name="Pick Several",
+                values = ["Option1","Option2","Option3"], scroll_exit=True)
+
+        # This lets the user interact with the Form.
+        F.edit()
+
+        print(ms.get_selected_objects())
+
+class PumpkinShell(Qt.QObject, ConsoleUI):
     """
     :parameters
         options : parse_args
     """
+    instances=[]
+
     def __init__(self,options):
         ConsoleUI.__init__(self)
+        super(PumpkinShell, self).__init__()
+        self.__class__.instances.append(weakref.proxy(self))
         self.options    = options
         self.sniffs     = SniffingPackets(self)
         self.conf       = SettingsINI(C.CONFIG_INI)
         self.conf_pproxy    = SettingsINI(C.CONFIG_PP_INI)
         self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
         self.ac         = AccessPoint(self)
+
+        self.coreui = DefaultWidget(self)
+        self.wireless = WirelessModeController(self)
+        self.dhcpcontrol = DHCPController(self)
+
+        
         self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
         self.ui_table   = ui_TableMonitorClient(self)
         self.ui_monitor = ui_MonitorSniffer(self)
         self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
         'bssid': 'bssid','channel':'channel'}
-        self.threadsAP = []
+        self.Apthreads = {'RogueAP': []}
         self.setOptions()
 
     def setOptions(self):
@@ -36,33 +79,63 @@ class PumpkinShell(ConsoleUI):
         self.ui_table.startThreads()
         self.ui_monitor.startThreads()
 
+
     def do_start(self,args):
         ''' start access point '''
-        if (not self.countThreads() > 0): 
-            self.sniffs.start()
-            self.ac.start()
-            self.addThreads(self.sniffs)
-            return self.addThreads(self.ac)
-        print(display_messages('the access point is running. [{}]'.format(
-            self.conf.get('accesspoint','ssid')
-        ),error=True))
+        # if (not self.countThreads() > 0): 
+        #     self.sniffs.start()
+        #     self.ac.start()
+        #     self.addThreads(self.sniffs)
+        #     return self.addThreads(self.ac)
+        # print(display_messages('the access point is running. [{}]'.format(
+        #     self.conf.get('accesspoint','ssid')
+        # ),error=True))
+        if self.wireless.Start() != None: return
+        self.dhcpcontrol.Start()
+
+        self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
+        self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
+
+
+        print(display_messages('sharing internet connection with NAT...', info=True))
+        try:
+            for ech in self.conf.get_all_childname('iptables'):
+                ech = self.conf.get('iptables', ech)
+                if '$inet' in ech:
+                    ech = ech.replace('$inet',self.interfaces['activated'][0])
+                if '$wlan' in ech:
+                    ech = ech.replace('$wlan',self.ifaceHostapd)
+                popen(ech)
+        except: pass
+
+        for thread in self.Apthreads['RogueAP']:
+            if thread is not None:
+                print("Starting {}".format(thread.objectName()))
+                QtCore.QThread.sleep(1)
+                thread.start()
     
     def addThreads(self,service):
         self.threadsAP.append(service)
 
     def killThreads(self):
-        if (self.countThreads() > 0):
-            for thread in self.threadsAP:
-                thread.stop()
-            self.threadsAP = []
+        if not len(self.Apthreads['RogueAP']) > 0:
+            return
+        self.conf.set('accesspoint', 'statusAP',False)
+        for thread in self.Apthreads['RogueAP']:
+            thread.stop()
+
+        for line in self.wireless.Activated.SettingsAP['kill']: exec_bash(line)
+        self.Apthreads['RogueAP'] = []
 
     def countThreads(self):
-        return len(self.threadsAP)
+        return len(self.threadsAP['RougeAP'])
 
     def do_clients(self, args):
         ''' show all clients connected on AP '''
         self.ui_table.start()
         self.addThreads(self.ui_table)
+        # App = TestApp()
+        # App.run()
 
     def do_monitor(self, args):
         ''' monitor traffic capture realtime Sniffer'''
@@ -72,6 +145,7 @@ class PumpkinShell(ConsoleUI):
     def do_stop(self,args):
         ''' stop access point '''
         self.killThreads()
+
 
     def do_info(self, args):
         ''' show all variable for settings AP'''

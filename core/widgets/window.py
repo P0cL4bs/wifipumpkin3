@@ -119,9 +119,9 @@ class ui_MonitorSniffer(object):
 
     def startThreads(self):
         if (not self.getThreadStatus()):
-            t1 = threading.Thread(target= self.parent.sniffs.tcp_proxy.get_output_activated)
-            t2 = threading.Thread(target=self.threadsQueueProxy)
-            self.appendThreads([t1, t2])
+            #t1 = threading.Thread(target= self.parent.sniffs.tcp_proxy.get_output_activated)
+            #t2 = threading.Thread(target=self.threadsQueueProxy)
+            #self.appendThreads([t1, t2])
             self.setThreadStatus(True)
             for thread in self.getThreadList():
                 thread.daemon = True

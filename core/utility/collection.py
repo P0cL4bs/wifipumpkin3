@@ -1,6 +1,6 @@
 from os import path
-from PyQt4.QtCore import QSettings
-
+from PyQt5.QtCore import QSettings
+import core.utility.constants as C 
 """
 Description:
     This program is a module for wifi-pumpkin.py.
@@ -23,9 +23,16 @@ Copyright:
 
 class SettingsINI(object):
 	""" settings INI file implemented for Wifi-Pumpkin"""
+	_instance = None
 	def __init__(self,filename):
 		if path.isfile(filename):
 			self.psettings = QSettings(filename,QSettings.IniFormat)
+
+	@staticmethod
+	def getInstance():
+		if SettingsINI._instance is None:
+			SettingsINI._instance = SettingsINI(C.CONFIG_INI)
+		return SettingsINI._instance
 
 	def get(self,name_group,key,format=str):
 		""" Get the value for setting key """

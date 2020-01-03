@@ -3,7 +3,7 @@ from os import system
 from scapy.all import *
 from threading import Thread
 from time import sleep
-from PyQt4.QtCore import QThread,SIGNAL,QObject,QProcess,pyqtSlot,SLOT,pyqtSignal
+from PyQt5.QtCore import QThread,SIGNAL,QObject,QProcess,pyqtSlot,pyqtSignal,pyqtSlot
 from datetime import datetime
 
 """
@@ -46,8 +46,8 @@ class ThreadAttackStar(QThread):
             self.count += 1
             self.data = ("PacketSend:[%s] DISCOVER Interface: %s "%(self.count,self.interface)
                          + datetime.now().strftime("%c"))
-            self.emit(SIGNAL("Activated( QString )"),self.data.rstrip())
-        self.emit(SIGNAL("Activated( QString )"),"[ OFF ] Packet sent: " + str(self.count))
+            self.emit(pyqtSignal("Activated( QString )"),self.data.rstrip())
+        self.emit(pyqtSignal("Activated( QString )"),"[ OFF ] Packet sent: " + str(self.count))
     def stop(self):
         print "Stop thread:" + self.objectName()
         self.process = False
@@ -71,14 +71,14 @@ class ThARP_posion(QThread):
         return packet_arp
 
     def run(self):
-        print 'Starting Thread:' + self.objectName()
+        print('Starting Thread:' + self.objectName())
         pkt = self.makePacket()
         while self.process:
             send(pkt,verbose=False, count=3),sendp(pkt,verbose=False, count=3)
     def stop(self):
         self.process = False
-        print 'Stop thread:' + self.objectName()
-        self.emit(SIGNAL('Activated( QString )'),'Ok')
+        print('Stop thread:' + self.objectName())
+        self.emit(pyqtSignal('Activated( QString )'),'Ok')
 
 
 class ThreadDNSspoofNF(QObject):
@@ -100,7 +100,7 @@ class ThreadDNSspoofNF(QObject):
         self.setIptables(self.APmode,option='A')
         self.procThreadDNS = QProcess(self)
         self.procThreadDNS.setProcessChannelMode(QProcess.MergedChannels)
-        QObject.connect(self.procThreadDNS, SIGNAL('readyReadStandardOutput()'), self, SLOT('readProcessOutput()'))
+        QObject.connect(self.procThreadDNS, pyqtSignal('readyReadStandardOutput()'), self, pyqtSlot('readProcessOutput()'))
         self.procThreadDNS.start('python',['core/packets/dnsspoofNF.py','-r',self.redirect,
         '-d',','.join(self.domains)])
 
@@ -208,4 +208,4 @@ class ThSpoofAttack(QThread):
         print 'Stop Thread:' + self.objectName()
         self.finished = True
         self.setIptables(option='D')
-        self.emit(SIGNAL('Activated( QString )'),'finished')
+        self.emit(pyqtSignal('Activated( QString )'),'finished')

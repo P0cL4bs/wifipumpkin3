@@ -4,9 +4,9 @@ from os import kill
 import signal
 from multiprocessing import Process, Queue
 from subprocess import (Popen, STDOUT, PIPE)
-from PyQt4.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
 from core.packets.dhcpserver import DHCPProtocol
-from core.servers.proxy.http.controller.handler import MasterHandler
+# from core.servers.proxy.http.controller.handler import MasterHandler
 from core.utility.printer import display_messages,colors
 
 
@@ -116,14 +116,14 @@ class ProcessHostapd(QObject):
         self.queue = Queue()
         self.started = False
 
-    def read_OutputCommand(self,q,proc):
-        for line in proc.stdout:
-            if 'AP-STA-DISCONNECTED' in line.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in line.rstrip():
-                q.put(line.split()[2])
-        # self.data = str(self.procHostapd.readAllStandardOutput(),encoding='ascii')
-        # if 'AP-STA-DISCONNECTED' in self.data.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in self.data.rstrip():
-        #     #self.statusAP_connected.emit(self.data.split()[2])
-        #     self.queue.put(self.data.split()[2])
+    def read_OutputCommand(self):
+        # for line in proc.stdout:
+        #     if 'AP-STA-DISCONNECTED' in line.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in line.rstrip():
+        #         q.put(line.split()[2])
+        self.data = str(self.procHostapd.readAllStandardOutput(),encoding='ascii')
+        if 'AP-STA-DISCONNECTED' in self.data.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in self.data.rstrip():
+            self.statusAP_connected.emit(self.data.split()[2])
+            #self.queue.put(self.data.split()[2])
         # #self.log_hostapd.info(self.data)
         # for error in self.errorAPDriver:
         #     if self.data.find(error) != -1:
@@ -135,15 +135,15 @@ class ProcessHostapd(QObject):
 
     def start(self):
         self.makeLogger()
-        # self.procHostapd = QProcess(self)
-        # self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)
-        # self.procHostapd.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
-        # self.procHostapd.readyReadStandardOutput.connect(self.read_OutputCommand)
-        # print('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()))
+        self.procHostapd = QProcess(self)
+        self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)
+        self.procHostapd.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
+        self.procHostapd.readyReadStandardOutput.connect(self.read_OutputCommand)
+        print('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()))
         self.started = True
-        self.proc = Popen(self.cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
-        self.procHostapd = Process(target=self.read_OutputCommand, args=(self.queue,self.proc))
-        self.procHostapd.start()
+        # self.proc = Popen(self.cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
+        # self.procHostapd = Process(target=self.read_OutputCommand, args=(self.queue,self.proc))
+        # self.procHostapd.start()
         print(display_messages('starting hostpad pid: [{}]'.format(self.procHostapd.pid),sucess=True))
 
     def makeLogger(self):
@@ -155,6 +155,6 @@ class ProcessHostapd(QObject):
         print('Thread::[{}] successfully stopped.'.format(self.objectName()))
         if hasattr(self,'procHostapd'):
             self.started = False
-            self.proc.kill()
-            self.proc.terminate()
+            #self.proc.kill()
+            #self.proc.terminate()
             self.procHostapd.terminate()

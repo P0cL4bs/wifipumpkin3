@@ -9,7 +9,7 @@ from subprocess import \
      Popen, PIPE, call
      )
 
-from PyQt4.QtCore import pyqtSignal,QObject
+from PyQt5.QtCore import pyqtSignal,QObject
 import core.utility.constants as C
 from core.common.platforms import Linux
 from core.common.platforms import exec_bash
@@ -164,8 +164,8 @@ class AccessPoint(Linux):
 
         # create thread for hostapd and connect get_Hostapd_Response function
         self.hostapd_path = self.conf.get('accesspoint', 'hostapd_path')
-        self.Thread_hostapd = ProcessHostapd([self.hostapd_path,C.HOSTAPDCONF_PATH], 'MDSNjD')
-        #self.Thread_hostapd = ProcessHostapd({self.hostapd_path :[C.HOSTAPDCONF_PATH]}, 'MDSNjD')
+        #self.Thread_hostapd = ProcessHostapd([self.hostapd_path,C.HOSTAPDCONF_PATH], 'MDSNjD')
+        self.Thread_hostapd = ProcessHostapd({self.hostapd_path :[C.HOSTAPDCONF_PATH]}, 'MDSNjD')
         self.Thread_hostapd.setObjectName('hostapd')
         self.Thread_hostapd.statusAP_connected.connect(self.get_Hostapd_Response)
         self.Thread_hostapd.statusAPError.connect(self.get_error_hostapdServices)
@@ -191,6 +191,7 @@ class AccessPoint(Linux):
 
         self.threadDHCP = DHCPThread(self.ifaceHostapd,self.DHCP)
         self.threadsAP['RougeAP'].append(self.threadDHCP)
+        self.threadDHCP.DHCPProtocol._request.connect(self.get_DHCPoutPut)
 
         print(display_messages('sharing internet connection with NAT...', info=True))
         try:
@@ -223,6 +224,9 @@ class AccessPoint(Linux):
             for line in self.SettingsAP['kill']: exec_bash(line)
         self.threadsAP['RougeAP'] = []
 
+    def get_DHCPoutPut(self, data):
+        self.parent.ui_table.add_Clients(data)
+        print(data)
 
     def get_PumpkinProxy_output(self, data):
         print(data)

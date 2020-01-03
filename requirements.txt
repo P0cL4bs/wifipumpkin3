@@ -8,3 +8,4 @@ tabulate
 beautifultable
 urwid==1.1.2
 termcolor
+PyQt5==5.10.1

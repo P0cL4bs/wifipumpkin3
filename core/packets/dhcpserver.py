@@ -5,7 +5,7 @@ from dhcplib import net, getifaddrslib
 import ipaddress as ip
 from queue import Queue
 log = logging.getLogger(__name__)
-from PyQt4.QtCore import QThread,pyqtSignal,SIGNAL,pyqtSlot,QProcess,QObject,SLOT
+from PyQt5.QtCore import QThread,pyqtSignal,pyqtSlot,QProcess,QObject
 
 
 class IpAddressClass(object):

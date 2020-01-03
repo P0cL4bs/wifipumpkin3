@@ -51,7 +51,7 @@ class MonitorCreds(PSniffer):
         username = re.findall(user_regex, str(payload,'utf-8'))
         password = re.findall(pw_regex, str(payload,'utf-8'))
         if not username ==[] and not password == []:
-            self.output.put({'POSTCreds':{'User':username[0][1],
+            self.output.emit({'POSTCreds':{'User':username[0][1],
             'Pass': password[0][1],'Url':str(url),
             'Destination':'{}/{}'.format(sport,dport),'Packets': pkt,'Payload': payload}})
 
@@ -88,7 +88,7 @@ class MonitorCreds(PSniffer):
                 self.getCredentials_POST(pkt.getlayer(Raw).load, http_layer.fields['Host'],
                 http_layer.fields['Headers'], self.dst_ip_port, self.src_ip_port,
                 {'IP': ip_layer.fields, 'Headers': http_layer.fields} )
-            self.output.put({'urlsCap':{'IP': ip_layer.fields, 'Headers': http_layer.fields}})
+            self.output.emit({'urlsCap':{'IP': ip_layer.fields, 'Headers': http_layer.fields}})
         except: pass
 
 
