@@ -91,6 +91,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         #     self.conf.get('accesspoint','ssid')
         # ),error=True))
         if self.wireless.Start() != None: return
+        self.interfaces = Linux.get_interfaces()
         self.dhcpcontrol.Start()
 
         self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
@@ -98,6 +99,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
 
         print(display_messages('sharing internet connection with NAT...', info=True))
+        self.ifaceHostapd = self.conf.get('accesspoint','interfaceAP')
         try:
             for ech in self.conf.get_all_childname('iptables'):
                 ech = self.conf.get('iptables', ech)
@@ -106,11 +108,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 if '$wlan' in ech:
                     ech = ech.replace('$wlan',self.ifaceHostapd)
                 popen(ech)
-        except: pass
+        except Exception as e:
+            print(e)
 
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:
-                print("Starting {}".format(thread.objectName()))
                 QtCore.QThread.sleep(1)
                 thread.start()
     
@@ -124,7 +126,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         for thread in self.Apthreads['RogueAP']:
             thread.stop()
 
-        for line in self.wireless.Activated.SettingsAP['kill']: exec_bash(line)
+        for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []
 
     def countThreads(self):

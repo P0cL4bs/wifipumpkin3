@@ -28,12 +28,14 @@ class Static(Mode):
     def Settings(self):
         return StaticSettings.getInstance()
 
+    def getSettings(self):
+        return self.Settings
+
     def Initialize(self):
 
         self.check_Wireless_Security()
         self.Settings.Configure()
         self.Settings.checkNetworkAP()
-        print(self.SettingsAP)
 
 
         ignore = ('interface=','ssid=','channel=','essid=')

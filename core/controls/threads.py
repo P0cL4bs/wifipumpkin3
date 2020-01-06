@@ -139,12 +139,12 @@ class ProcessHostapd(QObject):
         self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)
         self.procHostapd.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
         self.procHostapd.readyReadStandardOutput.connect(self.read_OutputCommand)
-        print('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()))
+        print(display_messages('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()),info=True))
         self.started = True
         # self.proc = Popen(self.cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
         # self.procHostapd = Process(target=self.read_OutputCommand, args=(self.queue,self.proc))
         # self.procHostapd.start()
-        print(display_messages('starting hostpad pid: [{}]'.format(self.procHostapd.pid),sucess=True))
+        print(display_messages('starting hostpad pid: [{}]'.format(self.procHostapd.pid()),sucess=True))
 
     def makeLogger(self):
         #setup_logger('hostapd', C.LOG_HOSTAPD, self.session)
