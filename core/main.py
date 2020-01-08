@@ -1,5 +1,5 @@
 from core.common.accesspoint import AccessPoint
-from core.common.sniffing import SniffingPackets
+#from core.common.sniffing import SniffingPackets
 from core.common.terminal import ConsoleUI
 from core.widgets.window import ui_TableMonitorClient,ui_MonitorSniffer
 from core.utility.collection import SettingsINI
@@ -13,6 +13,7 @@ from core.common.defaultwidget import *
 from core.controllers.wirelessmodecontroller import *
 from core.controllers.dhcpcontroller import *
 from core.servers.dhcp.dhcp import *
+from core.controllers.proxycontroller import *
 from core.controllers.dnscontroller import *
 
 
@@ -53,7 +54,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         super(PumpkinShell, self).__init__()
         self.__class__.instances.append(weakref.proxy(self))
         self.options    = options
-        self.sniffs     = SniffingPackets(self)
+        #self.sniffs     = SniffingPackets(self)
         self.conf       = SettingsINI(C.CONFIG_INI)
         self.conf_pproxy    = SettingsINI(C.CONFIG_PP_INI)
         self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
@@ -66,7 +67,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.dhcpcontrol = DHCPController(self)
         self.dnsserver = DNSController(self)
 
-        
+        self.proxy = self.coreui.Plugins.Proxy
+
         self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
         self.ui_table   = ui_TableMonitorClient(self)
         self.ui_monitor = ui_MonitorSniffer(self)
@@ -98,10 +100,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.interfaces = Linux.get_interfaces()
         self.dhcpcontrol.Start()
         self.dnsserver.Start()
+        self.proxy.Start()
 
         self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
         self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
         self.Apthreads['RogueAP'].insert(2,self.dnsserver.ActiveReactor)
+        self.Apthreads['RogueAP'].extend(self.proxy.ActiveReactor)
 
 
         print(display_messages('sharing internet connection with NAT...', info=True))
@@ -117,10 +121,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         except Exception as e:
             print(e)
 
+        
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:
                 QtCore.QThread.sleep(1)
-                thread.start()
+                if not (isinstance(thread, list)):  
+                    thread.start()
 
         #self.dns = DNSServer(self.ifaceHostapd, self.conf.get('dhcpdefault','router'))
         #self.dns.start()
@@ -133,7 +139,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return
         self.conf.set('accesspoint', 'statusAP',False)
         for thread in self.Apthreads['RogueAP']:
-            thread.stop()
+            if thread is not None:
+                if (isinstance(thread, list)):
+                    for sub_thread in thread:
+                        if (sub_thread != None):
+                            sub_thread.stop()
+                    continue
+                thread.stop()
 
         for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []

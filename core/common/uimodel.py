@@ -42,9 +42,28 @@ class TabsWidget(Qt.QObject):
         super(TabsWidget,self).__init__()
         self.setObjectName(self.Name)
         #self.setTitle("{}".format(self.Name))
-        self.FSettings = SuperSettings.getInstance()
+        self.conf = SuperSettings.getInstance()
         self.parent = parent
 
     @property
     def isSubitem(self):
         return self.__subitem
+
+
+
+class PluginsUI(Qt.QObject):
+    Name = "Default"
+    Caption = "Default"
+    ID = "Generic"
+    def __init__(self,parent=0):
+        super(PluginsUI,self).__init__(parent)
+        self.parent = parent
+        self.conf = SuperSettings.getInstance()
+        self.sessionconfig ={}
+
+    @property
+    def config(self):
+        return self.sessionconfigcd
+        
+    def deleteObject(self,obj):
+        del obj

@@ -79,6 +79,7 @@ LOG_DNSSPOOF     = 'logs/AccessPoint/dnsspoof.log'
 LOG_PHISHING     = 'logs/Phishing/requests.log'
 LOG_DHCP         = 'logs/AccessPoint/dhcp.log'
 LOG_HOSTAPD      = 'logs/AccessPoint/hostapd.log'
+LOG_ALL          = 'logs/everything.log'
 
 
 #APP SETTINGS
