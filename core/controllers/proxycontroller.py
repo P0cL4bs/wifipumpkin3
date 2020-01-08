@@ -94,7 +94,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                     reactor.append(act.reactor)
                     if act.subreactor:
                         reactor.append(act.subreactor)
-        print(reactor)
         return  reactor
 
 

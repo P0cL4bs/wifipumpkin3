@@ -1,6 +1,4 @@
 from PyQt5.QtCore import QThread,pyqtSignal,QThread,QObject
-
-
 import json
 import logging
 import os
@@ -13,6 +11,7 @@ from time import sleep
 from dnslib import DNSLabel, QTYPE, RR, dns
 from dnslib.proxy import ProxyResolver
 from dnslib.server import DNSServer
+import binascii
 
 
 TYPE_LOOKUP = {
@@ -137,6 +136,83 @@ class Resolver(ProxyResolver):
 
 
 
+class LocalDNSLogger(object):
+    
+    """
+        The class provides a default set of logging functions for the various
+        stages of the request handled by a DNSServer instance which are
+        enabled/disabled by flags in the 'log' class variable.
+        To customise logging create an object which implements the LocalDNSLogger
+        interface and pass instance to DNSServer.
+        The methods which the logger instance must implement are:
+            log_recv          - Raw packet received
+            log_send          - Raw packet sent
+            log_request       - DNS Request
+            log_reply         - DNS Response
+            log_truncated     - Truncated
+            log_error         - Decoding error
+            log_data          - Dump full request/response
+    """
+    def __init__(self, logger):
+        self.logger = logger
+
+    def log_recv(self, handler, data):
+        pass
+        # self.logger.emit("Received: [%s:%d] (%s) <%d> : %s" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              len(data),
+        #              binascii.hexlify(data)))
+
+    def log_send(self, handler, data):
+        pass
+        # self.logger.emit("Sent: [%s:%d] (%s) <%d> : %s" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              len(data),
+        #              binascii.hexlify(data)))
+
+    def log_request(self, handler, request):
+        self.logger.emit("Request: [%s:%d] (%s) / '%s' (%s)" %(
+                     handler.client_address[0],
+                     handler.client_address[1],
+                     handler.protocol,
+                     request.q.qname,
+                     QTYPE[request.q.qtype]))
+        self.log_data(request)
+
+    def log_reply(self, handler, reply):
+        self.logger.emit("Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
+                     handler.client_address[0],
+                     handler.client_address[1],
+                     handler.protocol,
+                     reply.q.qname,
+                     QTYPE[reply.q.qtype],
+                     ",".join([QTYPE[a.rtype] for a in reply.rr])))
+        self.log_data(reply)
+
+    def log_truncated(self, handler, reply):
+        self.logger.emit("Truncated Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
+                     handler.client_address[0],
+                     handler.client_address[1],
+                     handler.protocol,
+                     reply.q.qname,
+                     QTYPE[reply.q.qtype],
+                     ",".join([QTYPE[a.rtype] for a in reply.rr])))
+        self.log_data(reply)
+
+    def log_error(self, handler, e):
+        self.logger.emit("Invalid Request: [%s:%d] (%s) :: %s" %(
+                     handler.client_address[0],
+                     handler.client_address[1],
+                     handler.protocol,
+                     e))
+
+    def log_data(self, dnsobj):
+        self.logger.emit("\n" + dnsobj.toZone("    ") + "\n")
+
 
 
 class DNSServerThread(QThread):
@@ -153,9 +229,14 @@ class DNSServerThread(QThread):
         port = int(os.getenv('PORT', 53))
         upstream = os.getenv('UPSTREAM', '8.8.8.8')
         zone_file = Path(self.conf.get('accesspoint','path_pydns_server_zones'))
+        self.logger_dns = LocalDNSLogger(self.sendRequests)
         self.resolver = Resolver(upstream, zone_file, self.sendRequests)
-        self.udp_server = DNSServer(self.resolver, port=port)
-        self.tcp_server = DNSServer(self.resolver, port=port, tcp=True)
+        self.udp_server = DNSServer(self.resolver, port=port , 
+                                logger=self.logger_dns)
+        self.tcp_server = DNSServer(
+            self.resolver, port=port,
+             logger=self.logger_dns,
+            tcp=True)
 
         #logger.info('starting DNS server on port %d, upstream DNS server "%s"', port, upstream)
         self.udp_server.start_thread()
@@ -166,52 +247,6 @@ class DNSServerThread(QThread):
                 sleep(1)
         except KeyboardInterrupt:
             pass
-
-
-
-        # self.dns_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        # self.dns_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # self.dns_sock.settimeout(0.3)  # Set timeout on socket-operations.
-        # time.sleep(0.5)
-        # self.dns_sock.bind(('', 53))
-        # while self.DnsLoop:
-        #     try:
-        #         data, addr = self.dns_sock.recvfrom(1024)
-        #     except:
-        #         continue
-        #     packet = DNSQuery(data)
-        #     try:
-        #         msg = dns.message.from_wire(data)
-        #         op = msg.opcode()
-        #         if op == 0:
-        #             # standard and inverse query
-        #             qs = msg.question
-        #             if len(qs) > 0:
-        #                 query = qs[0]
-        #             #RCODE
-        #     except Exception as e:
-        #         query = repr(e) # error when resolver DNS
-        #     self.data_request['query'] = query # get query resquest from client
-        #     self.data_request['type'] = packet._get_dnsType() # get type query
-        #     self.data_request['logger']='Client [{}]: -> [{}]'.format(addr[0], packet.dominio)
-        #     if not self.blockResolverDNS:
-        #         try:
-        #             answers = self.Resolver.query(packet._get_domainReal()) # try resolver domain
-        #             for rdata in answers: # get real Ipaddress
-        #                 self.dns_sock.sendto(packet.render_packet(rdata.address), addr) #send resquest
-        #         except dns.resolver.NXDOMAIN: # error domain not found
-        #             # send domain not exist RCODE 3
-        #             self.dns_sock.sendto(packet.make_response(data,3), addr)
-        #         except dns.resolver.Timeout:
-        #             # unable to respond query RCODE 2
-        #             self.dns_sock.sendto(packet.make_response(data,2), addr) #timeout
-        #         except dns.exception.DNSException:
-        #             # server format ERROR unable to responde #RCODE 1
-        #             self.dns_sock.sendto(packet.make_response(data,1), addr)
-        #         continue
-        #     # I'll use this in future for implements new feature
-        #     self.dns_sock.sendto(packet.respuesta(self.GatewayAddr), addr) # for next feature
-        # self.dns_sock.close()
 
     def stop(self):
         self.udp_server.stop()

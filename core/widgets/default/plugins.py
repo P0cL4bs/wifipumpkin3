@@ -11,7 +11,6 @@ class Plugins(TabsWidget):
     def __init__(self,parent,FSettings=None):
         super(Plugins,self).__init__(parent,FSettings)
         self.__plugins = [plug(parent) for plug in PluginsUI.__subclasses__()]
-        print(self.__plugins)
         for wid in self.__plugins:
             setattr(self,wid.Name,wid)
 

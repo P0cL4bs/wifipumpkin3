@@ -17,9 +17,10 @@ class PyDNSServer(DNSBase):
         pass
 
     def LogOutput(self, data):
+        pass
         #TODO: add system logger controller 
-        print(data)
-        self.logger.info(data)
+        #print(data)
+        #self.logger.info(data)
 
     def boot(self):
         self.reactor = DNSServerThread(self.conf)
