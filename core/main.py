@@ -13,6 +13,7 @@ from core.common.defaultwidget import *
 from core.controllers.wirelessmodecontroller import *
 from core.controllers.dhcpcontroller import *
 from core.servers.dhcp.dhcp import *
+from core.controllers.dnscontroller import *
 
 
 approot = QtCore.QCoreApplication.instance()
@@ -58,9 +59,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
         self.ac         = AccessPoint(self)
 
+        self.currentSessionID = 'teste'
+
         self.coreui = DefaultWidget(self)
         self.wireless = WirelessModeController(self)
         self.dhcpcontrol = DHCPController(self)
+        self.dnsserver = DNSController(self)
 
         
         self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
@@ -93,9 +97,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         if self.wireless.Start() != None: return
         self.interfaces = Linux.get_interfaces()
         self.dhcpcontrol.Start()
+        self.dnsserver.Start()
 
         self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
         self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
+        self.Apthreads['RogueAP'].insert(2,self.dnsserver.ActiveReactor)
 
 
         print(display_messages('sharing internet connection with NAT...', info=True))
@@ -115,6 +121,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if thread is not None:
                 QtCore.QThread.sleep(1)
                 thread.start()
+
+        #self.dns = DNSServer(self.ifaceHostapd, self.conf.get('dhcpdefault','router'))
+        #self.dns.start()
     
     def addThreads(self,service):
         self.threadsAP.append(service)

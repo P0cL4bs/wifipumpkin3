@@ -17,6 +17,24 @@ from shlex import split
 from glob import glob
 import warnings
 
+
+loggers = {}
+'''http://stackoverflow.com/questions/17035077/python-logging-to-multiple-log-files-from-different-classes'''
+def setup_logger(logger_name, log_file,key=str(), level=logging.INFO):
+    global loggers
+    if loggers.get(logger_name):
+        return loggers.get(logger_name)
+    else:
+        logger = logging.getLogger(logger_name)
+        logger.propagate = False
+        formatter = logging.Formatter('SessionID[{}] %(asctime)s : %(message)s'.format(key))
+        fileHandler = logging.FileHandler(log_file, mode='a')
+        fileHandler.setFormatter(formatter)
+        logger.setLevel(logging.INFO)
+        logger.addHandler(fileHandler)
+    return logger
+
+
 class Linux(QtCore.QObject):
 
     @staticmethod

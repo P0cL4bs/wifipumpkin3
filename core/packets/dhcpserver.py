@@ -81,7 +81,7 @@ class DHCPProtocol(QObject):
             packet.set_option('yiaddr', self.ip_client)
             packet.set_option('siaddr', self.dhcp_conf['router'])
             packet.set_option('router', [self.dhcp_conf['router']], validate=False)
-            packet.set_option('domain_name_servers', ['8.8.8.8'], validate=False)
+            packet.set_option('domain_name_servers', ['10.0.0.1'], validate=False)
             packet.set_option('ip_address_lease_time', int(self.dhcp_conf['leasetimeMax']))
             for key in self.leases.keys():
                 for item in self.leases[key].keys():
