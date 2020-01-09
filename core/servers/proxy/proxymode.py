@@ -127,7 +127,7 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.reactor.setObjectName(self.Name)
 
     def shutdown(self):
-        self.ClearRules()
+        pass
 
     @property
     def isEnabled(self):

@@ -1,13 +1,13 @@
 from PyQt5 import QtGui,QtCore, Qt
 from functools import  partial
 
-class DockableWidget(Qt.QDockWidget):
+class DockableWidget(Qt.QObject):
     title = 'Default'
     id = 'default'
     addDock = QtCore.pyqtSignal(object)
 
     def __init__(self,parent=0,t='Default',info={}):
-        super(DockableWidget,self).__init__(t)
+        super(DockableWidget,self).__init__()
         self.parent = parent
         self.title = t
         self.logger = info

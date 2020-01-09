@@ -14,6 +14,7 @@ from core.controllers.wirelessmodecontroller import *
 from core.controllers.dhcpcontroller import *
 from core.servers.dhcp.dhcp import *
 from core.controllers.proxycontroller import *
+from core.controllers.mitmcontroller import *
 from core.controllers.dnscontroller import *
 
 
@@ -62,12 +63,14 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         self.currentSessionID = 'teste'
 
+
         self.coreui = DefaultWidget(self)
         self.wireless = WirelessModeController(self)
         self.dhcpcontrol = DHCPController(self)
         self.dnsserver = DNSController(self)
 
         self.proxy = self.coreui.Plugins.Proxy
+        self.mitmhandler = self.coreui.Plugins.MITM
 
         self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
         self.ui_table   = ui_TableMonitorClient(self)
@@ -101,11 +104,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.dhcpcontrol.Start()
         self.dnsserver.Start()
         self.proxy.Start()
+        self.mitmhandler.Start()
 
         self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
         self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
         self.Apthreads['RogueAP'].insert(2,self.dnsserver.ActiveReactor)
         self.Apthreads['RogueAP'].extend(self.proxy.ActiveReactor)
+        self.Apthreads['RogueAP'].extend(self.mitmhandler.ActiveReactor)
 
 
         print(display_messages('sharing internet connection with NAT...', info=True))
@@ -137,6 +142,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def killThreads(self):
         if not len(self.Apthreads['RogueAP']) > 0:
             return
+
+        self.proxy.Stop()
+        self.mitmhandler.Stop()
+        self.dnsserver.Stop()
+        self.dhcpcontrol.Stop()
+        self.wireless.Stop()
+
         self.conf.set('accesspoint', 'statusAP',False)
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:

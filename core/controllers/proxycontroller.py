@@ -141,7 +141,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 proxy.boot()
 
     def Stop(self):
-        self.setEnabled(True)
         self.Active.Serve(False)
         self.Active.shutdown()
 

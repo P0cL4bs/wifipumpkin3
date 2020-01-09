@@ -13,7 +13,6 @@ class DefaultWidget(Qt.QObject):
         self.allui =[]
         self.__tabbyname = {}
         __defaultui = [ui(parent,self.FSettings) for ui in TabsWidget.__subclasses__()]
-        print(__defaultui)
         for ui in __defaultui:
             if not  ui.isSubitem:
                 self.defaultui.append(ui)
