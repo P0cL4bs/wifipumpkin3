@@ -59,6 +59,7 @@ class ProcessThread(QThread):
         self.procThread = QProcess(self)
         self.procThread.setProcessChannelMode(QProcess.MergedChannels)
         if self.directory_exec:
+            print(' to aqui')
             self.procThread.setWorkingDirectory(self.directory_exec)
         self.procThread.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
         self.procThread.readyReadStandardOutput.connect(self.readProcessOutput)
