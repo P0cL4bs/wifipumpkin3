@@ -10,3 +10,4 @@ urwid==1.1.2
 termcolor
 PyQt5==5.10.1
 dnslib==0.9.7
+loguru
