@@ -10,17 +10,15 @@ class PyDNSServer(DNSBase):
 
     def __init__(self,parent):
         super(PyDNSServer,self).__init__(parent)
-        
+        #self.logger.setIgnore(True)
 
     @property
     def commandargs(self):
         pass
 
     def LogOutput(self, data):
-        pass
-        #TODO: add system logger controller 
-        #print(data)
-        #self.logger.info(data)
+        if self.conf.get('accesspoint', 'statusAP', format=bool):
+            self.logger.info(data)
 
     def boot(self):
         self.reactor = DNSServerThread(self.conf)

@@ -41,6 +41,7 @@ class TCPProxyDock(DockableWidget):
 class TCPProxy(ProxyMode):
     Name = "tcpproxy_plugin"
     Author = "Pumpkin-Dev"
+    ID = "tcpproxy"
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
     Hidden = False
     LogFile = C.LOG_TCPPROXY
@@ -60,8 +61,8 @@ class TCPProxy(ProxyMode):
         self.check_PluginDict = {}
         self.search_all_ProxyPlugins()
 
-        setup_logger("NetCreds",C.LOG_CREDSCAPTURE,"CapturedCreds")
-        self.LogCredsMonitor = logging.getLogger("NetCreds")
+        # setup_logger("NetCreds",C.LOG_CREDSCAPTURE,"CapturedCreds")
+        # self.LogCredsMonitor = logging.getLogger("NetCreds")
 
         #self.dockwidget = TCPProxyDock(None,title=self.Name)
 
@@ -98,7 +99,10 @@ class TCPProxy(ProxyMode):
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
     def LogOutput(self,data):
-        print(data)
+        if self.conf.get('accesspoint', 'statusAP', format=bool):
+            self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
+                        data['urlsCap']['IP'], data['urlsCap']['Headers']))
+        #print(data)
         # if self.conf.get('accesspoint', 'statusAP', format=bool):
         #     if data.keys()[0] == 'urlsCap':
         #         self.handler.URLMonitor.dockwidget.writeModeData(data)

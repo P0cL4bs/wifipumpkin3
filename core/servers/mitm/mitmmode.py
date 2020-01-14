@@ -4,6 +4,8 @@ from core.controls.threads import  (
 from core.widgets.docks.dock import DockableWidget
 from core.controllers.wirelessmodecontroller import AccessPointSettings
 from core.common.uimodel import *
+from core.config.globalimport import *
+from core.widgets.default.logger_manager import LoggerManager
 
 class Widget(Qt.QObject):
     def __init__(self,parent):
@@ -41,8 +43,22 @@ class MitmMode(Widget):
         self.conf = SuperSettings.getInstance()
         self.reactor = None
         self.server = None
-        setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
-        self.logger = getLogger(self.Name)
+        
+        #setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
+        #self.logger = getLogger(self.Name)
+        self.loggermanager = LoggerManager.getInstance()
+        self.configure_logger()
+
+    def configure_logger(self):
+        config_extra  = self.loggermanager.getExtraConfig(self.ID)
+        config_extra['extra']['session'] = self.parent.currentSessionID
+
+        self.logger = StandardLog(self.ID, 
+            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+        config=config_extra)
+        self.logger.filename = self.LogFile
+        self.loggermanager.add( self.ID, self.logger)
 
     def getModType(self):
         return self.ModType
@@ -105,7 +121,9 @@ class MitmMode(Widget):
                     self.reactor.terminate()
 
     def LogOutput(self,data):
-        print(data)
+        #self.dockwidget.writeModeData(line)
+        if self.conf.get('accesspoint', 'statusAP', format=bool):
+            self.logger.info(data)
         # if self.FSettings.Settings.get_setting('accesspoint', 'statusAP', format=bool):
         #     try:
         #         data = str(data).split(' : ')[1]

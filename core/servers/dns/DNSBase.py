@@ -5,7 +5,7 @@ from core.common.uimodel import *
 from core.utility.component import ComponentBlueprint
 from core.controls.threads import (ProcessThread)
 from core.common.platforms import setup_logger
-
+from core.widgets.default.logger_manager import LoggerManager
 
 class DNSBase(QtCore.QObject,ComponentBlueprint):
     Name = "DNSBaseClass"
@@ -26,9 +26,8 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         self.reactor = None
         self.LogFile ="logs/AccessPoint/{}.log".format(self.ID)
 
-        setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
-        self.logger = getLogger(self.Name)
-
+        #setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
+        #self.logger = getLogger(self.Name)
 
         # self.btnsettings.clicked.connect(self.showarguments)
         # self.btnsettings.setMaximumWidth(100)
@@ -37,6 +36,19 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         # self.controlui.toggled.connect(self.controluiCallback)
         # self.controlui.setChecked(self.FSettings.Settings.get_setting(self.ConfigRoot,self.ID,format=bool))
         # self.controluiCallback()
+        self.loggermanager = LoggerManager.getInstance()
+        self.configure_logger()
+
+    def configure_logger(self):
+        config_extra  = self.loggermanager.getExtraConfig(self.ID)
+        config_extra['extra']['session'] = self.parent.currentSessionID
+
+        self.logger = StandardLog(self.ID, 
+            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+        config=config_extra)
+        self.logger.filename = self.LogFile
+        self.loggermanager.add( self.ID, self.logger)
 
     def isChecked(self):
         return self.conf.get('accesspoint', self.ID, format=bool)
@@ -60,14 +72,15 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
 
     def LogOutput(self,data):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
-            try:
-                data = str(data).split(' : ')[1]
-                for line in data.split('\n'):
-                    if len(line) > 2 and not self.parent.currentSessionID in line:
-                        print(line)
-                    self.logger.info(line)
-            except IndexError:
-                return None
+            self.logger.info(line)
+            # try:
+            #     data = str(data).split(' : ')[1]
+            #     for line in data.split('\n'):
+            #         if len(line) > 2 and not self.parent.currentSessionID in line:
+            #             print(line)
+            #         self.logger.info(line)
+            # except IndexError:
+            #     return None
 
 
 class DNSSettings(CoreSettings):

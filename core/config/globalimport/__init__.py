@@ -18,6 +18,8 @@ from netaddr import EUI
 from core.utility.printer import display_messages
 from core.common.platforms import Linux as Refactor
 from core.common.platforms import setup_logger
+from core.widgets.default.logger_manager import StandardLog
+from core.widgets.default.logger_manager import LoggerManager
 
 def deleteObject(obj):
     ''' reclaim memory '''
@@ -45,7 +47,7 @@ def exec_bash(command):
     os.popen(command)
 
 
-__all__ = ["deleteObject","os","sys","exec_bash","setup_logger","QtGui","Qt","QtCore","SuperSettings","getLogger","ERROR",
+__all__ = ["deleteObject","os","sys","exec_bash","LoggerManager","StandardLog","setup_logger","QtGui","Qt","QtCore","SuperSettings","getLogger","ERROR",
            "C","OrderedDict","partial","Refactor","ComponentBlueprint","getgrnam",
            "getpwnam","ProgramPath","get_mac_vendor"]
 

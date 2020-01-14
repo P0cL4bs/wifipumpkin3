@@ -21,6 +21,7 @@ class SessionConfig(TabsWidget):
         self.settingsItem = {}
 
         for mod in settingsItem:
+            #print(mod.title)
             self.settingsItem[mod.title]=mod
             #self.mainlayout.addWidget(mod)
             #Hack to add all the modules into class

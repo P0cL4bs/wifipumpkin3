@@ -23,7 +23,7 @@ class NetCredential(DockableWidget):
     def stopProcess(self):
         pass
 
-class NetCreds(MitmMode):
+class Responder3(MitmMode):
     #TODO: implement a module example to mitmmode
     Name = "Responder 3"
     ID = "responder3"
@@ -34,7 +34,7 @@ class NetCreds(MitmMode):
     ModSettings = True
     ModType = "proxy"  # proxy or server
     def __init__(self,parent,FSettingsUI=None,main_method=None,  **kwargs):
-        super(NetCreds, self).__init__(parent)
+        super(Responder3, self).__init__(parent)
         self.setID(self.ID)
         self.setModType(self.ModType)
         self.dockwidget = NetCredential(None,title=self.Name)

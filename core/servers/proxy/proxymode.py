@@ -4,7 +4,8 @@ from core.controllers.wirelessmodecontroller import AccessPointSettings
 from core.common.uimodel import *
 from core.widgets.docks.dock import *
 from core.common.platforms import setup_logger
-
+from core.config.globalimport import *
+from core.widgets.default.logger_manager import LoggerManager
 
 class Widget(Qt.QObject):
     def __init__(self):
@@ -17,6 +18,7 @@ class VBox(Qt.QObject):
 class ProxyMode(Widget,ComponentBlueprint):
     Name = "Generic"
     Author = "Wahyudin Aziz"
+    ID = "generic"
     Description = "Generic Placeholder for Attack Scenario"
     LogFile = C.LOG_ALL
     ModSettings = False
@@ -36,8 +38,8 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.parent = parent
         self.conf = SuperSettings.getInstance()
         #self.server = ThreadReactor()
-        setup_logger(self.Name,self.LogFile,self.parent.currentSessionID)
-        self.logger  = getLogger(self.Name)
+        #setup_logger(self.Name,self.LogFile,self.parent.currentSessionID)
+        #self.logger  = getLogger(self.Name)
         self.handler = None
         self.reactor = None
         self.subreactor = None
@@ -56,6 +58,20 @@ class ProxyMode(Widget,ComponentBlueprint):
         #self.controlui.clicked.connect(self.CheckOptions)
         #self.setEnabled(self.FSettings.Settings.get_setting('plugins', self.Name, format=bool))
         #self.dockwidget = Dockable(None,title=self.Name)
+
+        self.loggermanager = LoggerManager.getInstance()
+        self.configure_logger()
+
+    def configure_logger(self):
+        config_extra  = self.loggermanager.getExtraConfig(self.ID)
+        config_extra['extra']['session'] = self.parent.currentSessionID
+
+        self.logger = StandardLog(self.ID, 
+            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+        config=config_extra)
+        self.logger.filename = self.LogFile
+        self.loggermanager.add( self.ID, self.logger)
 
 
     def getTypePlugin(self):

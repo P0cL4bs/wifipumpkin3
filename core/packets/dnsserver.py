@@ -175,40 +175,44 @@ class LocalDNSLogger(object):
         #              binascii.hexlify(data)))
 
     def log_request(self, handler, request):
-        self.logger.emit("Request: [%s:%d] (%s) / '%s' (%s)" %(
-                     handler.client_address[0],
-                     handler.client_address[1],
-                     handler.protocol,
-                     request.q.qname,
-                     QTYPE[request.q.qtype]))
-        self.log_data(request)
+        pass
+        # self.logger.emit("Request: [%s:%d] (%s) / '%s' (%s)" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              request.q.qname,
+        #              QTYPE[request.q.qtype]))
+        #self.log_data(request)
 
     def log_reply(self, handler, reply):
-        self.logger.emit("Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
-                     handler.client_address[0],
-                     handler.client_address[1],
-                     handler.protocol,
-                     reply.q.qname,
-                     QTYPE[reply.q.qtype],
-                     ",".join([QTYPE[a.rtype] for a in reply.rr])))
-        self.log_data(reply)
+        pass
+        # self.logger.emit("Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              reply.q.qname,
+        #              QTYPE[reply.q.qtype],
+        #              ",".join([QTYPE[a.rtype] for a in reply.rr])))
+        # self.log_data(reply)
 
     def log_truncated(self, handler, reply):
-        self.logger.emit("Truncated Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
-                     handler.client_address[0],
-                     handler.client_address[1],
-                     handler.protocol,
-                     reply.q.qname,
-                     QTYPE[reply.q.qtype],
-                     ",".join([QTYPE[a.rtype] for a in reply.rr])))
-        self.log_data(reply)
+        pass
+        # self.logger.emit("Truncated Reply: [%s:%d] (%s) / '%s' (%s) / RRs: %s" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              reply.q.qname,
+        #              QTYPE[reply.q.qtype],
+        #              ",".join([QTYPE[a.rtype] for a in reply.rr])))
+        # self.log_data(reply)
 
     def log_error(self, handler, e):
-        self.logger.emit("Invalid Request: [%s:%d] (%s) :: %s" %(
-                     handler.client_address[0],
-                     handler.client_address[1],
-                     handler.protocol,
-                     e))
+        pass
+        # self.logger.emit("Invalid Request: [%s:%d] (%s) :: %s" %(
+        #              handler.client_address[0],
+        #              handler.client_address[1],
+        #              handler.protocol,
+        #              e))
 
     def log_data(self, dnsobj):
         self.logger.emit("\n" + dnsobj.toZone("    ") + "\n")

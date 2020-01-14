@@ -9,6 +9,7 @@ from termcolor import colored
 import npyscreen, threading
 
 from core.common.defaultwidget import *
+from core.config.globalimport import *
 
 from core.controllers.wirelessmodecontroller import *
 from core.controllers.dhcpcontroller import *
@@ -68,6 +69,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.wireless = WirelessModeController(self)
         self.dhcpcontrol = DHCPController(self)
         self.dnsserver = DNSController(self)
+        self.logger_manager = LoggerManager.getInstance()
 
         self.proxy = self.coreui.Plugins.Proxy
         self.mitmhandler = self.coreui.Plugins.MITM
@@ -165,6 +167,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def countThreads(self):
         return len(self.threadsAP['RougeAP'])
 
+    def do_ignore(self, args):
+        ''' the message logger will be ignored '''
+        logger  = self.logger_manager.get(args)
+        if (logger != None):
+            return logger.setIgnore(True)
+        print(display_messages('Logger class not found.', error=True))
+
     def do_clients(self, args):
         ''' show all clients connected on AP '''
         self.ui_table.start()
@@ -239,6 +248,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return setcolor(status,color='green')
         return setcolor(status,color= 'red')
 
+
+    def complete_ignore(self, text, args, start_index, end_index):
+        if text:
+            return [command for command in self.logger_manager.all()
+                    if command.startswith(text)]
+        else:
+            return list(self.logger_manager.all())
 
     def complete_set(self, text, args, start_index, end_index):
         if text:
