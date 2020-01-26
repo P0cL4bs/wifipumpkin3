@@ -71,6 +71,12 @@ class ConsoleUI(Cmd):
                 if (len(output) > 0):
                     print(output) 
 
+
+    def onecmd(self, commands, separator=';'):
+        ''' load command separate for ; file or string'''
+        for command in commands.split(separator):
+            Cmd.onecmd(self, command)
+
     def precmd(self, line):
         newline=line.strip()
         is_cmt=newline.startswith('#')

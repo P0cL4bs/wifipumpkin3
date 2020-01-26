@@ -1,0 +1,4 @@
+set interface wlxc83a35cef744
+ignore pydns_server
+plugins
+start

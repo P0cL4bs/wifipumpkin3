@@ -83,8 +83,19 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.setOptions()
 
     def setOptions(self):
-        self.conf.set('accesspoint',self.commands['interface'],self.options.interface)
-        self.conf.set('accesspoint','current_session',self.options.session)
+        if (self.options.pulp):
+            self.loadPulpFiles(self.options.pulp)
+        elif (self.options.xpulp):
+            self.onecmd(self.options.xpulp, ";")
+
+    def loadPulpFiles(self, file, data=None):
+        ''' load and execute all commands in file pulp separate for \n '''
+        if os.path.isfile(file):
+            with open(self.options.pulp, 'r') as f:
+                data = f.read()
+                f.close()
+            if (data != None):
+                self.onecmd(data, separator='\n')
         
     def getAccessPointStatus(self,status):
         self.ui_table.startThreads()
@@ -101,8 +112,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         # print(display_messages('the access point is running. [{}]'.format(
         #     self.conf.get('accesspoint','ssid')
         # ),error=True))
-        if self.wireless.Start() != None: return
         self.interfaces = Linux.get_interfaces()
+        if (not self.conf.get("accesspoint", self.commands['interface']) in self.interfaces):
+            print(display_messages('The interface not found! ',error=True))
+            sys.exit(1)
+
+        self.conf.set('accesspoint',self.commands['interface'],self.options.interface)
+        self.conf.set('accesspoint','current_session',self.options.session)
+
+        if self.wireless.Start() != None: return
         self.dhcpcontrol.Start()
         self.dnsserver.Start()
         self.proxy.Start()
