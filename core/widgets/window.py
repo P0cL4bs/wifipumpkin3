@@ -40,7 +40,7 @@ class TableWidget(BeautifulTable):
         self.bottom_border_char = ''
         self.header_seperator_char = '-'
         self.row_seperator_char = ''
-        self.intersection_char = ''
+       # self.intersection_char = ''
         self.column_seperator_char = '|'
 
     def get_sizeobject(self):
