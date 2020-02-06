@@ -12,7 +12,7 @@ class ConsoleUI(Cmd):
         self.set_prompt()
 
     def set_prompt(self):
-        self.prompt = '{} > '.format(setcolor('wp-ng',color='blue',underline=True))
+        self.prompt = '{} > '.format(setcolor('wp3',color='blue',underline=True))
 
     def do_modules(self,args):
         """ show modules available"""
