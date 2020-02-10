@@ -231,9 +231,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_info(self, args):
         ''' show all variable for settings AP'''
-        print(display_messages('Settings Access Point:',info=True,sublime=True))
-        for item in self.commands.keys():
-            print('{} = {} '.format(item, self.conf.get('accesspoint',self.commands[item])))
+        headers_table, output_table = ["BSSID", "SSID", "Channel", "Iface"], []
+        print(display_messages('Settings AccessPoint:',info=True,sublime=True))
+        output_table.append([
+            self.conf.get('accesspoint',self.commands["bssid"]),
+            self.conf.get('accesspoint',self.commands["ssid"]),
+            self.conf.get('accesspoint',self.commands["channel"]),
+            self.conf.get('accesspoint',self.commands["interface"]),
+        ])
+        print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')
         
 

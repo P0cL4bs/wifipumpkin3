@@ -23,9 +23,10 @@ class ConsoleUI(Cmd):
     def set_prompt(self):
         self.prompt = '{} > '.format(setcolor('wp3',color='blue',underline=True))
 
-    def do_modules(self,args):
-        """ show modules available"""
-        pass
+    # def do_modules(self,args):
+    #     """ show modules available"""
+    #     pass
+
     def do_search(self,args):
         """ search  modules by name"""
         pass
@@ -34,9 +35,9 @@ class ConsoleUI(Cmd):
         """ load module on session"""
         pass
 
-    def do_back(self,args):
-        """ unload module on session"""
-        pass
+    # def do_back(self,args):
+    #     """ unload module on session"""
+    #     pass
 
     ## Override methods in Cmd object ##
     def preloop(self):
