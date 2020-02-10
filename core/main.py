@@ -7,6 +7,7 @@ import core.utility.constants  as C
 from core.utility.printer import display_messages,setcolor
 from termcolor import colored
 import npyscreen, threading
+from tabulate import tabulate
 
 from core.common.defaultwidget import *
 from core.config.globalimport import *
@@ -18,6 +19,8 @@ from core.controllers.proxycontroller import *
 from core.controllers.mitmcontroller import *
 from core.controllers.dnscontroller import *
 
+from modules import *
+from modules import module_list, all_modules
 
 approot = QtCore.QCoreApplication.instance()
 
@@ -50,13 +53,19 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         options : parse_args
     """
     instances=[]
+    _all_modules =None
 
-    def __init__(self,options):
-        ConsoleUI.__init__(self)
-        super(PumpkinShell, self).__init__()
+    @classmethod
+    def getInstance(cls):
+        return cls.instances[0]
+
+    def __init__(self, parse_args):
         self.__class__.instances.append(weakref.proxy(self))
-        self.options    = options
-        #self.sniffs     = SniffingPackets(self)
+        self.parse_args = parse_args
+        self.all_modules = module_list
+        ConsoleUI.__init__(self, parse_args=self.parse_args)
+        super(PumpkinShell, self).__init__(parse_args=self.parse_args)
+        
         self.conf       = SettingsINI(C.CONFIG_INI)
         self.conf_pproxy    = SettingsINI(C.CONFIG_PP_INI)
         self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
@@ -80,22 +89,33 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
         'bssid': 'bssid','channel':'channel'}
         self.Apthreads = {'RogueAP': []}
-        self.setOptions()
 
-    def setOptions(self):
-        if (self.options.pulp):
-            self.loadPulpFiles(self.options.pulp)
-        elif (self.options.xpulp):
-            self.onecmd(self.options.xpulp, ";")
+    @property
+    def all_modules(self):
+        return self._all_modules
 
-    def loadPulpFiles(self, file, data=None):
-        ''' load and execute all commands in file pulp separate for \n '''
-        if os.path.isfile(file):
-            with open(self.options.pulp, 'r') as f:
-                data = f.read()
-                f.close()
-            if (data != None):
-                self.onecmd(data, separator='\n')
+    @all_modules.setter
+    def all_modules(self, module_list):
+        m_avaliable = {}
+        for name,module in module_list().items():
+            if (hasattr(module, "ModPump")):
+                m_avaliable[name] = module
+        self._all_modules =  m_avaliable
+
+    def do_show(self, args):
+        """ show available modules"""
+        headers_table, output_table = ["Name", "Description"], []
+        print(display_messages('Available Modules:',info=True,sublime=True))
+        for name,module in self.all_modules.items():
+            output_table.append([name, getattr(module, "ModPump").__doc__])
+        print(tabulate(output_table, headers_table, tablefmt="simple"))
+        print("\n")
+
+    def do_use(self, args):
+        """ select module for modules"""
+        if (args in self.all_modules.keys()):
+            module = module_list()[args].ModPump(self.parse_args, globals())
+            module.cmdloop()
         
     def getAccessPointStatus(self,status):
         self.ui_table.startThreads()
@@ -287,6 +307,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             command.startswith(text)]
         else:
             return self.conf_pproxy.get_all_childname('plugins')
+
+    def complete_use(self, text, args, start_index, end_index):
+        if (text):
+            return [command for command in list(self.all_modules.keys()) if 
+            command.startswith(text)]
+        else:
+            return list(self.all_modules.keys())
 
     def do_exit(self, args):
         ''' exit program and all threads'''
