@@ -133,12 +133,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         #     self.conf.get('accesspoint','ssid')
         # ),error=True))
         self.interfaces = Linux.get_interfaces()
-        if (not self.conf.get("accesspoint", self.commands['interface']) in self.interfaces):
+        if (not self.conf.get("accesspoint", self.commands['interface']) in self.interfaces.get('all')):
             print(display_messages('The interface not found! ',error=True))
             sys.exit(1)
 
-        self.conf.set('accesspoint',self.commands['interface'],self.options.interface)
-        self.conf.set('accesspoint','current_session',self.options.session)
+        self.conf.set('accesspoint',self.commands['interface'],self.parse_args.interface)
+        self.conf.set('accesspoint','current_session',self.parse_args.session)
 
         if self.wireless.Start() != None: return
         self.dhcpcontrol.Start()
