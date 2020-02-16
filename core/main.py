@@ -63,17 +63,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.__class__.instances.append(weakref.proxy(self))
         self.parse_args = parse_args
         self.all_modules = module_list
-        ConsoleUI.__init__(self, parse_args=self.parse_args)
+        self.currentSessionID = self.parse_args.session
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
-        
-        self.conf       = SettingsINI(C.CONFIG_INI)
-        self.conf_pproxy    = SettingsINI(C.CONFIG_PP_INI)
-        self.conf_tproxy    = SettingsINI(C.CONFIG_TP_INI)
-        self.ac         = AccessPoint(self)
 
-        self.currentSessionID = 'teste'
-
-
+    def initialize_core(self):
+        """ this method is called in __init__ """
         self.coreui = DefaultWidget(self)
         self.wireless = WirelessModeController(self)
         self.dhcpcontrol = DHCPController(self)
@@ -83,7 +77,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.proxy = self.coreui.Plugins.Proxy
         self.mitmhandler = self.coreui.Plugins.MITM
 
-        self.ac.sendStatusPoint.connect(self.getAccessPointStatus)
         self.ui_table   = ui_TableMonitorClient(self)
         self.ui_monitor = ui_MonitorSniffer(self)
         self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
@@ -210,6 +203,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         logger  = self.logger_manager.get(args)
         if (logger != None):
             return logger.setIgnore(True)
+        print(display_messages('Logger class not found.', error=True))
+
+    def do_restore(self, args):
+        ''' the message logger will be restored '''
+        logger  = self.logger_manager.get(args)
+        if (logger != None):
+            return logger.setIgnore(False)
         print(display_messages('Logger class not found.', error=True))
 
     def do_clients(self, args):

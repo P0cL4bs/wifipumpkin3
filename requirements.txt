@@ -2,7 +2,7 @@ netifaces
 netaddr
 dhcplib
 ipaddress
-#scapy_http
+scapy_http
 configparser
 tabulate
 beautifultable
@@ -11,3 +11,7 @@ termcolor
 PyQt5==5.10.1
 dnslib==0.9.7
 loguru
+scapy
+npyscreen
+isc_dhcp_leases
+dnspython

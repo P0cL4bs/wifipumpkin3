@@ -1,2 +1,4 @@
-use modules.wifi.wifi_scan
+use modules.wifi.wifiscan
+#set timeout 0  for scan loop infinite
+set timeout 20
 run

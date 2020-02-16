@@ -12,7 +12,11 @@ class ConsoleUI(Cmd):
         Cmd.__init__(self)
         self.conf = SettingsINI(C.CONFIG_INI)
         self.set_prompt()
+        self.initialize_core()
         self.setOptions()
+    
+    def initialize_core(self):
+        raise NotImplementedError()
 
     def setOptions(self):
         if (self.parse_args.pulp):
@@ -89,7 +93,10 @@ class ConsoleUI(Cmd):
                 data = f.read()
                 f.close()
             if (data != None):
-                self.onecmd(data, separator='\n')
+                print(display_messages('plugin: {}'.format(file),info=True, sublime=True))
+                return self.onecmd(data, separator='\n')
+        print(display_messages('script {} not found! '.format(file),error=True, sublime= True))
+        sys.exit(1)
 
     def onecmd(self, commands, separator=';'):
         ''' load command separate for ; file or string'''
@@ -161,7 +168,7 @@ class ModuleUI(Cmd):
             command,value = args.split()[0],args.split()[1]
             if (command in self.options.keys()):
                 #self.conf.set('accesspoint',self.commands[command],value)
-                print(display_messages('{} changed to => {}'.format(command, value),sucess=True))
+                print(display_messages('changed to {} => {}'.format(command, value),sucess=True))
                 self.options.update({command: value})
             else:
                 print(display_messages('unknown command: {} '.format(command),error=True))
@@ -210,6 +217,7 @@ class ModuleUI(Cmd):
                 f.close()
             if (data != None):
                 self.onecmd(data, separator='\n')
+        sys.exit(1)
 
     def default(self, args=str):
         for goodArgs in C.SYSTEMCOMMAND:
