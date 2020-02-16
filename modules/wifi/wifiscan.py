@@ -1,6 +1,6 @@
 from core.common.terminal import ModuleUI
 from core.config.globalimport import *
-from core.utility.printer import display_messages
+from core.utility.printer import display_messages,setcolor
 from random import randrange
 import time,signal,sys
 from multiprocessing import Process
@@ -27,9 +27,7 @@ class ModPump(ModuleUI):
         self.root = root
         self.name_module = self.name
         self.whitelist = ['00:00:00:00:00:00','ff:ff:ff:ff:ff:ff' ]
-        self.set_prompt_modules()
         self.aps = {}
-        self.A = []
         self.clients = {}
         self.table_headers_wifi = ["CH", "SSID" ,"BSSID", "RSSI","Privacy", ]
         self.table_headers_STA = ["BSSID", "STATION" ,"PWR","Frames", 'Probe']
@@ -37,8 +35,9 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root )
 
     def do_run(self, args):
-        print(display_messages('setting interface: {} monitor momde'.format(self.options.get("interface")), info=True))
-        self.set_monitor_mode()
+        print(display_messages('setting interface: {} monitor momde'.format(
+            setcolor(self.options.get("interface"),color='green')), info=True))
+        self.set_monitor_mode('monitor')
         print(display_messages('starting Channel Hopping ', info=True))
         self.p = Process(target = self.channel_hopper, args=(self.options.get("interface"),))
         self.p.daemon = True
@@ -47,6 +46,7 @@ class ModPump(ModuleUI):
         sniff(iface=self.options.get("interface"), prn=self.sniffAp,
          timeout= None if int(self.options.get("timeout")) == 0 else int(self.options.get("timeout")))
         self.p.terminate()
+        self.set_monitor_mode()
 
     def channel_hopper(self, interface):
         while True:
@@ -186,10 +186,10 @@ class ModPump(ModuleUI):
             
             self.showDataOutputScan()
 
-    def set_monitor_mode(self):
+    def set_monitor_mode(self, mode='manager'):
         if not self.options.get("interface") in Linux.get_interfaces().get("all"):
             print(display_messages("the interface not found!", error=True))
-            sys.exit(0)
+            sys.exit(1)
         os.system("ifconfig {} down".format(self.options.get("interface")))
-        os.system("iwconfig {} mode monitor".format(self.options.get("interface")))
+        os.system("iwconfig {} mode {}".format(self.options.get("interface"), mode))
         os.system("ifconfig {} up".format(self.options.get("interface")))

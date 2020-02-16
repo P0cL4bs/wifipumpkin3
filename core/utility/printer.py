@@ -1,21 +1,24 @@
 
 colors = {'BOLD': '\033[1m','BLUE': '\033[34m' ,
             'GREEN': '\033[32m','YELLOW' :'\033[33m',
-            'RED': '\033[91m','ENDC' : '\033[0m','CIANO' :'\033[1m','ORAN' : '\033[91m',
+            'RED': '\033[91m','ENDC' : '\033[0m','CIANO' :'\033[1;36m','ORAN' : '\033[91m',
             'GREY': '\033[37m','DARKGREY' : '\033[1;30m','UNDERLINE' : '\033[4m'}
 
-def banner():
+def banner(name=''):
     print ('''
  _ _ _  _  ___  _       ___                   _    _      
 | | | |<_>| __><_> ___ | . \ _ _ ._ _ _  ___ | |__<_>._ _
 | | | || || _> | ||___||  _/| | || ' ' || . \| / /| || ' |
 |__/_/ |_||_|  |_|     |_|  `___||_|_|_||  _/|_\_\|_||_|_|
-                                        |_|               ''')
+                                        |_|  
+                                        
+                                            codename: {}'''.format(name))
 
 def setcolor(text,color='',underline=False):
     strcolored = {
         'blue':'{}{}{}{}'.format(colors['BOLD'],colors['BLUE'],text,colors['ENDC']),
         'red': '{}{}{}{}'.format(colors['BOLD'], colors['RED'], text, colors['ENDC']),
+        'ciano': '{}{}{}{}'.format(colors['BOLD'], colors['CIANO'], text, colors['ENDC']),
         'green': '{}{}{}{}'.format(colors['BOLD'], colors['GREEN'], text, colors['ENDC']),
         'yellow': '{}{}{}{}'.format(colors['BOLD'], colors['YELLOW'], text, colors['ENDC']),
         'grey': '{}{}{}{}'.format(colors['BOLD'], colors['GREY'], text, colors['ENDC']),

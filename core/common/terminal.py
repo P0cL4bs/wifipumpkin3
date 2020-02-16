@@ -88,6 +88,7 @@ class ConsoleUI(Cmd):
 
     def loadPulpFiles(self, file, data=None):
         ''' load and execute all commands in file pulp separate for \n '''
+        print('\n'+display_messages('mode: {}'.format(setcolor('script', 'ciano', True)),info=True))
         if os.path.isfile(file):
             with open(file, 'r') as f:
                 data = f.read()
@@ -137,6 +138,7 @@ class ModuleUI(Cmd):
         Cmd.__init__(self)
         self.conf = SettingsINI(C.CONFIG_INI)
         self.setOptions()
+        self.set_prompt_modules()
 
     def setOptions(self):
         if (self.parse_args.pulp):

@@ -249,7 +249,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             command,value = args.split()[0],args.split()[1]
             if (command in self.commands.keys()):
                 self.conf.set('accesspoint',self.commands[command],value)
-                print(display_messages('{} changed to => {}'.format(command, value),sucess=True))
+                print(display_messages('changed {} to => {}'.format(command, value),sucess=True))
             else:
                 print(display_messages('unknown command: {} '.format(command),error=True))
         except IndexError:
