@@ -134,11 +134,11 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     @property
     def CMD_ARRAY(self):
-        self._cmd_array.extend(self.parent.currentSessionID)
+        #self._cmd_array.extend(self.parent.currentSessionID)
         return  self._cmd_array
 
     def boot(self):
-        self.reactor= ProcessThread({'python': self.CMD_ARRAY})
+        self.reactor= ProcessThread({'python3': self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
         self.reactor.setObjectName(self.Name)
 
