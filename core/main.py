@@ -229,19 +229,19 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.killThreads()
 
 
-    def do_info(self, args):
-        ''' show all variable for settings AP'''
-        headers_table, output_table = ["BSSID", "SSID", "Channel", "Iface"], []
+    def do_info_ap(self, args):
+        ''' show all variable and status for settings AP '''
+        headers_table, output_table = ["BSSID", "SSID", "Channel", "Iface", "StatusAP"], []
         print(display_messages('Settings AccessPoint:',info=True,sublime=True))
+        status_ap =self.conf.get('accesspoint',"statusAP", format=bool)
         output_table.append([
             self.conf.get('accesspoint',self.commands["bssid"]),
             self.conf.get('accesspoint',self.commands["ssid"]),
             self.conf.get('accesspoint',self.commands["channel"]),
             self.conf.get('accesspoint',self.commands["interface"]),
-        ])
+            setcolor('Yes',color='green') if status_ap  else setcolor('False',color='red')])
         print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')
-        
 
     def do_set(self, args):
         ''' set variable for access point '''
