@@ -6,6 +6,9 @@ __pycache__/
 *.so
 *.log
 
+#exclude vscode
+.vscode/
+
 # Distribution / packaging
 .Python
 env/
