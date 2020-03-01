@@ -8,6 +8,7 @@ __pycache__/
 
 #exclude vscode
 .vscode/
+.ideia/
 
 # Distribution / packaging
 .Python
