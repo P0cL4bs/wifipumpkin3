@@ -1,0 +1,34 @@
+#!/usr/bin/env python3.6
+# -*- coding: utf-8 -*-
+from logging import getLogger,ERROR
+getLogger('scapy.runtime').setLevel(ERROR)
+import argparse
+import sys
+from PyQt5 import QtGui,QtCore
+from wifipumpkin3.core.main import PumpkinShell
+from wifipumpkin3.core.utility.printer import banner, setcolor
+from wifipumpkin3.core.packets.dhcpserver import IpAddressClass
+from wifipumpkin3.core.utility.collection import SettingsINI
+import wifipumpkin3.core.utility.constants as C
+
+_author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
+_version = setcolor('0.1',color='yellow')
+__codename__ = setcolor('sab1no',color='red')
+banner(__codename__)
+
+
+if __name__ == '__main__':
+    app = QtCore.QCoreApplication(sys.argv)
+    conf       = SettingsINI(C.CONFIG_INI)
+    ifacedefault = conf.get('accesspoint','interfaceAP')
+    session_default = conf.get('accesspoint','current_session')
+    parser = argparse.ArgumentParser(description="WiFi-Pumpkin - pure line-oriented command")
+    parser.add_argument('-i',  dest='interface',help='set interface for create AP',default=ifacedefault)
+    parser.add_argument('-s',  dest='session',help='set session for continue attack',default=session_default)
+    parser.add_argument('-p', '--pulp', dest='pulp',help='interactive sessions can be scripted with .pulp file',default='')
+    parser.add_argument('-x', '--xpulp', dest='xpulp',help='interactive sessions can be string with ";" as the separator',default='')
+    parser.add_argument('-v','--version', action='version', dest='version',version='%(prog)s v{}'.format(_version))
+    print('Author: {} P0cL4bs Team | {} dev'.format(_author, _version))
+    prompt = PumpkinShell(parser.parse_args())
+    prompt.cmdloop('Starting prompt...')
+    sys.exit(app.exec_())
