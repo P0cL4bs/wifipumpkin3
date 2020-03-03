@@ -51,6 +51,9 @@ DHCPSERVERBINARY = 'core/packets/binary/dhcpserver'
 PUMPKINPROXY_notify = 'the package requirement mitmproxy==0.18.2 is ' \
                       'not satisfied.'
 
+#DNS file hosts
+DNSHOSTS = user_config_dir+ '/.config/wifipumpkin3/config/app/dns_hosts.ini'
+
 #donation button
 DONATE = 'https://github.com/P0cL4bs/WiFi-Pumpkin#donation'
 DONATE_TXT = 'Consider donating to support the development and maintenance of WiFi-Pumpkin. '
@@ -60,8 +63,8 @@ DHCPLEASES_PATH = '/var/lib/dhcp/dhcpd.leases'
 DHCPCONF_PATH   = 'core/config/dhcpd_wp.conf'
 
 # settings HOSTAPD
-HOSTAPDCONF_PATH    = 'core/config/hostapd/hostapd.conf'
-HOSTAPDCONF_PATH2   = 'core/config/hostapd/hostapd+.conf'
+HOSTAPDCONF_PATH    = user_config_dir+ '/.config/wifipumpkin3/config/hostapd/hostapd.conf'
+HOSTAPDCONF_PATH2   = user_config_dir+ '/.config/wifipumpkin3/config/hostapd/hostapd+.conf'
 ALGORITMS = ('TKIP','CCMP','TKIP + CCMP')
 
 #system configs

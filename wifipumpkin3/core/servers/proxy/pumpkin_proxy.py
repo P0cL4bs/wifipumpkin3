@@ -46,7 +46,7 @@ class PumpKinProxy(ProxyMode):
     Hidden = False
     LogFile = C.LOG_PUMPKINPROXY
     _cmd_array = ['-m' ,'proxy' ,'--hostname',
-     '0.0.0.0', '--port' ,'8080','--plugins','plugins.plugins.RedirectToCustomServerPlugin']
+     '0.0.0.0', '--port' ,'8080','--plugins','proxy.plugin.ManInTheMiddlePlugin']
     ModSettings = True
     ModType = "proxy" 
     TypePlugin =  1 

@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from textwrap import wrap
 from time import sleep
-
+import wifipumpkin3.core.utility.constants as C
 from dnslib import DNSLabel, QTYPE, RR, dns
 from dnslib.proxy import ProxyResolver
 from dnslib.server import DNSServer
@@ -232,7 +232,7 @@ class DNSServerThread(QThread):
 
         port = int(os.getenv('PORT', 53))
         upstream = os.getenv('UPSTREAM', '8.8.8.8')
-        zone_file = Path(self.conf.get('accesspoint','path_pydns_server_zones'))
+        zone_file = Path(C.DNSHOSTS)
         self.logger_dns = LocalDNSLogger(self.sendRequests)
         self.resolver = Resolver(upstream, zone_file, self.sendRequests)
         self.udp_server = DNSServer(self.resolver, port=port , 
