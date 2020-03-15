@@ -1,7 +1,8 @@
 
+from wifipumpkin3.plugins.extension.base import BasePumpkin
 from os import path
-from core.common.platforms import decoded
-from plugins.extension.plugin import PluginTemplate
+from bs4 import BeautifulSoup
+from io import StringIO
 
 """
 Description:
@@ -24,29 +25,27 @@ Copyright:
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 """
 
-class replaceImages(PluginTemplate):
+class replaceImages(BasePumpkin):
     meta = {
-        'Name'      : 'replaceImages',
-        'Version'   : '1.0',
-        'Description' : 'this module proxy replace all images with the picture .',
-        'Author'    : 'Marcos Nesster'
+        '_name'      : 'replaceImages',
+        '_version'   : '1.0',
+        '_description' : 'this module proxy replace all images with the picture .',
+        '_author'    : 'mh4x0f'
     }
     def __init__(self):
         for key,value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.imagePath = self.config.get('set_replaceImages','path')
+        self.imagePath = self._config.get('set_replaceImages','path')
 
-    def request(self, flow):
-        pass
-
-    def response(self,flow):
-        if str(flow.response.headers['Content-Type']).startswith('image'):
+    def handleResponse(self,request, data):
+        self.content = request.responseHeaders.getRawHeaders('content-type')
+        if str(self.content).startswith('image'):
             if path.isfile(self.imagePath):
-                with decoded(flow.response):
-                    try:
-                        img = cStringIO.StringIO(open(self.imagePath, 'rb').read())
-                        flow.response.content = img.getvalue()
-                        self.send_output.emit('[{}] URL:{} image replaced...'.format(self.Name,flow.request.url))
-                    except:
-                        pass
+                try:
+                    img = StringIO(open(self.imagePath, 'rb').read().decode())
+                    data = img.getvalue()
+                    print('[{}] URL:{} image replaced...'.format(self._name,request.uri))
+                except:
+                    pass
+        return data

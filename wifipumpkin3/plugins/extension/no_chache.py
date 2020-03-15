@@ -1,5 +1,4 @@
-from core.common.platforms import decoded
-from plugins.extension.plugin import PluginTemplate
+from wifipumpkin3.plugins.extension.base import BasePumpkin
 
 """
 Description:
@@ -23,12 +22,12 @@ Copyright:
 """
 
 
-class nocache(PluginTemplate):
+class nocache(BasePumpkin):
     meta = {
-        'Name': 'no-cache',
-        'Version': '1.0',
-        'Description': 'disable browser caching, cache-control in HTML',
-        'Author': 'by dev'
+        '_name': 'no-cache',
+        '_version': '1.0',
+        '_description': 'disable browser caching, cache-control in HTML',
+        '_author': 'mh4x0f'
     }
 
     def __init__(self):
@@ -36,14 +35,11 @@ class nocache(PluginTemplate):
             self.__dict__[key] = value
         self.ConfigParser = False
 
-    def request(self, flow):
-        pass
+    def handleHeader(self, request, key, value):
+        if (key.decode().lower() == 'cache-control'):
+            value = 'no-cache'.encode()
 
-    def response(self, flow):
-        flow.request.headers['Cache-Control'] = 'no-cache'
-        flow.response.headers['Cache-Control'] = 'no-cache'
-
-        if 'If-None-Match' in flow.request.headers:
-            del flow.request.headers['If-None-Match']
-        if 'ETag' in flow.response.headers:
-            del flow.response.headers['ETag']
+        if (key.decode().lower() == 'if-none-match'):
+            value = ''.encode()
+        if (key.decode().lower() == 'etag'):
+            value = ''.encode()

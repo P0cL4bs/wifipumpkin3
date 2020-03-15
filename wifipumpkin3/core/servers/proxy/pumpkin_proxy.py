@@ -4,18 +4,12 @@ from functools import partial
 from threading import Thread
 import queue
 from scapy.all import *
-import logging
-#from plugins.analyzers import *
-
+import logging, os
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.utility.collection import SettingsINI
-# from core.widgets.docks.dockmonitor import (
-#     dockTCPproxy,dockUrlMonitor
-# )
 from wifipumpkin3.core.common.uimodel import *
-from wifipumpkin3.plugins.analyzers import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 
 class TCPProxyDock(DockableWidget):
@@ -45,8 +39,7 @@ class PumpKinProxy(ProxyMode):
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
     Hidden = False
     LogFile = C.LOG_PUMPKINPROXY
-    _cmd_array = ['-m' ,'proxy' ,'--hostname',
-     '0.0.0.0', '--port' ,'8080','--plugins','proxy.plugin.ManInTheMiddlePlugin']
+    _cmd_array = []
     ModSettings = True
     ModType = "proxy" 
     TypePlugin =  1 
@@ -56,32 +49,19 @@ class PumpKinProxy(ProxyMode):
         self.setID(self.Name)
         self.setTypePlugin(self.TypePlugin)
         self.config = SettingsINI(C.CONFIG_TP_INI)
-        self.plugins = []
-        self.parent = parent
-        self.bt_SettingsDict = {}
-        self.check_PluginDict = {}
 
-    def setPluginOption(self, name, status):
-        ''' get each plugins status'''
-        # enable realtime disable and enable plugin
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
-            self.reactor.disablePlugin(name, status)
-        self.conf.set('plugins', name, status)
+    @property
+    def CMD_ARRAY(self):
+        port_ssltrip = self.conf.get('settings', 'sslstrip_redirect_port')
+        os.system(self.search[self.Name])
+        self._cmd_array=['-l', port_ssltrip]
+        return self._cmd_array
 
-    def search_all_ProxyPlugins(self):
-        ''' load all plugins function '''
-        plugin_classes = default.PSniffer.__subclasses__()
-        for p in plugin_classes:
-            if p().Name != 'httpCap':
-                self.plugins.append(p())
-
-    # def boot(self):
-    #     #self.handler = self.parent.Plugins.MITM
-    #     iface =  self.conf.get('accesspoint','interfaceAP')
-    #     self.reactor= TCPProxyCore(iface, self.parent.currentSessionID)
-    #     self.reactor.setObjectName(self.Name)
-    #     self.reactor._ProcssOutput.connect(self.LogOutput)
-
+    def boot(self):
+        self.reactor= ProcessThread({'sslstrip3': self.CMD_ARRAY})
+        self.reactor._ProcssOutput.connect(self.LogOutput)
+        self.reactor.setObjectName(self.Name)
+        
     def LogOutput(self,data):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.logger.info(data)

@@ -46,7 +46,7 @@ class StandardLog:
             {
                 "sink": self.redirect_stdout(),"colorize": self.colorized,
                 "filter" : make_filter(self.typelog),
-                "format": " {time:HH:mm:ss} [<bg %s> <%s> {extra[name]} </%s> </bg %s>]  - {message} "%(self.bgcolor,self.color,self.color, self.bgcolor)
+                "format": " [<bg %s> <%s> {extra[name]} </%s> </bg %s>] {time:HH:mm:ss}  - {message} "%(self.bgcolor,self.color,self.color, self.bgcolor)
              },
 
             {   "sink": self.filename,

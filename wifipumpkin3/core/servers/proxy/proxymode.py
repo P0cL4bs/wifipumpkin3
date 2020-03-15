@@ -48,10 +48,10 @@ class ProxyMode(Widget,ComponentBlueprint):
                             ' --destination-port 80 -j REDIRECT --to-port ' + self.conf.get('settings','redirect_port')),
             'dns2proxy': str('iptables -t nat -A PREROUTING -p udp --destination-port 53 -j REDIRECT --to-port 53'),
             'bdfproxy': str('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080'),
-            'PumpkinProxy': str('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080')
+            'pumpkinproxy_plugin': str('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080')
             }
 
-        self.search[self.Name]=self.iptablesrules
+        #self.search[self.Name]=self.iptablesrules
 
 
 
@@ -173,15 +173,8 @@ class ProxyMode(Widget,ComponentBlueprint):
             self.unset_Rules(rules)
 
     def LogOutput(self,data):
-        if self.FSettings.Settings.get_setting('accesspoint', 'statusAP', format=bool):
-            try:
-                data = str(data).split(' : ')[1]
-                for line in data.split('\n'):
-                    if len(line) > 2 and not self.parent.currentSessionID in line:
-                        self.dockwidget.writeModeData(line)
-                        self.logger.info(line)
-            except IndexError:
-                return None
+        if self.conf.get('accesspoint', 'statusAP', format=bool):
+            print(data)
 
     def Configure(self):
         self.ConfigWindow.show()
