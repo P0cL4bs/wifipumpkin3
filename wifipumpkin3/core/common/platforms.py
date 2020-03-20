@@ -15,7 +15,7 @@ import configparser
 import wifipumpkin3.core.utility.constants as C
 from shlex import split
 from glob import glob
-import warnings
+import warnings, json
 
 
 loggers = {}
@@ -140,6 +140,19 @@ class Linux(QtCore.QObject):
         st = stat(filename)
         return st.st_size
 
+    @staticmethod
+    def writeFileDataToJson(filename, content, mode='w'):
+        if (path.isfile(filename)):
+            with open(filename, mode) as f:
+                json.dump(content, f)
+
+    @staticmethod
+    def readFileDataToJson(filename, mode='r'):
+        datastore = None
+        if (path.isfile(filename)):
+            with open(filename, mode) as f:
+                datastore = json.load(f)
+        return datastore
 
 
 def is_hexadecimal(text):

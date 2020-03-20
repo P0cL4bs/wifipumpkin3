@@ -27,12 +27,16 @@ class MyTestApp(npyscreen.NPSAppManaged):
 class MainForm(npyscreen.ActionForm):
     def create(self):
         self.add(npyscreen.TitleText, name="Text:", value="Press ^T to change screens")
+        self.title = self.add(npyscreen.FixedText, value="Press ^T to change screens")
 
         self.add_handlers({"^T": self.change_forms})
 
     def on_ok(self):
         # Exit the application if the OK button is pressed.
         self.parentApp.switchForm(None)
+
+    def on_cancel(self):
+        self.title.value = "Hello 4!"
 
     def change_forms(self, *args, **keywords):
         if self.name == "Screen 1":

@@ -46,6 +46,9 @@ NOTIFYSTYLE = "; ".join((
     "padding: 5px"))
 
 
+#DHCP logger connected 
+CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/session/connected.json'
+
 DHCPSERVERBINARY = 'core/packets/binary/dhcpserver'
 
 PUMPKINPROXY_notify = 'the package requirement mitmproxy==0.18.2 is ' \

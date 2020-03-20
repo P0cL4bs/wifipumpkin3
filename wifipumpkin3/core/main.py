@@ -1,7 +1,7 @@
 from wifipumpkin3.core.common.accesspoint import AccessPoint
 #from core.common.sniffing import SniffingPackets
 from wifipumpkin3.core.common.terminal import ConsoleUI
-from wifipumpkin3.core.widgets.window import ui_TableMonitorClient,ui_MonitorSniffer
+from wifipumpkin3.core.ui.components import ui_TableMonitorClient
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants  as C
 from wifipumpkin3.core.utility.printer import display_messages,setcolor
@@ -18,6 +18,7 @@ from wifipumpkin3.core.servers.dhcp.dhcp import *
 from wifipumpkin3.core.controllers.proxycontroller import *
 from wifipumpkin3.core.controllers.mitmcontroller import *
 from wifipumpkin3.core.controllers.dnscontroller import *
+from wifipumpkin3.core.controllers.uicontroller import *
 
 from wifipumpkin3.modules import *
 from wifipumpkin3.modules import module_list, all_modules
@@ -72,13 +73,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.wireless = WirelessModeController(self)
         self.dhcpcontrol = DHCPController(self)
         self.dnsserver = DNSController(self)
+        self.tableUI = UIController(self)
         self.logger_manager = LoggerManager.getInstance()
 
         self.proxy = self.coreui.Plugins.Proxy
         self.mitmhandler = self.coreui.Plugins.MITM
 
-        self.ui_table   = ui_TableMonitorClient(self)
-        self.ui_monitor = ui_MonitorSniffer(self)
         self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
         'bssid': 'bssid','channel':'channel'}
         self.Apthreads = {'RogueAP': []}
@@ -117,14 +117,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_start(self,args):
         ''' start access point '''
-        # if (not self.countThreads() > 0): 
-        #     self.sniffs.start()
-        #     self.ac.start()
-        #     self.addThreads(self.sniffs)
-        #     return self.addThreads(self.ac)
-        # print(display_messages('the access point is running. [{}]'.format(
-        #     self.conf.get('accesspoint','ssid')
-        # ),error=True))
+        
         self.interfaces = Linux.get_interfaces()
         if (not self.conf.get("accesspoint", self.commands['interface']) in self.interfaces.get('all')):
             print(display_messages('The interface not found! ',error=True))
@@ -214,10 +207,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_clients(self, args):
         ''' show all clients connected on AP '''
-        self.ui_table.start()
-        self.addThreads(self.ui_table)
-        # App = TestApp()
-        # App.run()
+        self.tableUI.ui_table_mod.start()
 
     def do_monitor(self, args):
         ''' monitor traffic capture realtime Sniffer'''

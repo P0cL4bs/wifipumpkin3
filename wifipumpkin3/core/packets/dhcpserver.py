@@ -6,6 +6,7 @@ import ipaddress as ip
 from queue import Queue
 log = logging.getLogger(__name__)
 from PyQt5.QtCore import QThread,pyqtSignal,pyqtSlot,QProcess,QObject
+from wifipumpkin3.core.config.globalimport import *
 
 
 class IpAddressClass(object):
@@ -90,6 +91,7 @@ class DHCPProtocol(QObject):
                         break
             self._request.emit(self.leases[mac])
             self.queue.put(self.leases[mac])
+            Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, self.leases, 'w')
             send = True
         if send:
             log.debug('SEND to %s:\n%s\n', addr, packet)
@@ -152,4 +154,5 @@ class DHCPThread(QThread):
 
     def stop(self):
         self.started = False
+        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')
         self.sock.close()
