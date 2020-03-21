@@ -1,7 +1,6 @@
 from wifipumpkin3.core.common.accesspoint import AccessPoint
 #from core.common.sniffing import SniffingPackets
 from wifipumpkin3.core.common.terminal import ConsoleUI
-from wifipumpkin3.core.ui.components import ui_TableMonitorClient
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants  as C
 from wifipumpkin3.core.utility.printer import display_messages,setcolor
@@ -63,6 +62,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def __init__(self, parse_args):
         self.__class__.instances.append(weakref.proxy(self))
         self.parse_args = parse_args
+        self.parser_list_func = {'parser_set_proxy' : self, 'parser_set_plugin': self }
         self.all_modules = module_list
         self.currentSessionID = self.parse_args.session
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
@@ -80,7 +80,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.mitmhandler = self.coreui.Plugins.MITM
 
         self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
-        'bssid': 'bssid','channel':'channel'}
+        'bssid': 'bssid','channel':'channel', 'proxy': 'proxy_plugins',
+         'plugin': 'plugin'}
         self.Apthreads = {'RogueAP': []}
 
     @property
@@ -117,7 +118,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_start(self,args):
         ''' start access point '''
-        
+
         self.interfaces = Linux.get_interfaces()
         if (not self.conf.get("accesspoint", self.commands['interface']) in self.interfaces.get('all')):
             print(display_messages('The interface not found! ',error=True))
@@ -237,6 +238,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         ''' set variable for access point '''
         try:
             command,value = args.split()[0],args.split()[1]
+            for func in self.parser_list_func:
+                if command in func:
+                    return getattr(self.parser_list_func[func], func)(value, args)
             if (command in self.commands.keys()):
                 self.conf.set('accesspoint',self.commands[command],value)
                 print(display_messages('changed {} to => {}'.format(command, value),sucess=True))
@@ -244,36 +248,57 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 print(display_messages('unknown command: {} '.format(command),error=True))
         except IndexError:
             pass
-    
-    # def do_show(self, args):
-    #     print(display_messages('Plugins:',info=True,sublime=True))
-    #     for plugin in self.conf.get_all_childname('plugins'):
-    #         if ('_plugin' in plugin):
-    #             print('{0:20} = {1}'.format(plugin,
-    #             self.getColorStatusPlugins(self.conf.get('plugins',plugin,format=bool))))
-    #     pass
+
+    def parser_set_proxy(self, proxy_name, *args):
+        if not self.conf.get('accesspoint', 'statusAP') or len(self.Apthreads['RogueAP']) == 0:
+            plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
+            if (plugins_selected != []):
+                self.conf.set('proxy_plugins', plugins_selected[0], True)
+                for proxy in self.conf.get_all_childname('proxy_plugins'):
+                    if proxy != plugins_selected[0]:
+                        self.conf.set('proxy_plugins', proxy, False)
+                return
+            return print(display_messages('unknown command: {} '.format(proxy_name),error=True))
+        print(display_messages('Error: 0x01 - the AP(access point) is running',error=True))
+
+    def do_proxys(self, args):
+        ''' show all proxys available for attack  '''
+        headers_table, output_table = ["Proxy", "Active"], []
+        proxy_plugins =  self.conf.get_all_childname('proxy_plugins') 
+        for plu in proxy_plugins:
+            status_plugin = self.conf.get('proxy_plugins',plu, format=bool)
+            output_table.append([plu,
+            setcolor('Yes',color='green') if status_plugin  else setcolor('False',color='red')])
+        print(display_messages('Available Proxys:',info=True,sublime=True))
+        print(tabulate(output_table, headers_table,tablefmt="simple"))
+        print('\n')
+
+    def parser_set_plugin(self, proxy_name, args):
+        try:
+            plugin_name,plugin_status = list(args.split())[1],list(args.split())[2]
+            if (plugin_status not in ['true','false','True','False']):
+                return print(display_messages('wifipumpkin3: error: unrecognized arguments {}'.format(plugin_status),error=True))
+            if (plugin_name in self.conf.get_all_childname('plugins')):
+                return self.conf.set('plugins',plugin_name, plugin_status)
+            return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
+        except IndexError:
+            return self.help_plugins()
+
 
     def do_plugins(self, args=str):
-        ''' show/edit all plugins abaliable for attack '''
-        if (len(args.split()) > 0):
-            try:
-                plugin_name,plugin_status = list(args.split())[0],list(args.split())[1]
-                if (plugin_status not in ['true','false','True','False']):
-                    return print(display_messages('wifipumpkin-ng: error: unrecognized arguments {}'.format(plugin_status),error=True))
-                if (plugin_name in self.conf_pproxy.get_all_childname('plugins')):
-                    return self.conf_pproxy.set('plugins',plugin_name, plugin_status)
-                return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
-            except IndexError:
-                return self.help_plugins()
-        print(display_messages('PumpkinProxy plugins:',info=True,sublime=True))
-        for plugin in self.conf_pproxy.get_all_childname('plugins'):
-            print('{0:20} = {1}'.format(plugin,
-            self.getColorStatusPlugins(self.conf_pproxy.get('plugins',
-            plugin,format=bool))))
+        ''' show/edit all plugins available for attack '''
+        headers_table, output_table = ["Plugins", "Active"], []
+        proxy_plugins =  self.conf.get_all_childname('plugins') 
+        for plu in proxy_plugins:
+            status_plugin = self.conf.get('plugins',plu, format=bool)
+            output_table.append([plu,
+            setcolor('Yes',color='green') if status_plugin  else setcolor('False',color='red')])
+        print(display_messages('Available Plugins:',info=True,sublime=True))
+        print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')
-    
+
     def help_plugins(self):
-        print('\n'.join([ 'usage: plugins [module name ] [(True/False)]',
+        print('\n'.join([ 'usage: set plugin [module name ] [(True/False)]',
                     'wifipumpkin-ng: error: unrecognized arguments',
                     ]))
 

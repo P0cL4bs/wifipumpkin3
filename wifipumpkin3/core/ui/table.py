@@ -84,46 +84,49 @@ class ui_TableMonitorClient(WidgetBase):
     ConfigRoot = "ui_table_mod"
     SubConfig = "ui_table_mod"
     ID = "ui_table_mod"
-    Name = "ui_table_mod widget"
+    Name = "ui_table_mod"
 
 
     def __init__(self, parent):
         self.parent = parent
-        self.conf = SettingsINI(C.CONFIG_INI)
         self.table_clients = []
         self.__threadServices = []
         self.__threadStatus = False
+        self.body = ''
         self.header_text = [
             ('titlebar', ''), 'Clients: ',('titlebar','     '),
             ('title', 'UP'), ',', ('title', 'DOWN'), ':scroll',
             '     Monitor DHCP Requests',
         ]
+        super().__init__(self.parent,self.body)
 
     def getClientsCount(self):
         return len(self.table_clients)
 
     def setup_view(self):
-        self.header = urwid.AttrWrap(urwid.Text(self.header_text), 'title')
+        self.header_wid = urwid.AttrWrap(urwid.Text(self.header_text), 'title')
         self.menu = urwid.Text([u'Press (', ('quit button', u'Q'), u') to quit.'])
         self.lwDevices = urwid.SimpleListWalker([])
-        self.body = urwid.ListBox(self.lwDevices)
-        self.main_box = urwid.LineBox(self.body)
+        self.body_list = urwid.ListBox(self.lwDevices)
+        self.main_box = urwid.LineBox(self.body_list)
 
         self.add_Clients(Refactor.readFileDataToJson(C.CLIENTS_CONNECTED))
 
-        self.view = urwid.Frame(header=self.header, body=self.main_box, footer=self.menu)
+        self.set_body(self.main_box)
+        self.set_header(self.header_wid)
+        self.set_footer(self.menu)
 
     def main(self):
         self.setup_view()
         loop = urwid.MainLoop(
-            self.view, palette=palette_color,
+            self.render(), palette=palette_color,
             unhandled_input=self.handleWindow)
         loop.set_alarm_in(1, self.refresh)
         loop.run()
 
     def refresh(self, loop=None, data=None):
         self.setup_view()
-        loop.widget = self.view
+        loop.widget = self.render()
         loop.set_alarm_in(1, self.refresh)
 
     def start(self):
