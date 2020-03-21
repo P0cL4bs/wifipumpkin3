@@ -24,7 +24,7 @@ class WidgetBase(urwid.Frame):
     def handleWindow(self, key):
         raise NotImplementedError
 
-    def render(self):
+    def render_view(self):
         return self
 
     def set_body(self, widgets):

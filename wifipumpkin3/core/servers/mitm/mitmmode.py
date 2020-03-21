@@ -50,15 +50,16 @@ class MitmMode(Widget):
         self.configure_logger()
 
     def configure_logger(self):
-        config_extra  = self.loggermanager.getExtraConfig(self.ID)
-        config_extra['extra']['session'] = self.parent.currentSessionID
+        if not self.Hidden:
+            config_extra  = self.loggermanager.getExtraConfig(self.ID)
+            config_extra['extra']['session'] = self.parent.currentSessionID
 
-        self.logger = StandardLog(self.ID, 
-            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
-            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
-        config=config_extra)
-        self.logger.filename = self.LogFile
-        self.loggermanager.add( self.ID, self.logger)
+            self.logger = StandardLog(self.ID, 
+                colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+                serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+            config=config_extra)
+            self.logger.filename = self.LogFile
+            self.loggermanager.add( self.ID, self.logger)
 
     def getModType(self):
         return self.ModType

@@ -148,7 +148,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def readFileDataToJson(filename, mode='r'):
-        datastore = None
+        datastore = {}
         if (path.isfile(filename)):
             with open(filename, mode) as f:
                 datastore = json.load(f)

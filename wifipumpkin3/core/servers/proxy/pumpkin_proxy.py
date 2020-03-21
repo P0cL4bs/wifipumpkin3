@@ -33,7 +33,7 @@ class TCPProxyDock(DockableWidget):
         pass
 
 class PumpKinProxy(ProxyMode):
-    Name = "pumpkinproxy_plugin"
+    Name = "PumpkinProxy 3"
     Author = "Pumpkin-Dev"
     ID = "pumpkinproxy"
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
@@ -41,19 +41,21 @@ class PumpKinProxy(ProxyMode):
     LogFile = C.LOG_PUMPKINPROXY
     _cmd_array = []
     ModSettings = True
+    RunningPort = 8080
     ModType = "proxy" 
     TypePlugin =  1 
 
     def __init__(self,parent=None, **kwargs):
         super(PumpKinProxy,self).__init__(parent)
-        self.setID(self.Name)
+        self.setID(self.ID)
         self.setTypePlugin(self.TypePlugin)
+        self.setRunningPort(self.conf.get('proxy_plugins', 'pumpkinproxy_config_port'))
         self.config = SettingsINI(C.CONFIG_TP_INI)
 
     @property
     def CMD_ARRAY(self):
-        port_ssltrip = self.conf.get('settings', 'sslstrip_redirect_port')
-        os.system(self.search[self.Name])
+        self.runDefaultRules()
+        port_ssltrip = self.conf.get('proxy_plugins', 'pumpkinproxy_config_port')
         self._cmd_array=['-l', port_ssltrip]
         return self._cmd_array
 

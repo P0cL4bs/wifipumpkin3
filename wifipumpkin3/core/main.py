@@ -79,9 +79,20 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.proxy = self.coreui.Plugins.Proxy
         self.mitmhandler = self.coreui.Plugins.MITM
 
-        self.commands = {'interface': 'interfaceAP','ssid': 'ssid',
-        'bssid': 'bssid','channel':'channel', 'proxy': 'proxy_plugins',
-         'plugin': 'plugin'}
+        self.commands = \
+        {
+            'interface': 'interfaceAP',
+            'ssid': 'ssid',
+            'bssid': 'bssid',
+            'channel':'channel', 
+            'proxy': 'proxy_plugins',
+            'plugin': 'plugin',
+        }
+        for plugin_name, plugins_info in self.proxy.getInfo().items():
+            self.commands[plugin_name]  = ''
+        for plugin_name, plugins_info in self.mitmhandler.getInfo().items():
+            self.commands[plugin_name]  = ''
+
         self.Apthreads = {'RogueAP': []}
 
     @property
@@ -210,11 +221,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         ''' show all clients connected on AP '''
         self.tableUI.ui_table_mod.start()
 
-    def do_monitor(self, args):
-        ''' monitor traffic capture realtime Sniffer'''
-        self.ui_monitor.start()
-        self.addThreads(self.ui_monitor)
-
     def do_stop(self,args):
         ''' stop access point '''
         self.killThreads()
@@ -263,12 +269,17 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_proxys(self, args):
         ''' show all proxys available for attack  '''
-        headers_table, output_table = ["Proxy", "Active"], []
-        proxy_plugins =  self.conf.get_all_childname('proxy_plugins') 
-        for plu in proxy_plugins:
-            status_plugin = self.conf.get('proxy_plugins',plu, format=bool)
-            output_table.append([plu,
-            setcolor('Yes',color='green') if status_plugin  else setcolor('False',color='red')])
+        headers_table, output_table = ["Proxy", "Active", 'Port', 'Description'], []
+        for plugin_name, plugin_info in self.proxy.getInfo().items():
+            status_plugin = self.conf.get('proxy_plugins',plugin_name, format=bool)
+            output_table.append(
+            [
+                plugin_name,setcolor('Yes',color='green') if 
+                    status_plugin  else setcolor('False',color='red'),
+                plugin_info['Port'],
+                plugin_info['Description'][:50] + '...'
+            ]) 
+
         print(display_messages('Available Proxys:',info=True,sublime=True))
         print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')
@@ -278,8 +289,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             plugin_name,plugin_status = list(args.split())[1],list(args.split())[2]
             if (plugin_status not in ['true','false','True','False']):
                 return print(display_messages('wifipumpkin3: error: unrecognized arguments {}'.format(plugin_status),error=True))
-            if (plugin_name in self.conf.get_all_childname('plugins')):
-                return self.conf.set('plugins',plugin_name, plugin_status)
+            if (plugin_name in self.conf.get_all_childname('mitm_modules')):
+                return self.conf.set('mitm_modules',plugin_name, plugin_status)
             return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
         except IndexError:
             return self.help_plugins()
@@ -287,12 +298,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_plugins(self, args=str):
         ''' show/edit all plugins available for attack '''
-        headers_table, output_table = ["Plugins", "Active"], []
-        proxy_plugins =  self.conf.get_all_childname('plugins') 
-        for plu in proxy_plugins:
-            status_plugin = self.conf.get('plugins',plu, format=bool)
-            output_table.append([plu,
-            setcolor('Yes',color='green') if status_plugin  else setcolor('False',color='red')])
+        headers_table, output_table = ["Name", "Active", "Description"], []
+        for plugin_name, plugin_info in self.mitmhandler.getInfo().items():
+            status_plugin = self.conf.get('mitm_modules',plugin_name, format=bool)
+            output_table.append(
+            [   plugin_name,setcolor('Yes',color='green') if 
+                    status_plugin  else setcolor('False',color='red'),
+                plugin_info['Description'][:50] + '...'
+            ])   
+
         print(display_messages('Available Plugins:',info=True,sublime=True))
         print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')

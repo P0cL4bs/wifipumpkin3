@@ -1,22 +1,12 @@
 from wifipumpkin3.core.config.globalimport import *
-from collections import OrderedDict
-from functools import partial
 from threading import Thread
 import queue
 from scapy.all import *
-import logging
-#from plugins.analyzers import *
-
 import wifipumpkin3.core.utility.constants as C
-from wifipumpkin3.core.common.platforms import setup_logger
-from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.utility.collection import SettingsINI
-# from core.widgets.docks.dockmonitor import (
-#     dockTCPproxy,dockUrlMonitor
-# )
-from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.plugins.analyzers import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
+from wifipumpkin3.core.servers.mitm.mitmmode import MitmMode
 
 class TCPProxyDock(DockableWidget):
     id = "TCPProxy"
@@ -38,44 +28,25 @@ class TCPProxyDock(DockableWidget):
     def stopProcess(self):
         pass
 
-class TCPProxy(ProxyMode):
-    Name = "tcpproxy_plugin"
+class Sniffkin3(MitmMode):
+    Name = "Sniffkin 3"
     Author = "Pumpkin-Dev"
-    ID = "tcpproxy"
+    ID = "sniffkin3"
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
     Hidden = False
-    LogFile = C.LOG_TCPPROXY
+    LogFile = C.LOG_SNIFFKIN3
     _cmd_array = []
     ModSettings = True
-    ModType = "proxy" 
-    TypePlugin =  2 
+    ModType = "server" 
 
     def __init__(self,parent=None, **kwargs):
-        super(TCPProxy,self).__init__(parent)
-        self.setID(self.Name)
-        self.setTypePlugin(self.TypePlugin)
+        super(Sniffkin3,self).__init__(parent)
+        self.setID(self.ID)
         self.config = SettingsINI(C.CONFIG_TP_INI)
         self.plugins = []
         self.parent = parent
         self.bt_SettingsDict = {}
         self.check_PluginDict = {}
-        self.search_all_ProxyPlugins()
-
-        # setup_logger("NetCreds",C.LOG_CREDSCAPTURE,"CapturedCreds")
-        # self.LogCredsMonitor = logging.getLogger("NetCreds")
-
-        #self.dockwidget = TCPProxyDock(None,title=self.Name)
-
-    def onProxyDisabled(self):
-        self.handler = self.parent.Plugins.MITM
-        self.handler.CredMonitor.controlui.setChecked(False)
-        self.handler.URLMonitor.controlui.setChecked(False)
-
-    def onProxyEnabled(self):
-        self.handler=self.parent.Plugins.MITM
-        self.handler.CredMonitor.controlui.setChecked(True)
-        self.handler.URLMonitor.controlui.setChecked(True)
-
 
     def setPluginOption(self, name, status):
         ''' get each plugins status'''
@@ -83,13 +54,6 @@ class TCPProxy(ProxyMode):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.reactor.disablePlugin(name, status)
         self.conf.set('plugins', name, status)
-
-    def search_all_ProxyPlugins(self):
-        ''' load all plugins function '''
-        plugin_classes = default.PSniffer.__subclasses__()
-        for p in plugin_classes:
-            if p().Name != 'httpCap':
-                self.plugins.append(p())
 
     def boot(self):
         #self.handler = self.parent.Plugins.MITM
@@ -102,22 +66,6 @@ class TCPProxy(ProxyMode):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
                         data['urlsCap']['IP'], data['urlsCap']['Headers']))
-        #print(data)
-        # if self.conf.get('accesspoint', 'statusAP', format=bool):
-        #     if data.keys()[0] == 'urlsCap':
-        #         self.handler.URLMonitor.dockwidget.writeModeData(data)
-        #         self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
-        #                 data['urlsCap']['IP'], data['urlsCap']['Headers']))
-        #     elif data.keys()[0] == 'POSTCreds':
-        #         self.handler.CredMonitor.dockwidget.writeModeData(data)
-        #         self.LogCredsMonitor.info('URL: {}'.format(data['POSTCreds']['Url']))
-        #         self.LogCredsMonitor.info('UserName: {}'.format(data['POSTCreds']['User']))
-        #         self.LogCredsMonitor.info('UserName: {}'.format(data['POSTCreds']['Pass']))
-        #         self.LogCredsMonitor.info('Packets: {}'.format(data['POSTCreds']['Destination']))
-        #     else:
-        #         self.tableLogging.writeModeData(data)
-        #         self.LogTcpproxy.info('[{}] {}'.format(data.keys()[0],data[data.keys()[0]]))
-
 
 class TCPProxyCore(QtCore.QThread):
     _ProcssOutput = QtCore.pyqtSignal(object)

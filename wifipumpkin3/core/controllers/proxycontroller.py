@@ -10,6 +10,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     Name = "Proxy"
     Caption = "Enable Proxy Server"
     proxies = {}
+    proxies_infor = {}
     SetNoProxy = QtCore.pyqtSignal(object)
     dockMount = QtCore.pyqtSignal(bool)
 
@@ -26,6 +27,15 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         #Keep Proxy in a dictionary
         for k in __proxlist:
             self.proxies[k.Name]=k
+
+            self.proxies_infor[k.ID] = {
+                'ID': k.ID,
+                'Name' : k.Name,
+                'Port' : k.getRunningPort(),
+                'Description': k.Description,
+            }
+
+
 
         self.p_name = []
         self.p_desc = []
@@ -120,6 +130,9 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     @property
     def get(self):
         return self.proxies
+
+    def getInfo(self):
+        return self.proxies_infor
 
     @classmethod
     def disable(cls, val=True):

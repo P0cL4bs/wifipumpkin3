@@ -119,14 +119,14 @@ class ui_TableMonitorClient(WidgetBase):
     def main(self):
         self.setup_view()
         loop = urwid.MainLoop(
-            self.render(), palette=palette_color,
+            self.render_view(), palette=palette_color,
             unhandled_input=self.handleWindow)
         loop.set_alarm_in(1, self.refresh)
         loop.run()
 
     def refresh(self, loop=None, data=None):
         self.setup_view()
-        loop.widget = self.render()
+        loop.widget = self.render_view()
         loop.set_alarm_in(1, self.refresh)
 
     def start(self):

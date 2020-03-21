@@ -9,6 +9,7 @@ class MitmController(PluginsUI,ControllerBlueprint):
     Caption = "Activity Monitor"
     mitmhandler = {}
     SetNoMitmMode = QtCore.pyqtSignal(object)
+    mitm_infor = {}
 
     def __init__(self,parent = None,**kwargs):
         super(MitmController, self).__init__(parent)
@@ -21,6 +22,11 @@ class MitmController(PluginsUI,ControllerBlueprint):
         for k in __manipulator:
             #print(k.Name, 'mitmcontroller')
             self.mitmhandler[k.Name]=k
+            self.mitm_infor[k.ID] = {
+                'ID': k.ID,
+                'Name' : k.Name,
+                'Description': k.Description
+            }
 
         self.m_name = []
         self.m_desc = []
@@ -71,6 +77,9 @@ class MitmController(PluginsUI,ControllerBlueprint):
     @property
     def get(self):
         return self.mitmhandler
+
+    def getInfo(self):
+        return self.mitm_infor
 
     @classmethod
     def disable(cls, val=True):

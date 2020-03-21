@@ -31,24 +31,26 @@ class ProxyMode(Widget,ComponentBlueprint):
     sendSingal_disable = QtCore.pyqtSignal(object)
     addDock=QtCore.pyqtSignal(object)
     TypePlugin = 1
+    RunningPort = 80
 
 
     def __init__(self,parent):
         super(ProxyMode, self).__init__()
         self.parent = parent
         self.conf = SuperSettings.getInstance()
-        #self.server = ThreadReactor()
-        #setup_logger(self.Name,self.LogFile,self.parent.currentSessionID)
-        #self.logger  = getLogger(self.Name)
+
         self.handler = None
         self.reactor = None
         self.subreactor = None
-        self.search = {
-            'sslstrip': str('iptables -t nat -A PREROUTING -p tcp' +
-                            ' --destination-port 80 -j REDIRECT --to-port ' + self.conf.get('settings','redirect_port')),
-            'dns2proxy': str('iptables -t nat -A PREROUTING -p udp --destination-port 53 -j REDIRECT --to-port 53'),
-            'bdfproxy': str('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080'),
-            'pumpkinproxy_plugin': str('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080')
+        self.defaults_rules = {
+            'ssslstrip': 
+                [
+                    'iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port ' + self.conf.get('settings','redirect_port')
+                ],
+            'pumpkinproxy': 
+                [
+                    'iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}'.format(self.conf.get('proxy_plugins','pumpkinproxy_config_port'))
+                ]
             }
 
         #self.search[self.Name]=self.iptablesrules
@@ -63,16 +65,27 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.configure_logger()
 
     def configure_logger(self):
-        config_extra  = self.loggermanager.getExtraConfig(self.ID)
-        config_extra['extra']['session'] = self.parent.currentSessionID
+        if not self.Hidden:
+            config_extra  = self.loggermanager.getExtraConfig(self.ID)
+            config_extra['extra']['session'] = self.parent.currentSessionID
 
-        self.logger = StandardLog(self.ID, 
-            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
-            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
-        config=config_extra)
-        self.logger.filename = self.LogFile
-        self.loggermanager.add( self.ID, self.logger)
+            self.logger = StandardLog(self.ID, 
+                colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+                serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+            config=config_extra)
+            self.logger.filename = self.LogFile
+            self.loggermanager.add( self.ID, self.logger)
 
+
+    def runDefaultRules(self):
+        for rules in self.defaults_rules[self.ID]:
+            os.system(rules)
+
+    def setRunningPort(self, value):
+        self.RunningPort = value
+
+    def getRunningPort(self):
+        return self.RunningPort
 
     def getTypePlugin(self):
         return self.TypePlugin
@@ -84,7 +97,7 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.ID = id
 
     def isChecked(self):
-        return self.conf.get('plugins', self.ID, format=bool)
+        return self.conf.get('proxy_plugins', self.ID, format=bool)
 
     @property
     def iptablesrules(self):
