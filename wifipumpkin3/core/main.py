@@ -253,7 +253,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 plugin_name,setcolor('True',color='green') if 
                     status_plugin  else setcolor('False',color='red'),
                 plugin_info['Port'],
-                plugin_info['Description'][:50] + '...'
+                plugin_info['Description'][:50] + '...' if len(plugin_info['Description']) > 50 else 
+                plugin_info['Description']
             ]) 
 
         print(display_messages('Available Proxys:',info=True,sublime=True))
@@ -282,7 +283,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             output_table.append(
             [   plugin_name,setcolor('True',color='green') if 
                     status_plugin  else setcolor('False',color='red'),
-                plugin_info['Description'][:50] + '...'
+                plugin_info['Description'][:50] + '...' if len(plugin_info['Description']) > 50 else 
+                plugin_info['Description']
             ])   
             if (self.mitmhandler.getInfo()[plugin_name]['Config'] !=  None and status_plugin):
                 config_instance = self.mitmhandler.getInfo()[plugin_name]['Config']
@@ -301,7 +303,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 setcolor('True',color='green') if status_plugin
                  else setcolor('False',color='red')
             ])
-        print(display_messages('Plugins:',info=True,sublime=True))
+        print(display_messages('Sniffkin3 plugins:',info=True,sublime=True))
         print(tabulate(output_plugins, headers_plugins,tablefmt="simple"))
         print('\n')
 
