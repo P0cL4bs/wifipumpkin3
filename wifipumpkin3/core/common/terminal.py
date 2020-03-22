@@ -4,6 +4,7 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from os import popen
 import sys
+from tabulate import tabulate
 
 class ConsoleUI(Cmd):
     ''' shell console UI '''
@@ -171,7 +172,7 @@ class ModuleUI(Cmd):
             if (command in self.options.keys()):
                 #self.conf.set('accesspoint',self.commands[command],value)
                 print(display_messages('changed to {} => {}'.format(command, value),sucess=True))
-                self.options.update({command: value})
+                self.options[command] = [value, self.options[command][1]]
             else:
                 print(display_messages('unknown command: {} '.format(command),error=True))
                 print(display_messages("Example : set host 127.0.0.1", info=True))
@@ -180,11 +181,11 @@ class ModuleUI(Cmd):
 
     def do_options(self, line):
         """ show options of current module"""
-        print(display_messages('Available Options:',info=True,sublime=True))
-        self.stdout.write('    {}	 {}\n'.format('Option', 'Value'))
-        self.stdout.write('    {}	 {}\n'.format('------', '-----'))
+        headers_table, output_table = ["Option", "Value", "Description"], []
         for option,value in self.options.items():
-            self.stdout.write('    {:<10}	 {}\n'.format(option, value))
+            output_table.append([option,value[0], value[1]])
+        print(display_messages('Available Options:',info=True,sublime=True))
+        print(tabulate(output_table, headers_table,tablefmt="simple"))
         print("\n")
 
     def do_help(self,args):

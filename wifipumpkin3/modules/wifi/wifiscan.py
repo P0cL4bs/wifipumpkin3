@@ -17,8 +17,8 @@ class ModPump(ModuleUI):
     name = "wifiscan"
 
     options = {
-        "interface": "wlxc83a35cef744",
-        "timeout": 10
+        "interface": ["wlxc83a35cef744", "Name network interface wireless "],
+        "timeout": [10, "Time duration of scan network wireless (ex: 0 infinty)"]
     }
     completions = list(options.keys())
 
