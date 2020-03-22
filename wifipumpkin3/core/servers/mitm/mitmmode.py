@@ -31,11 +31,13 @@ class MitmMode(Widget):
     LogFile = C.LOG_ALL
     ModSettings = False
     ModType = "proxy" # proxy or server
+    ConfigMitm = None
     Hidden = True
     _cmd_array = []
     plugins = []
     sendError = QtCore.pyqtSignal(str)
     sendSingal_disable = QtCore.pyqtSignal(object)
+    config = None
 
     def __init__(self,parent=None):
         super(MitmMode, self).__init__(parent)
@@ -60,6 +62,10 @@ class MitmMode(Widget):
             config=config_extra)
             self.logger.filename = self.LogFile
             self.loggermanager.add( self.ID, self.logger)
+
+    @property
+    def getConfig(self):
+        return self.config
 
     def getModType(self):
         return self.ModType

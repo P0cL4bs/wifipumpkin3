@@ -30,9 +30,12 @@ class Responder3(MitmMode):
     Author = "PumpkinDev"
     Description = "New and improved Responder for Python3"
     LogFile = C.LOG_RESPONDER3
+    ConfigMitmPath = None
     _cmd_array = []
     ModSettings = True
     ModType = "proxy"  # proxy or server
+    config = None
+    
     def __init__(self,parent,FSettingsUI=None,main_method=None,  **kwargs):
         super(Responder3, self).__init__(parent)
         self.setID(self.ID)

@@ -237,7 +237,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if (plugins_selected != []):
                 self.conf.set('proxy_plugins', plugins_selected[0], True)
                 for proxy in self.conf.get_all_childname('proxy_plugins'):
-                    if proxy != plugins_selected[0]:
+                    if proxy != plugins_selected[0] and not '_config' in proxy:
                         self.conf.set('proxy_plugins', proxy, False)
                 return
             return print(display_messages('unknown command: {} '.format(proxy_name),error=True))
@@ -250,7 +250,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             status_plugin = self.conf.get('proxy_plugins',plugin_name, format=bool)
             output_table.append(
             [
-                plugin_name,setcolor('Yes',color='green') if 
+                plugin_name,setcolor('True',color='green') if 
                     status_plugin  else setcolor('False',color='red'),
                 plugin_info['Port'],
                 plugin_info['Description'][:50] + '...'
@@ -273,18 +273,36 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
 
     def do_plugins(self, args=str):
-        ''' show/edit all plugins available for attack '''
+        ''' show all plugins available for attack '''
         headers_table, output_table = ["Name", "Active", "Description"], []
+        headers_plugins, output_plugins = ["Name", "Active"], []
+        all_plugins,config_instance = None, None
         for plugin_name, plugin_info in self.mitmhandler.getInfo().items():
             status_plugin = self.conf.get('mitm_modules',plugin_name, format=bool)
             output_table.append(
-            [   plugin_name,setcolor('Yes',color='green') if 
+            [   plugin_name,setcolor('True',color='green') if 
                     status_plugin  else setcolor('False',color='red'),
                 plugin_info['Description'][:50] + '...'
             ])   
-
+            if (self.mitmhandler.getInfo()[plugin_name]['Config'] !=  None and status_plugin):
+                config_instance = self.mitmhandler.getInfo()[plugin_name]['Config']
+                all_plugins = self.mitmhandler.getInfo()[plugin_name]['Config'].get_all_childname('plugins')
         print(display_messages('Available Plugins:',info=True,sublime=True))
         print(tabulate(output_table, headers_table,tablefmt="simple"))
+        print('\n')
+
+        if not all_plugins: return
+
+        for plugin_name in all_plugins:
+            status_plugin = config_instance.get('plugins', plugin_name,format=bool )
+            output_plugins.append(
+            [
+                plugin_name,
+                setcolor('True',color='green') if status_plugin
+                 else setcolor('False',color='red')
+            ])
+        print(display_messages('Plugins:',info=True,sublime=True))
+        print(tabulate(output_plugins, headers_plugins,tablefmt="simple"))
         print('\n')
 
     def help_plugins(self):

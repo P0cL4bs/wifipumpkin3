@@ -32,6 +32,7 @@ class ProxyMode(Widget,ComponentBlueprint):
     addDock=QtCore.pyqtSignal(object)
     TypePlugin = 1
     RunningPort = 80
+    config = None
 
 
     def __init__(self,parent):
@@ -80,6 +81,12 @@ class ProxyMode(Widget,ComponentBlueprint):
     def runDefaultRules(self):
         for rules in self.defaults_rules[self.ID]:
             os.system(rules)
+
+
+
+    @property
+    def getConfig(self):
+        return self.config
 
     def setRunningPort(self, value):
         self.RunningPort = value
