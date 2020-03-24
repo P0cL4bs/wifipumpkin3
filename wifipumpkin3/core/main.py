@@ -235,7 +235,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print('\n')
 
     def do_set(self, args):
-        ''' set variable the  '''
+        ''' set variable proxy,plugin and access point '''
         try:
             command,value = args.split()[0],args.split()[1]
             for func in self.parser_list_func:
@@ -257,8 +257,18 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def do_proxys(self, args):
         ''' show all proxys available for attack  '''
         headers_table, output_table = ["Proxy", "Active", 'Port', 'Description'], []
+        plugin_info_activated = None
+        config_instance = None
+        headers_plugins, output_plugins = ["Name", "Active"], []
+
         for plugin_name, plugin_info in self.proxy.getInfo().items():
             status_plugin = self.conf.get('proxy_plugins',plugin_name, format=bool)
+
+            if (plugin_info['Config'] != None) and (plugin_info['Config'].
+                        get_name_activated_plugin('plugins') != None):
+                plugin_info_activated = plugin_info
+                config_instance = plugin_info_activated['Config']
+
             output_table.append(
             [
                 plugin_name,setcolor('True',color='green') if 
@@ -270,6 +280,23 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         print(display_messages('Available Proxys:',info=True,sublime=True))
         print(tabulate(output_table, headers_table,tablefmt="simple"))
+        print('\n')
+        # check plugin none
+        if not plugin_info_activated: return
+        # check if plugin selected is iquals the plugin config
+        if (plugin_info_activated['ID'] != self.conf.get_name_activated_plugin('proxy_plugins')):
+            return 
+        all_plugins = plugin_info_activated['Config'].get_all_childname('plugins')
+        for plugin_name in all_plugins:
+            status_plugin = config_instance.get('plugins', plugin_name,format=bool )
+            output_plugins.append(
+            [
+                plugin_name,
+                setcolor('True',color='green') if status_plugin
+                 else setcolor('False',color='red')
+            ])
+        print(display_messages('{} plugins:'.format(plugin_info_activated['Name']),info=True,sublime=True))
+        print(tabulate(output_plugins, headers_plugins,tablefmt="simple"))
         print('\n')
 
 
