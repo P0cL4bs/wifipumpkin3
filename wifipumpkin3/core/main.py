@@ -29,7 +29,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         options : parse_args
     """
     instances=[]
-    _all_modules =None
+    _all_modules = None
 
     @classmethod
     def getInstance(cls):
@@ -38,7 +38,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def __init__(self, parse_args):
         self.__class__.instances.append(weakref.proxy(self))
         self.parse_args = parse_args
-        self.parser_list_func = {'parser_set_proxy' : self, 'parser_set_plugin': self }
+
         self.all_modules = module_list
         self.currentSessionID = self.parse_args.session
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
@@ -54,6 +54,17 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         self.proxy = self.coreui.Plugins.Proxy
         self.mitmhandler = self.coreui.Plugins.MITM
+
+        self.parser_list_func = {
+            #parser_set_proxy is default extend class 
+            'parser_set_proxy' : self.proxy.pumpkinproxy,
+            'parser_set_plugin': self.mitmhandler.sniffkin3,
+        }
+        self.parser_complete_plugin = {}
+
+        # hook function (plugins and proxys)
+        self.intialize_hook_func(self.proxy)
+        self.intialize_hook_func(self.mitmhandler)
 
         self.commands = \
         {
@@ -82,6 +93,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if (hasattr(module, "ModPump")):
                 m_avaliable[name] = module
         self._all_modules =  m_avaliable
+
+    def intialize_hook_func(self, controller):
+        # load all parser funct and plguins command CLI for plugins
+        for plugin_name in controller.getInfo():
+            self.parser_list_func['parser_set_' + plugin_name] = getattr(controller, plugin_name) 
+            if (getattr(controller, plugin_name).getPlugins != None):
+                self.parser_complete_plugin['parser_set_' + plugin_name] = getattr(controller, plugin_name).getPlugins
 
     def do_show(self, args):
         """ show available modules"""
@@ -217,12 +235,17 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print('\n')
 
     def do_set(self, args):
-        ''' set variable for access point '''
+        ''' set variable the  '''
         try:
             command,value = args.split()[0],args.split()[1]
             for func in self.parser_list_func:
                 if command in func:
                     return getattr(self.parser_list_func[func], func)(value, args)
+            # hook function configure plugin 
+            for plugin in self.parser_complete_plugin:
+                if command in self.parser_complete_plugin[plugin]:
+                    return getattr(self.parser_list_func[plugin], plugin)(value, command)
+
             if (command in self.commands.keys()):
                 self.conf.set('accesspoint',self.commands[command],value)
                 print(display_messages('changed {} to => {}'.format(command, value),sucess=True))
@@ -230,18 +253,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 print(display_messages('unknown command: {} '.format(command),error=True))
         except IndexError:
             pass
-
-    def parser_set_proxy(self, proxy_name, *args):
-        if not self.conf.get('accesspoint', 'statusAP') or len(self.Apthreads['RogueAP']) == 0:
-            plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
-            if (plugins_selected != []):
-                self.conf.set('proxy_plugins', plugins_selected[0], True)
-                for proxy in self.conf.get_all_childname('proxy_plugins'):
-                    if proxy != plugins_selected[0] and not '_config' in proxy:
-                        self.conf.set('proxy_plugins', proxy, False)
-                return
-            return print(display_messages('unknown command: {} '.format(proxy_name),error=True))
-        print(display_messages('Error: 0x01 - the AP(access point) is running',error=True))
 
     def do_proxys(self, args):
         ''' show all proxys available for attack  '''
@@ -260,17 +271,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages('Available Proxys:',info=True,sublime=True))
         print(tabulate(output_table, headers_table,tablefmt="simple"))
         print('\n')
-
-    def parser_set_plugin(self, proxy_name, args):
-        try:
-            plugin_name,plugin_status = list(args.split())[1],list(args.split())[2]
-            if (plugin_status not in ['true','false','True','False']):
-                return print(display_messages('wifipumpkin3: error: unrecognized arguments {}'.format(plugin_status),error=True))
-            if (plugin_name in self.conf.get_all_childname('mitm_modules')):
-                return self.conf.set('mitm_modules',plugin_name, plugin_status)
-            return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
-        except IndexError:
-            return self.help_plugins()
 
 
     def do_plugins(self, args=str):
@@ -327,8 +327,17 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def complete_set(self, text, args, start_index, end_index):
         if text:
-            return [command for command in self.commands.keys()
-                    if command.startswith(text)]
+            command_list = []
+            for func in self.parser_complete_plugin:
+                if text.startswith(func.split('_set_')[1]):
+                    for command in self.parser_complete_plugin[func]:
+                        if command.startswith(text):
+                            command_list.append(command)
+
+            for command in self.commands:
+                if command.startswith(text):
+                    command_list.append(command)
+            return command_list
         else:
             return list(self.commands.keys())
 

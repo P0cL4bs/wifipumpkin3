@@ -1,4 +1,5 @@
 from wifipumpkin3.core.config.globalimport import *
+from wifipumpkin3.core.common.uimodel import *
 from threading import Thread
 import queue
 from scapy.all import *
@@ -35,6 +36,7 @@ class Sniffkin3(MitmMode):
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
     Hidden = False
     LogFile = C.LOG_SNIFFKIN3
+    CONFIGINI_PATH = C.CONFIG_TP_INI
     _cmd_array = []
     ModSettings = True
     ModType = "server" 
@@ -42,7 +44,6 @@ class Sniffkin3(MitmMode):
     def __init__(self,parent=None, **kwargs):
         super(Sniffkin3,self).__init__(parent)
         self.setID(self.ID)
-        self.config = SettingsINI(C.CONFIG_TP_INI)
         self.plugins = []
         self.parent = parent
         self.bt_SettingsDict = {}
@@ -66,6 +67,27 @@ class Sniffkin3(MitmMode):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
                         data['urlsCap']['IP'], data['urlsCap']['Headers']))
+
+    @property
+    def getPlugins(self):
+        commands = self.config.get_all_childname('plugins')
+        list_commands = []
+        for command in commands:
+            list_commands.append(self.ID + '.' + command)
+        return list_commands
+
+    def parser_set_sniffkin3(self, status, plugin_name):
+        try:
+            # plugin_name = pumpkinproxy.no-cache 
+            name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
+            if key_plugin in self.config.get_all_childname('plugins'):
+                self.config.set('plugins',key_plugin, status)
+                print(display_messages('sniffkin3: {} activate {}'.format(key_plugin, status),sucess=True))
+            else:
+                print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))
+
 
 class TCPProxyCore(QtCore.QThread):
     _ProcssOutput = QtCore.pyqtSignal(object)

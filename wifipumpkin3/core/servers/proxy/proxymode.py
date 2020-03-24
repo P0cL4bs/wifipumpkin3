@@ -21,6 +21,7 @@ class ProxyMode(Widget,ComponentBlueprint):
     ID = "generic"
     Description = "Generic Placeholder for Attack Scenario"
     LogFile = C.LOG_ALL
+    CONFIGINI_PATH = ''
     ModSettings = False
     ModType = "proxy" # proxy or server
     EXEC_PATH = ''
@@ -53,14 +54,9 @@ class ProxyMode(Widget,ComponentBlueprint):
                     'iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}'.format(self.conf.get('proxy_plugins','pumpkinproxy_config_port'))
                 ]
             }
-
-        #self.search[self.Name]=self.iptablesrules
-
-
-
-        #self.controlui.clicked.connect(self.CheckOptions)
-        #self.setEnabled(self.FSettings.Settings.get_setting('plugins', self.Name, format=bool))
-        #self.dockwidget = Dockable(None,title=self.Name)
+        # set config path plugin
+        if (self.getConfigINIPath != ''):
+            self.config = SettingsINI(self.getConfigINIPath)
 
         self.loggermanager = LoggerManager.getInstance()
         self.configure_logger()
@@ -77,12 +73,30 @@ class ProxyMode(Widget,ComponentBlueprint):
             self.logger.filename = self.LogFile
             self.loggermanager.add( self.ID, self.logger)
 
+    def parser_set_proxy(self, proxy_name, *args):
+        # default parser proxy commands complete
+        if not self.conf.get('accesspoint', 'statusAP', format=bool):
+            plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
+            if (plugins_selected != []):
+                self.conf.set('proxy_plugins', plugins_selected[0], True)
+                for proxy in self.conf.get_all_childname('proxy_plugins'):
+                    if proxy != plugins_selected[0] and not '_config' in proxy:
+                        self.conf.set('proxy_plugins', proxy, False)
+                return
+            return print(display_messages('unknown command: {} '.format(proxy_name),error=True))
+        print(display_messages('Error: 0x01 - the AP(access point) is running',error=True))
 
     def runDefaultRules(self):
         for rules in self.defaults_rules[self.ID]:
             os.system(rules)
 
+    @property
+    def getPlugins(self):
+        return None
 
+    @property
+    def getConfigINIPath(self):
+        return self.CONFIGINI_PATH
 
     @property
     def getConfig(self):

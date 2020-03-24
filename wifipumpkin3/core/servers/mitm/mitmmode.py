@@ -29,6 +29,7 @@ class MitmMode(Widget):
     Author = "Wahyudin Aziz"
     Description = "Generic Placeholder for Attack Scenario"
     LogFile = C.LOG_ALL
+    CONFIGINI_PATH = ''
     ModSettings = False
     ModType = "proxy" # proxy or server
     ConfigMitm = None
@@ -46,6 +47,8 @@ class MitmMode(Widget):
         self.reactor = None
         self.server = None
         
+        if (self.getConfigINIPath != ''):
+            self.config = SettingsINI(self.getConfigINIPath)
         #setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
         #self.logger = getLogger(self.Name)
         self.loggermanager = LoggerManager.getInstance()
@@ -62,6 +65,26 @@ class MitmMode(Widget):
             config=config_extra)
             self.logger.filename = self.LogFile
             self.loggermanager.add( self.ID, self.logger)
+
+    def parser_set_plugin(self, proxy_name, args):
+        # default parser plugin commands complete
+        try:
+            plugin_name,plugin_status = list(args.split())[1],list(args.split())[2]
+            if (plugin_status not in ['true','false','True','False']):
+                return print(display_messages('wifipumpkin3: error: unrecognized arguments {}'.format(plugin_status),error=True))
+            if (plugin_name in self.conf.get_all_childname('mitm_modules')):
+                return self.conf.set('mitm_modules',plugin_name, plugin_status)
+            return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
+        except IndexError:
+            return self.help_plugins()
+
+    @property
+    def getPlugins(self):
+        return None
+
+    @property
+    def getConfigINIPath(self):
+        return self.CONFIGINI_PATH
 
     @property
     def getConfig(self):

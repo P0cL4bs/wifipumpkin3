@@ -56,3 +56,14 @@ class Responder3(MitmMode):
             self.reactor.setObjectName(self.Name)
 
 
+    def parser_set_responder3(self, status, plugin_name):
+        try:
+            # plugin_name = pumpkinproxy.no-cache 
+            name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
+            if key_plugin in self.config.get_all_childname('plugins'):
+                self.config.set('plugins',key_plugin, status)
+                print(display_messages('responder3: {} activate {}'.format(key_plugin, status),sucess=True))
+            else:
+                print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))

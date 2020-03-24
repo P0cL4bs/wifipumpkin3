@@ -53,7 +53,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
             #p.sendSingal_disable.connect(self.DisableProxy)
             #p.dockwidget.addDock.connect(self.dockUpdate)
             if (hasattr(p,'ID')):
-                setattr(self.parent, p.ID, p)
+                setattr(self, p.ID, p)
 
         self.THeadersPluginsProxy = OrderedDict(
             [('Proxies', self.p_name),
