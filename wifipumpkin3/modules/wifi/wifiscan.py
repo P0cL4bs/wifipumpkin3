@@ -37,22 +37,22 @@ class ModPump(ModuleUI):
     def do_run(self, args):
         """ execute module """
         print(display_messages('setting interface: {} monitor momde'.format(
-            setcolor(self.options.get("interface"),color='green')), info=True))
+            setcolor(self.options.get("interface")[0],color='green')), info=True))
         self.set_monitor_mode('monitor')
         print(display_messages('starting Channel Hopping ', info=True))
-        self.p = Process(target = self.channel_hopper, args=(self.options.get("interface"),))
+        self.p = Process(target = self.channel_hopper, args=(self.options.get("interface")[0],))
         self.p.daemon = True
         self.p.start()
         print(display_messages('sniffing... ', info=True))
-        sniff(iface=self.options.get("interface"), prn=self.sniffAp,
-         timeout= None if int(self.options.get("timeout")) == 0 else int(self.options.get("timeout")))
+        sniff(iface=self.options.get("interface")[0], prn=self.sniffAp,
+         timeout= None if int(self.options.get("timeout")[0]) == 0 else int(self.options.get("timeout")[0]))
         self.p.terminate()
         self.set_monitor_mode()
 
     def channel_hopper(self, interface):
         while True:
             try:
-                channel = randrange(1,10)
+                channel = randrange(1,11)
                 os.system("iw dev %s set channel %d" % (interface, channel))
                 time.sleep(1)
             except KeyboardInterrupt:
@@ -188,9 +188,9 @@ class ModPump(ModuleUI):
             self.showDataOutputScan()
 
     def set_monitor_mode(self, mode='manager'):
-        if not self.options.get("interface") in Linux.get_interfaces().get("all"):
+        if not self.options.get("interface")[0] in Linux.get_interfaces().get("all"):
             print(display_messages("the interface not found!", error=True))
             sys.exit(1)
-        os.system("ifconfig {} down".format(self.options.get("interface")))
-        os.system("iwconfig {} mode {}".format(self.options.get("interface"), mode))
-        os.system("ifconfig {} up".format(self.options.get("interface")))
+        os.system("ifconfig {} down".format(self.options.get("interface")[0]))
+        os.system("iwconfig {} mode {}".format(self.options.get("interface")[0], mode))
+        os.system("ifconfig {} up".format(self.options.get("interface")[0]))
