@@ -1,5 +1,4 @@
 from wifipumpkin3.core.common.accesspoint import AccessPoint
-#from core.common.sniffing import SniffingPackets
 from wifipumpkin3.core.common.terminal import ConsoleUI
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants  as C
@@ -182,14 +181,14 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.wireless.Stop()
 
         self.conf.set('accesspoint', 'statusAP',False)
-        for thread in self.Apthreads['RogueAP']:
-            if thread is not None:
-                if (isinstance(thread, list)):
-                    for sub_thread in thread:
-                        if (sub_thread != None):
-                            sub_thread.stop()
-                    continue
-                thread.stop()
+        # for thread in self.Apthreads['RogueAP']:
+        #     if thread is not None:
+        #         if (isinstance(thread, list)):
+        #             for sub_thread in thread:
+        #                 if (sub_thread != None):
+        #                     sub_thread.stop()
+        #             continue
+        #         thread.stop()
 
         for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []
@@ -263,11 +262,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         for plugin_name, plugin_info in self.proxy.getInfo().items():
             status_plugin = self.conf.get('proxy_plugins',plugin_name, format=bool)
-
-            if (plugin_info['Config'] != None) and (plugin_info['Config'].
-                        get_name_activated_plugin('plugins') != None):
-                plugin_info_activated = plugin_info
-                config_instance = plugin_info_activated['Config']
+            # save plugin activated infor
+            if (plugin_info['Config'] != None):
+                if (self.conf.get_name_activated_plugin('proxy_plugins') == plugin_name):
+                    plugin_info_activated = plugin_info
+                    config_instance = plugin_info_activated['Config']
 
             output_table.append(
             [

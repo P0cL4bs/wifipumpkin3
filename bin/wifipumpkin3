@@ -4,15 +4,15 @@ from logging import getLogger,ERROR
 getLogger('scapy.runtime').setLevel(ERROR)
 import argparse
 import sys
-from PyQt5 import QtGui,QtCore
-from wifipumpkin3.core.main import PumpkinShell
+from PyQt5 import QtCore
+from wifipumpkin3.core.__main__ import PumpkinShell
 from wifipumpkin3.core.utility.printer import banner, setcolor
-from wifipumpkin3.core.packets.dhcpserver import IpAddressClass
 from wifipumpkin3.core.utility.collection import SettingsINI
+from wifipumpkin3._version import __version__
 import wifipumpkin3.core.utility.constants as C
 
 _author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
-_version = setcolor('0.1',color='yellow')
+_version = setcolor(__version__,color='yellow')
 __codename__ = setcolor('sab1no',color='red')
 banner(__codename__)
 

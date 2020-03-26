@@ -9,11 +9,8 @@ class WidgetBase(urwid.Frame):
     """
     _conf = SettingsINI(C.CONFIG_INI)
 
-    def __init__(self, ui, *args, **kwargs):
-        self.ui = ui
-        super().__init__(*args, **kwargs)
-        self.ro_content = self.body[:]  
-        self.body_change_lock = threading.Lock()
+    def __init__(self, *args, **kwargs):
+        pass
 
     def setup_view(self):
         raise NotImplementedError
@@ -26,19 +23,3 @@ class WidgetBase(urwid.Frame):
 
     def render_view(self):
         return self
-
-    def set_body(self, widgets):
-        with self.body_change_lock:
-            self.body = widgets
-
-    def set_header(self, widgets):
-        with self.body_change_lock:
-            self.header = widgets  
-
-    def set_footer(self, widgets):
-        with self.body_change_lock:
-            self.footer = widgets       
-
-    def reload_widget(self):
-        with self.body_change_lock:
-            self.body[:] = self.body

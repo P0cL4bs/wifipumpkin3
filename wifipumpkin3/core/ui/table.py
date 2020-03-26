@@ -92,13 +92,11 @@ class ui_TableMonitorClient(WidgetBase):
         self.table_clients = []
         self.__threadServices = []
         self.__threadStatus = False
-        self.body = ''
         self.header_text = [
             ('titlebar', ''), 'Clients: ',('titlebar','     '),
             ('title', 'UP'), ',', ('title', 'DOWN'), ':scroll',
             '     Monitor DHCP Requests',
         ]
-        super().__init__(self.parent,self.body)
 
     def getClientsCount(self):
         return len(self.table_clients)
@@ -107,14 +105,14 @@ class ui_TableMonitorClient(WidgetBase):
         self.header_wid = urwid.AttrWrap(urwid.Text(self.header_text), 'title')
         self.menu = urwid.Text([u'Press (', ('quit button', u'Q'), u') to quit.'])
         self.lwDevices = urwid.SimpleListWalker([])
-        self.body_list = urwid.ListBox(self.lwDevices)
-        self.main_box = urwid.LineBox(self.body_list)
+        self.body = urwid.ListBox(self.lwDevices)
+        self.main_box = urwid.LineBox(self.body)
 
+        self.layout = urwid.Frame(header=self.header_wid, body=self.main_box, footer=self.menu)
         self.add_Clients(Refactor.readFileDataToJson(C.CLIENTS_CONNECTED))
 
-        self.set_body(self.main_box)
-        self.set_header(self.header_wid)
-        self.set_footer(self.menu)
+    def render_view(self):
+        return self.layout
 
     def main(self):
         self.setup_view()
@@ -155,7 +153,7 @@ class ui_TableMonitorClient(WidgetBase):
             self.get_mac_vendor(data_dict[data]['MAC'])])
             self.lwDevices.clear()
             self.lwDevices.append(urwid.Text(('', self.up_Clients())))
-            self.body.set_focus(len(self.lwDevices) - 1, 'above')
+            self._body.set_focus(len(self.lwDevices) - 1, 'above')
 
     def up_Clients(self):
         if len(self.table_clients) > 0:

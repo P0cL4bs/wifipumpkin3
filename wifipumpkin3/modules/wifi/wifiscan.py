@@ -35,6 +35,7 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root )
 
     def do_run(self, args):
+        """ execute module """
         print(display_messages('setting interface: {} monitor momde'.format(
             setcolor(self.options.get("interface"),color='green')), info=True))
         self.set_monitor_mode('monitor')

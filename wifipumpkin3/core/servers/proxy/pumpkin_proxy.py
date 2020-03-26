@@ -49,6 +49,7 @@ class PumpKinProxy(ProxyMode):
     def __init__(self,parent=None, **kwargs):
         super(PumpKinProxy,self).__init__(parent)
         self.setID(self.ID)
+        self.parent = parent
         self.setTypePlugin(self.TypePlugin)
         self.setRunningPort(self.conf.get('proxy_plugins', 'pumpkinproxy_config_port'))
 
@@ -82,7 +83,7 @@ class PumpKinProxy(ProxyMode):
             name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
             if key_plugin in self.config.get_all_childname('plugins'):
                 self.config.set('plugins',key_plugin, status)
-                print(display_messages('PumpkinProxy: {} activate {}'.format(key_plugin, status),sucess=True))
+                print(display_messages('PumpkinProxy: {} status: {}'.format(key_plugin, status),sucess=True))
             else:
                 print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
         except IndexError:

@@ -47,7 +47,7 @@ NOTIFYSTYLE = "; ".join((
 
 
 #DHCP logger connected 
-CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/session/connected.json'
+CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/config/session/connected.json'
 
 DHCPSERVERBINARY = 'core/packets/binary/dhcpserver'
 
@@ -88,12 +88,14 @@ LOG_PHISHING     = user_config_dir+'/.config/wifipumpkin3/logs/Phishing/requests
 LOG_DHCP         = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/dhcp.log'
 LOG_HOSTAPD      = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/hostapd.log'
 LOG_ALL          = user_config_dir+'/.config/wifipumpkin3/logs/everything.log'
+LOG_CAPTIVEPO    = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/captiveportal.log'
 
 
 #APP SETTINGS
 CONFIG_INI          = user_config_dir+'/.config/wifipumpkin3/config/app/config.ini'
 CONFIG_TP_INI       = user_config_dir + '/.config/wifipumpkin3/config/app/tcpproxy.ini'
 CONFIG_PP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/proxy.ini'
+CONFIG_CP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/captive-portal.ini'
 
 TEMPLATES           = 'templates/fakeupdate/Windows_Update/Settins_WinUpdate.html'
 TEMPLATE_PH         = 'templates/phishing/custom/index.html'
@@ -102,7 +104,10 @@ EXTRACT_TEMP        = 'cd templates/ && tar -xf fakeupdate.tar.gz'
 LCOMMITS            = 'https://raw.githubusercontent.com/P0cL4bs/WiFi-Pumpkin/master/Core/config/commits/Lcommits.cfg'
 SOURCE_URL          = 'https://github.com/P0cL4bs/WiFi-Pumpkin.git'
 
+
+
 #settings template
+TEMPLATES_FLASK     = user_config_dir+ '/.config/wifipumpkin3/config/'
 TEMP_CUSTOM = dir_path+'/templates/phishing/custom'
 TEMP_Win    = dir_path+'/templates/fakeupdate/Windows_Update'
 TEMP_Java   = dir_path+'/templates/fakeupdate/Java_Update'
