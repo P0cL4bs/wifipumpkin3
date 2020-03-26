@@ -5,7 +5,7 @@ getLogger('scapy.runtime').setLevel(ERROR)
 import argparse
 import sys
 from PyQt5 import QtCore
-from wifipumpkin3.core.__main__ import PumpkinShell
+from wifipumpkin3 import PumpkinShell
 from wifipumpkin3.core.utility.printer import banner, setcolor
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3._version import __version__
