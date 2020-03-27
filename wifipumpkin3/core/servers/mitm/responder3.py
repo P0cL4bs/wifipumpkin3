@@ -33,7 +33,7 @@ class Responder3(MitmMode):
     ConfigMitmPath = None
     _cmd_array = []
     ModSettings = True
-    ModType = "proxy"  # proxy or server
+    ModType = "server"  # proxy or server
     config = None
     
     def __init__(self,parent,FSettingsUI=None,main_method=None,  **kwargs):

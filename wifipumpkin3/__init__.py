@@ -3,7 +3,6 @@ from wifipumpkin3.core.common.terminal import ConsoleUI
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants  as C
 from wifipumpkin3.core.utility.printer import display_messages,setcolor
-from termcolor import colored
 from tabulate import tabulate
 
 from wifipumpkin3.core.common.defaultwidget import *
@@ -218,6 +217,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         ''' stop access point '''
         self.killThreads()
 
+    def do_info(self, args):
+        pass
 
     def do_info_ap(self, args):
         ''' show all variable and status for settings AP '''

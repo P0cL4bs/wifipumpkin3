@@ -14,5 +14,4 @@ loguru==0.4.0
 scapy==2.4.3
 isc_dhcp_leases==0.9.1
 dnspython==1.16.0
-proxy.py==2.1.2
 Flask==1.1.1

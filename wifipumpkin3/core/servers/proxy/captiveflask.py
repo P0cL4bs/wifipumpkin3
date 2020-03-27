@@ -77,14 +77,14 @@ class CaptivePortal(ProxyMode):
         PORT= 80
         
         self.defaults_rules[self.ID] = []
-        print('[*] Settings for captive portal:')
-        print(" -> Allow FORWARD UDP DNS")
+        print(display_messages('settings for captive portal:', info=True))
+        print(display_messages("allow FORWARD UDP DNS", info=True))
         self.defaults_rules[self.ID].append('iptables -A FORWARD -i {iface} -p tcp --dport 53 -j ACCEPT'.format(iface=IFACE))
-        print(" -> Allow traffic to captive portal")
+        print(display_messages("allow traffic to captive portal", info=True))
         self.defaults_rules[self.ID].append('iptables -A FORWARD -i {iface} -p tcp --dport {port} -d {ip} -j ACCEPT'.format(iface=IFACE, port=PORT, ip=IP_ADDRESS))
-        print(" -> Block all other traffic in access point")
+        print(display_messages("block all other traffic in access point", info=True))
         self.defaults_rules[self.ID].append('iptables -A FORWARD -i {iface} -j DROP '.format(iface=IFACE))
-        print(" -> Redirecting HTTP traffic to captive portal")
+        print(display_messages("redirecting HTTP traffic to captive portal", info=True ))
         self.defaults_rules[self.ID].append('iptables -t nat -A PREROUTING -i {iface} -p tcp --dport 80 -j DNAT --to-destination {ip}:{port}'.format(iface=IFACE,ip=IP_ADDRESS, port=PORT))
         self.runDefaultRules()
 
@@ -107,7 +107,7 @@ class CaptivePortal(ProxyMode):
             name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
             if key_plugin in self.config.get_all_childname('plugins'):
                 self.setPluginActivated(key_plugin, status)
-                print(display_messages('Captiveflask: {} status {}'.format(key_plugin, status),sucess=True))
+                print(display_messages('captiveflask: {} status {}'.format(key_plugin, status),sucess=True))
             else:
                 print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
         except IndexError:
