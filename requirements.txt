@@ -1,4 +1,4 @@
-netifaces==0.10.4
+netifaces==0.10.9
 netaddr==0.7.19
 dhcplib==0.1.1
 ipaddress==1.0.22
@@ -8,7 +8,7 @@ tabulate==0.8.5
 beautifultable==0.8.0
 urwid==1.1.2
 termcolor==1.1.0
-PyQt5==5.10.1
+#PyQt5==5.10.1
 dnslib==0.9.7
 loguru==0.4.0
 scapy==2.4.3

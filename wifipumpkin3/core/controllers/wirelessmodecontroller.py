@@ -31,6 +31,10 @@ class WirelessModeController(object):
         return self.Settings.getActiveMode
 
     @property
+    def getAllModeInfo(self):
+        return self.Settings.getModesInfo
+
+    @property
     def ActiveReactor(self):
         return self.Settings.getActiveMode.reactor
 
@@ -117,11 +121,33 @@ class AccessPointSettings(CoreSettings):
         for mode in self.__modelist:
             if mode.isChecked():
                 return mode
-
+    
+    @property
+    def getModesInfo(self):
+        mode_info = {}
+        for mode in self.__modelist:
+            mode_info[mode.ID] = {
+                'Name' : mode.Name,
+                'Checked' : mode.isChecked(),
+                'ID': mode.ID}  
+        return mode_info 
+    
     @property
     def getInstances(self):
         return self.instances
 
+
+    def parser_set_mode(self, mode_name, *args):
+        # default parser mode commands complete
+        if mode_name in self.conf.get_all_childname('ap_mode'):
+            mode_selected =self.conf.get_name_activated_plugin('ap_mode')
+            if (mode_selected != None):
+                self.conf.set('ap_mode', mode_name, True)
+                for mode in self.conf.get_all_childname('ap_mode'):
+                    if mode != mode_name:
+                        self.conf.set('ap_mode', mode, False)
+                return
+        return print(display_messages('unknown command: {} '.format(mode_name),error=True))
 
    
     def configure_network_AP(self):

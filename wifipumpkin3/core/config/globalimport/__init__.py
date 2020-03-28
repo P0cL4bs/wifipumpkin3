@@ -2,7 +2,7 @@ import os
 import sys
 from pwd import getpwnam
 from grp import getgrnam
-from PyQt5 import QtGui,QtCore, Qt
+from PyQt5 import QtCore, Qt
 from logging import getLogger,ERROR
 # from core.utils import (
 #     Refactor,set_monitor_mode,waiterSleepThread,
@@ -47,7 +47,7 @@ def exec_bash(command):
     os.popen(command)
 
 
-__all__ = ["deleteObject","os","sys","exec_bash","LoggerManager","StandardLog","setup_logger","QtGui","Qt","QtCore","SuperSettings","getLogger","ERROR",
+__all__ = ["deleteObject","os","sys","exec_bash","LoggerManager","StandardLog","setup_logger","Qt","QtCore","SuperSettings","getLogger","ERROR",
            "C","OrderedDict","partial","Refactor","ComponentBlueprint","getgrnam",
            "getpwnam","ProgramPath","get_mac_vendor"]
 

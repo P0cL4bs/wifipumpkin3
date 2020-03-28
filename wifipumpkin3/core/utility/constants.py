@@ -74,6 +74,10 @@ ALGORITMS = ('TKIP','CCMP','TKIP + CCMP')
 NETWORKMANAGER = '/etc/NetworkManager/NetworkManager.conf'
 IPFORWARD      = '/proc/sys/net/ipv4/ip_forward'
 
+# Docker settings 
+DOCKERIPTABLESPATH = '/etc/iptables.ipv4.nat'
+DOCKERHOSTAPDCONF_PATH = '/etc/hostapd/hostapd.conf'
+
 #logging
 LOG_PUMPKINPROXY = user_config_dir+ '/.config/wifipumpkin3/logs/AccessPoint/pumpkin-proxy.log'
 LOG_URLCAPTURE   = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/urls.log'

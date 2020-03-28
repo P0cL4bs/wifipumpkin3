@@ -57,6 +57,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             #parser_set_proxy is default extend class 
             'parser_set_proxy' : self.proxy.pumpkinproxy,
             'parser_set_plugin': self.mitmhandler.sniffkin3,
+            'parser_set_mode': self.wireless.Settings,
         }
         self.parser_complete_plugin = {}
 
@@ -72,11 +73,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             'channel':'channel', 
             'proxy': 'proxy_plugins',
             'plugin': 'plugin',
+            'mode': 'mode',
         }
         for plugin_name, plugins_info in self.proxy.getInfo().items():
             self.commands[plugin_name]  = ''
         for plugin_name, plugins_info in self.mitmhandler.getInfo().items():
             self.commands[plugin_name]  = ''
+        for mode_name, mode_info in self.wireless.getAllModeInfo.items():
+            self.commands[mode_name]  = ''
+        
 
         self.Apthreads = {'RogueAP': []}
 
@@ -105,6 +110,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages('Available Modules:',info=True,sublime=True))
         for name,module in self.all_modules.items():
             output_table.append([name, getattr(module, "ModPump").__doc__])
+        print(tabulate(output_table, headers_table, tablefmt="simple"))
+        print("\n")
+
+    def do_mode(self, args):
+        headers_table, output_table = ["ID","Activate","Description"], []
+        print(display_messages('Available Wireless Mode:',info=True,sublime=True))
+        for id_mode,info in self.wireless.getAllModeInfo.items():
+            output_table.append([id_mode, setcolor('True',color='green') if 
+                    info['Checked']  else setcolor('False',color='red'),info['Name']])
         print(tabulate(output_table, headers_table, tablefmt="simple"))
         print("\n")
 
@@ -142,21 +156,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.Apthreads['RogueAP'].extend(self.proxy.ActiveReactor)
         self.Apthreads['RogueAP'].extend(self.mitmhandler.ActiveReactor)
 
-
-        print(display_messages('sharing internet connection with NAT...', info=True))
-        self.ifaceHostapd = self.conf.get('accesspoint','interfaceAP')
-        try:
-            for ech in self.conf.get_all_childname('iptables'):
-                ech = self.conf.get('iptables', ech)
-                if '$inet' in ech:
-                    ech = ech.replace('$inet',self.interfaces['activated'][0])
-                if '$wlan' in ech:
-                    ech = ech.replace('$wlan',self.ifaceHostapd)
-                popen(ech)
-        except Exception as e:
-            print(e)
-
-        
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:
                 QtCore.QThread.sleep(1)
@@ -180,14 +179,14 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.wireless.Stop()
 
         self.conf.set('accesspoint', 'statusAP',False)
-        # for thread in self.Apthreads['RogueAP']:
-        #     if thread is not None:
-        #         if (isinstance(thread, list)):
-        #             for sub_thread in thread:
-        #                 if (sub_thread != None):
-        #                     sub_thread.stop()
-        #             continue
-        #         thread.stop()
+        for thread in self.Apthreads['RogueAP']:
+            if thread is not None:
+                if (isinstance(thread, list)):
+                    for sub_thread in thread:
+                        if (sub_thread != None):
+                            sub_thread.stop()
+                    continue
+                thread.stop()
 
         for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []
@@ -218,6 +217,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.killThreads()
 
     def do_info(self, args):
+        """ get info from the module/plugin""" 
         pass
 
     def do_info_ap(self, args):

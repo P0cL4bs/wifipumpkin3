@@ -8,7 +8,6 @@ from re import search,compile,VERBOSE,IGNORECASE
 import netifaces
 from scapy.all import *
 from PyQt5 import QtCore
-from PyQt5 import QtGui
 import logging
 import signal
 import configparser
