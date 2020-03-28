@@ -6,8 +6,8 @@ RUN apt-get update \
     && apt-get -y install \
         dnsmasq \
         hostapd \
-	nano \
-	vim \
+	    nano \
+	    wi \
         ifupdown \
         python3 \
         python3-dev \
