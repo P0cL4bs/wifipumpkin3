@@ -25,8 +25,11 @@ class MitmController(PluginsUI,ControllerBlueprint):
             self.mitm_infor[k.ID] = {
                 'ID': k.ID,
                 'Name' : k.Name,
+                'Activate': k.isChecked(),
+                'Author' : k.Author,
+                'Logger' : k.LogFile,
                 'Description': k.Description,
-                'Config' : k.getConfig
+                'Config' : k.getConfig,
             }
 
         self.m_name = []

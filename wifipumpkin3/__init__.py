@@ -114,6 +114,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print("\n")
 
     def do_mode(self, args):
+        """ all wireless mode available """
         headers_table, output_table = ["ID","Activate","Description"], []
         print(display_messages('Available Wireless Mode:',info=True,sublime=True))
         for id_mode,info in self.wireless.getAllModeInfo.items():
@@ -218,7 +219,28 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_info(self, args):
         """ get info from the module/plugin""" 
-        pass
+        try:
+            command = args.split()[0]
+            plugins = self.mitmhandler.getInfo().get(command)
+            proxys = self.proxy.getInfo().get(command)
+            if plugins or proxys:
+                print(display_messages('Information {}: '.format(command),info=True,sublime=True))
+            if plugins:
+                for name,info in plugins.items():
+                    if (name != 'Config'):
+                        print(' {} : {}'.format(setcolor(name,color='blue'), 
+                        setcolor(info,color='yellow')))
+            if proxys:
+                for name,info in proxys.items():
+                    if (name != 'Config'):
+                        print(' {} : {}'.format(setcolor(name,color='blue'), 
+                        setcolor(info,color='yellow')))
+            
+            if plugins or proxys:
+                print('\n')
+
+        except IndexError:
+            pass
 
     def do_info_ap(self, args):
         ''' show all variable and status for settings AP '''
@@ -344,6 +366,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return setcolor(status,color='green')
         return setcolor(status,color= 'red')
 
+
+    def complete_info(self, text, args, start_index, end_index):
+        if text:
+            return [command for command in list(self.commands.keys())
+                    if command.startswith(text)]
+        else:
+            return list(self.commands.keys())
 
     def complete_ignore(self, text, args, start_index, end_index):
         if text:

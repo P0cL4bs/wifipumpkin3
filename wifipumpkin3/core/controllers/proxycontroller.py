@@ -32,8 +32,12 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 'ID': k.ID,
                 'Name' : k.Name,
                 'Port' : k.getRunningPort(),
+                'Activate': k.isChecked(),
+                'Author' : k.Author,
+                'Logger' : k.LogFile,
+                'ConfigPath' : k.CONFIGINI_PATH,
                 'Description': k.Description,
-                'Config' : k.getConfig
+                'Config' : k.getConfig,
             }
 
 
