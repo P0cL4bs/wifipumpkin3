@@ -11,16 +11,16 @@ from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.ui.uimode import WidgetBase
 
 palette_color = [
-    ('titlebar', 'black,bold', 'yellow'),
+    ('titlebar', '', ''),
     ('refresh button', 'dark green,bold', 'black'),
     ('quit button', 'dark red,bold', 'black'),
     ('getting quote', 'dark blue', 'black'),
     ('getting quote', 'dark blue', ''),
-    ('headers', 'white,bold', ''),
+    ('headers', 'black,bold', 'black'),
     ('change', 'dark green', ''),
     ('change negative', 'dark red', ''),
     ('body', 'white', 'black'),
-    ('title', 'black,bold', 'yellow'),
+    ('title', 'black', 'dark blue'),
 ]
 
 class TableWidget(BeautifulTable):
@@ -93,7 +93,7 @@ class ui_TableMonitorClient(WidgetBase):
         self.__threadServices = []
         self.__threadStatus = False
         self.header_text = [
-            ('titlebar', ''), 'Clients: ',('titlebar','     '),
+            ('titlebar', ''), 'Clients: ',
             ('title', 'UP'), ',', ('title', 'DOWN'), ':scroll',
             '     Monitor DHCP Requests',
         ]

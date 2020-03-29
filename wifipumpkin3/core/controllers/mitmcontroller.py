@@ -28,6 +28,7 @@ class MitmController(PluginsUI,ControllerBlueprint):
                 'Activate': k.isChecked(),
                 'Author' : k.Author,
                 'Logger' : k.LogFile,
+                'ConfigPath' : k.CONFIGINI_PATH,
                 'Description': k.Description,
                 'Config' : k.getConfig,
             }
