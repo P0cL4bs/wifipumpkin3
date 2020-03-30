@@ -4,7 +4,6 @@ from wifipumpkin3.core.config.globalimport import *
 
 from wifipumpkin3.core.controllers.wirelessmodecontroller import *
 from wifipumpkin3.core.controllers.dhcpcontroller import *
-from wifipumpkin3.core.servers.dhcp.dhcp import *
 from wifipumpkin3.core.controllers.proxycontroller import *
 from wifipumpkin3.core.controllers.mitmcontroller import *
 from wifipumpkin3.core.controllers.dnscontroller import *

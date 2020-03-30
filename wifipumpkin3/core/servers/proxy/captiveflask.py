@@ -107,7 +107,6 @@ class CaptivePortal(ProxyMode):
             name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
             if key_plugin in self.config.get_all_childname('plugins'):
                 self.setPluginActivated(key_plugin, status)
-                print(display_messages('captiveflask: {} status {}'.format(key_plugin, status),sucess=True))
             else:
                 print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
         except IndexError:

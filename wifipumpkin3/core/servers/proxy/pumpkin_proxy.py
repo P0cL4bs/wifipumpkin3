@@ -83,7 +83,6 @@ class PumpKinProxy(ProxyMode):
             name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
             if key_plugin in self.config.get_all_childname('plugins'):
                 self.config.set('plugins',key_plugin, status)
-                print(display_messages('PumpkinProxy: {} status: {}'.format(key_plugin, status),sucess=True))
             else:
                 print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
         except IndexError:
