@@ -4,7 +4,6 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from os import popen
 import sys
-from tabulate import tabulate
 
 class ConsoleUI(Cmd):
     ''' shell console UI '''
@@ -185,8 +184,7 @@ class ModuleUI(Cmd):
         for option,value in self.options.items():
             output_table.append([option,value[0], value[1]])
         print(display_messages('Available Options:',info=True,sublime=True))
-        print(tabulate(output_table, headers_table,tablefmt="simple"))
-        print("\n")
+        return display_tabulate(headers_table, output_table)
 
     def do_help(self,args):
         """ show this help """
