@@ -26,7 +26,7 @@ class PyDHCP(DHCPServers):
 
     def boot(self):
         #if (not hasattr(self, 'reactor')):
-        threadDHCP = DHCPThread(self.ifaceHostapd,self.DHCPConf)
-        threadDHCP.DHCPProtocol._request.connect(self.get_DHCPoutPut)
-        self.reactor = threadDHCP
+        self.reactor = DHCPThread(self.ifaceHostapd,self.DHCPConf)
+        self.reactor.DHCPProtocol._request.connect(self.get_DHCPoutPut)
+        self.reactor.setObjectName(self.ID)
         #self.reactor.LoopDhcpStatus = True

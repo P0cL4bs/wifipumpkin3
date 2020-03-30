@@ -25,3 +25,10 @@ class DNSController(ControllerBlueprint):
         for dns in self.DNSSettings.dnslist:
             if dns.isChecked():
                 return dns
+
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.ActiveReactor.getID()] = {
+            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
+            }
+        return info_reactor

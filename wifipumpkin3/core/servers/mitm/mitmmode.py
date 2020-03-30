@@ -141,7 +141,7 @@ class MitmMode(Widget):
         if self.CMD_ARRAY:
             self.reactor= ProcessThread({'python': self.CMD_ARRAY})
             self.reactor._ProcssOutput.connect(self.LogOutput)
-            self.reactor.setObjectName(self.Name)
+            self.reactor.setObjectName(self.ID)
 
     def shutdown(self):
         if self.reactor is not None:

@@ -63,7 +63,7 @@ class PumpKinProxy(ProxyMode):
     def boot(self):
         self.reactor= ProcessThread({'sslstrip3': self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
-        self.reactor.setObjectName(self.Name)
+        self.reactor.setObjectName(self.ID)
 
     @property
     def getPlugins(self):

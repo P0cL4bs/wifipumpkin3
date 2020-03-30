@@ -69,7 +69,7 @@ class CaptivePortal(ProxyMode):
 
         self.reactor= ProcessThread({'captiveflask': self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
-        self.reactor.setObjectName(self.Name)
+        self.reactor.setObjectName(self.ID)
 
         # settings iptables for add support captive portal 
         IFACE = self.conf.get('accesspoint', 'interfaceAP')

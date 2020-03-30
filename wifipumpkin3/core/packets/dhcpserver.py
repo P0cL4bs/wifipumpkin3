@@ -152,6 +152,14 @@ class DHCPThread(QThread):
             message, address = self.sock.recvfrom(1024)
             self.DHCPProtocol.datagram_received(message, address)
 
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return 'thread'
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
+
     def stop(self):
         self.started = False
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')

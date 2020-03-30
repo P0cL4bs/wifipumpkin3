@@ -53,7 +53,7 @@ class Responder3(MitmMode):
         if self.CMD_ARRAY:
             self.reactor= ProcessThread({'responder3': self.CMD_ARRAY})
             self.reactor._ProcssOutput.connect(self.LogOutput)
-            self.reactor.setObjectName(self.Name)
+            self.reactor.setObjectName(self.ID)
 
 
     def parser_set_responder3(self, status, plugin_name):

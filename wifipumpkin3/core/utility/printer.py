@@ -1,3 +1,4 @@
+from tabulate import tabulate
 
 colors = {'BOLD': '\033[1m','BLUE': '\033[34m' ,
             'GREEN': '\033[32m','YELLOW' :'\033[33m',
@@ -26,6 +27,11 @@ def setcolor(text,color='',underline=False):
     if underline:
         return colors['UNDERLINE']+strcolored[color]
     return strcolored[color]
+
+def display_tabulate(header=[], content=[], tablefmt='simple', newline=True):
+    print(tabulate(content, header,tablefmt=tablefmt))
+    if newline:
+        print('\n')
 
 def display_messages(string,error=False,sucess=False,info=False,sublime=False,without=False):
     if sublime:

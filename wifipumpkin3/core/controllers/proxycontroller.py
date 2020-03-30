@@ -158,6 +158,18 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 proxy.Serve()
                 proxy.boot()
 
+
+    @property
+    def getReactor(self):
+        return self.Active.reactor
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.getReactor.getID()] = {
+            'ID' : self.getReactor.getID(), 'PID' : self.getReactor.getpid()
+            }
+        return info_reactor
+
     def Stop(self):
         self.Active.Serve(False)
         self.Active.shutdown()

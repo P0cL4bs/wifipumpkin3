@@ -15,7 +15,7 @@ from collections import OrderedDict
 from functools import  partial
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from netaddr import EUI
-from wifipumpkin3.core.utility.printer import display_messages
+from wifipumpkin3.core.utility.printer import display_messages,display_tabulate
 from wifipumpkin3.core.common.platforms import Linux as Refactor
 from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.widgets.default.logger_manager import StandardLog

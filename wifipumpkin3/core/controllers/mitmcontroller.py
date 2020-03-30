@@ -98,6 +98,23 @@ class MitmController(PluginsUI,ControllerBlueprint):
         for i in self.Active:
             i.boot()
 
+    
+    @property
+    def getAllReactor(self):
+        reactor=[]
+        for i in self.Active:
+            reactor.append(i.reactor)
+        return reactor
+
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        for reactor in self.getAllReactor:
+            info_reactor[reactor.getID()] = {
+                'ID' : reactor.getID(), 'PID' : reactor.getpid()
+            }
+        return info_reactor
+
     def Stop(self):
         for i in self.Active:
             i.shutdown()

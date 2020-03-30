@@ -174,7 +174,7 @@ class ProxyMode(Widget,ComponentBlueprint):
     def boot(self):
         self.reactor= ProcessThread({'python3': self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
-        self.reactor.setObjectName(self.Name)
+        self.reactor.setObjectName(self.ID)
 
     def shutdown(self):
         pass

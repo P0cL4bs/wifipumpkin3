@@ -60,7 +60,7 @@ class Sniffkin3(MitmMode):
         #self.handler = self.parent.Plugins.MITM
         iface =  self.conf.get('accesspoint','interfaceAP')
         self.reactor= TCPProxyCore(iface, self.parent.currentSessionID)
-        self.reactor.setObjectName(self.Name)
+        self.reactor.setObjectName(self.ID)
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
     def LogOutput(self,data):
@@ -209,6 +209,14 @@ class TCPProxyCore(QtCore.QThread):
         except ValueError:
             return None,None
         return dict_head, None
+
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return 'thread'
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
 
     def stop(self):
         self.stopped = True

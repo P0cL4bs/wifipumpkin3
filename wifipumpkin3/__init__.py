@@ -3,7 +3,6 @@ from wifipumpkin3.core.common.terminal import ConsoleUI
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants  as C
 from wifipumpkin3.core.utility.printer import display_messages,setcolor
-from tabulate import tabulate
 
 from wifipumpkin3.core.common.defaultwidget import *
 from wifipumpkin3.core.config.globalimport import *
@@ -83,7 +82,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.commands[mode_name]  = ''
         
 
-        self.Apthreads = {'RogueAP': []}
+        self.Apthreads = {'RogueAP': [], 'ControllersAP' : []}
 
     @property
     def all_modules(self):
@@ -110,8 +109,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages('Available Modules:',info=True,sublime=True))
         for name,module in self.all_modules.items():
             output_table.append([name, getattr(module, "ModPump").__doc__])
-        print(tabulate(output_table, headers_table, tablefmt="simple"))
-        print("\n")
+        return display_tabulate(headers_table, output_table)
 
     def do_mode(self, args):
         """ all wireless mode available """
@@ -120,8 +118,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         for id_mode,info in self.wireless.getAllModeInfo.items():
             output_table.append([id_mode, setcolor('True',color='green') if 
                     info['Checked']  else setcolor('False',color='red'),info['Name']])
-        print(tabulate(output_table, headers_table, tablefmt="simple"))
-        print("\n")
+        return display_tabulate(headers_table, output_table)
 
     def do_use(self, args):
         """ select module for modules"""
@@ -146,10 +143,14 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.conf.set('accesspoint','current_session',self.parse_args.session)
 
         if self.wireless.Start() != None: return
-        self.dhcpcontrol.Start()
-        self.dnsserver.Start()
-        self.proxy.Start()
-        self.mitmhandler.Start()
+        self.Apthreads['ControllersAP'].append(self.dhcpcontrol)
+        self.Apthreads['ControllersAP'].append(self.dnsserver)
+        self.Apthreads['ControllersAP'].append(self.proxy)
+        self.Apthreads['ControllersAP'].append(self.mitmhandler)
+
+        for controller in self.Apthreads['ControllersAP']:
+            controller.Start()
+        self.Apthreads['ControllersAP'].append(self.wireless)
 
         self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
         self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
@@ -217,6 +218,22 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         ''' stop access point '''
         self.killThreads()
 
+    def do_jobs(self, args):
+        """ show all threads/processes in background """
+        if len(self.Apthreads['RogueAP']) > 0:
+            process_background = {}
+            headers_table, output_table = ["ID", "PID"], []
+            for controller in self.Apthreads['ControllersAP']:
+                process_background.update(controller.getReactorInfo())
+
+            for id_controller, info in process_background.items():
+                output_table.append([info['ID'], info['PID']])
+                
+            print(display_messages('Background processes/threads:',info=True,sublime=True))
+            return display_tabulate(headers_table, output_table)
+        print(display_messages('the AccessPoint is not running',info=True))
+        
+
     def do_info(self, args):
         """ get info from the module/plugin""" 
         try:
@@ -252,9 +269,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.conf.get('accesspoint',self.commands["ssid"]),
             self.conf.get('accesspoint',self.commands["channel"]),
             self.conf.get('accesspoint',self.commands["interface"]),
-            setcolor('Yes',color='green') if status_ap  else setcolor('False',color='red')])
-        print(tabulate(output_table, headers_table,tablefmt="simple"))
-        print('\n')
+            setcolor('is Running',color='green') if status_ap  else setcolor('not Running',color='red')])
+        return display_tabulate(headers_table, output_table)
 
     def do_set(self, args):
         ''' set variable proxy,plugin and access point '''
@@ -301,8 +317,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             ]) 
 
         print(display_messages('Available Proxys:',info=True,sublime=True))
-        print(tabulate(output_table, headers_table,tablefmt="simple"))
-        print('\n')
+        display_tabulate(headers_table, output_table)
         # check plugin none
         if not plugin_info_activated: return
         # check if plugin selected is iquals the plugin config
@@ -318,8 +333,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                  else setcolor('False',color='red')
             ])
         print(display_messages('{} plugins:'.format(plugin_info_activated['Name']),info=True,sublime=True))
-        print(tabulate(output_plugins, headers_plugins,tablefmt="simple"))
-        print('\n')
+        return display_tabulate(headers_plugins, output_plugins)
 
 
     def do_plugins(self, args=str):
@@ -338,9 +352,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if (self.mitmhandler.getInfo()[plugin_name]['Config'] !=  None and status_plugin):
                 config_instance = self.mitmhandler.getInfo()[plugin_name]['Config']
                 all_plugins = self.mitmhandler.getInfo()[plugin_name]['Config'].get_all_childname('plugins')
+        
         print(display_messages('Available Plugins:',info=True,sublime=True))
-        print(tabulate(output_table, headers_table,tablefmt="simple"))
-        print('\n')
+        display_tabulate(headers_table, output_table)
 
         if not all_plugins: return
 
@@ -353,8 +367,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                  else setcolor('False',color='red')
             ])
         print(display_messages('Sniffkin3 plugins:',info=True,sublime=True))
-        print(tabulate(output_plugins, headers_plugins,tablefmt="simple"))
-        print('\n')
+        return display_tabulate(headers_plugins, output_plugins)
 
     def help_plugins(self):
         print('\n'.join([ 'usage: set plugin [module name ] [(True/False)]',

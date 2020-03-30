@@ -37,6 +37,13 @@ class WirelessModeController(object):
     @property
     def ActiveReactor(self):
         return self.Settings.getActiveMode.reactor
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.ActiveReactor.getID()] = {
+            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
+            }
+        return info_reactor
 
     @property
     def Settings(self):

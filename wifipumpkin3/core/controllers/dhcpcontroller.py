@@ -10,11 +10,14 @@ class DHCPController(ControllerBlueprint):
         self.mode = {}
         for k in __dhcpmode:
             self.mode[k.ID]=k
+            
     def Start(self):
         self.Active.Start()
+
     @property
     def ActiveService(self):
         return self.Active.service
+
     @property
     def Active(self):
         for i in self.mode.values():
@@ -24,6 +27,14 @@ class DHCPController(ControllerBlueprint):
     def ActiveReactor(self):
         #reactor=[self.Active.reactor,self.Active.service]
         return self.Active.reactor
+
     def Stop(self):
         self.Active.Stop()
+
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.ActiveReactor.getID()] = {
+            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
+            }
+        return info_reactor
 

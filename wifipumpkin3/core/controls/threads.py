@@ -8,7 +8,8 @@ from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
 from wifipumpkin3.core.packets.dhcpserver import DHCPProtocol
 # from core.servers.proxy.http.controller.handler import MasterHandler
 from wifipumpkin3.core.utility.printer import display_messages,colors
-
+from wifipumpkin3.core.common.platforms import Linux as Refactor
+import wifipumpkin3.core.utility.constants as C
 
 class DHCPServerProcess(QThread):
     _ProcssOutput = pyqtSignal(object)
@@ -30,6 +31,14 @@ class DHCPServerProcess(QThread):
         print('[New Thread {} ({})]'.format(self.procDHCP.pid, self.objectName()))
         while self.started:
             self._ProcssOutput.emit(self.queue.get())
+
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return self.procDHCP.pid
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
 
     def stop(self):
         print('Thread::[{}] successfully stopped.'.format(self.objectName()))
@@ -54,6 +63,14 @@ class ProcessThread(QThread):
     def readProcessOutput(self):
         self.data = str(self.procThread.readAllStandardOutput(),encoding='ascii')
         self._ProcssOutput.emit(self.data)
+
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return self.procThread.pid()
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
 
     def start(self):
         self.procThread = QProcess(self)
@@ -116,12 +133,28 @@ class ProcessHostapd(QObject):
         self.queue = Queue()
         self.started = False
 
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return self.procHostapd.pid()
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
+
+    def removeInactivityClient(self, client_mac):
+        all_clients = Refactor.readFileDataToJson(C.CLIENTS_CONNECTED)
+        if client_mac in all_clients.keys():
+            del all_clients[client_mac]
+        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, all_clients)
+
+
     def read_OutputCommand(self):
         # for line in proc.stdout:
         #     if 'AP-STA-DISCONNECTED' in line.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in line.rstrip():
         #         q.put(line.split()[2])
         self.data = str(self.procHostapd.readAllStandardOutput(),encoding='ascii')
         if 'AP-STA-DISCONNECTED' in self.data.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in self.data.rstrip():
+            self.removeInactivityClient(self.data.split()[2])
             self.statusAP_connected.emit(self.data.split()[2])
             #self.queue.put(self.data.split()[2])
         # #self.log_hostapd.info(self.data)
@@ -139,7 +172,7 @@ class ProcessHostapd(QObject):
         self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)
         self.procHostapd.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
         self.procHostapd.readyReadStandardOutput.connect(self.read_OutputCommand)
-        print(display_messages('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()),info=True))
+        #print(display_messages('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()),info=True))
         self.started = True
         # self.proc = Popen(self.cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
         # self.procHostapd = Process(target=self.read_OutputCommand, args=(self.queue,self.proc))

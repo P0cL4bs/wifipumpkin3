@@ -56,7 +56,7 @@ class Static(Mode):
     def boot(self):
         # create thread for hostapd and connect get_Hostapd_Response functio
         self.reactor = ProcessHostapd({self.getHostapdPath :[C.HOSTAPDCONF_PATH]}, 'MDSNjD')
-        self.reactor.setObjectName('hostapd')
+        self.reactor.setObjectName('hostapd_{}'.format(self.ID))
         self.reactor.statusAP_connected.connect(self.get_Hostapd_Response)
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 

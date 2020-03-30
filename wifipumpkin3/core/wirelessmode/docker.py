@@ -47,7 +47,7 @@ class Docker(Mode):
         # create thread for hostapd and connect get_Hostapd_Response function
         self.reactor = ProcessHostapd({self.getHostapdPath :[
             '-P','/run/hostapd.pid' ,C.DOCKERHOSTAPDCONF_PATH]}, 'MDSNjD')
-        self.reactor.setObjectName('hostapd')
+        self.reactor.setObjectName('hostapd_{}'.format(self.ID))
         self.reactor.statusAP_connected.connect(self.get_Hostapd_Response)
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 
