@@ -6,6 +6,7 @@ class PyDNSServer(DNSBase):
     ID = "pydns_server"
     Name = "PyDNS Server"
     Author = 'Samuel Colvin @samuelcolvin'
+    LogFile = C.LOG_PYDNSSERVER
     ExecutableFile = ""
 
     def __init__(self,parent):

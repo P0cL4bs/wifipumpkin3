@@ -15,15 +15,15 @@ from collections import OrderedDict
 from functools import  partial
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from netaddr import EUI
-from wifipumpkin3.core.utility.printer import display_messages,display_tabulate
+from wifipumpkin3.core.utility.printer import display_messages,display_tabulate, setcolor
 from wifipumpkin3.core.common.platforms import Linux as Refactor
 from wifipumpkin3.core.common.platforms import setup_logger
-from wifipumpkin3.core.widgets.default.logger_manager import StandardLog
-from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
+from wifipumpkin3.core.widgets.default.logger_manager import StandardLog, LoggerManager
 
 def deleteObject(obj):
     ''' reclaim memory '''
     del obj
+    
 def ProgramPath(executablename):
     expath = os.popen('which {}'.format(executablename)).read().split('\n')[0]
 

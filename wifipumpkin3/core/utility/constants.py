@@ -81,6 +81,7 @@ DOCKERHOSTAPDCONF_PATH = '/etc/hostapd/hostapd.conf'
 #logging
 LOG_PUMPKINPROXY = user_config_dir+ '/.config/wifipumpkin3/logs/AccessPoint/pumpkin-proxy.log'
 LOG_URLCAPTURE   = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/urls.log'
+LOG_PYDNSSERVER  = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/pydnsserver.log'
 LOG_CREDSCAPTURE = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/credentials.log'
 LOG_SNIFFKIN3    = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/tcp-proxy.log'
 LOG_RESPONDER3   = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/responder3.log'
