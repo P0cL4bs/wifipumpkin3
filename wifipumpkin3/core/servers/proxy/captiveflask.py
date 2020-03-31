@@ -12,6 +12,7 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.plugins.captivePortal import *
+from ast import literal_eval
 
 class TCPProxyDock(DockableWidget):
     id = "TCPProxy"
@@ -98,8 +99,22 @@ class CaptivePortal(ProxyMode):
         return list_commands
 
     def LogOutput(self,data):
+        headers_table, output_table = ["IP", "Login", "Password"], []
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.logger.info(data)
+            try:
+                data = literal_eval(data)
+                ip = list(data.keys())[0]
+                output_table.append([
+                    ip,
+                    setcolor(data[ip]['login'], 'red'),
+                    setcolor(data[ip]['password'], 'red')
+                ])
+                print(display_messages('CaptiveFlask credentials:',info=True,sublime=True))
+                return display_tabulate(headers_table, output_table)
+            except SyntaxError:
+                pass
+
 
     def parser_set_captiveflask(self, status, plugin_name):
         try:

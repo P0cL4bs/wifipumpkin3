@@ -186,6 +186,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []
+        self.Apthreads['ControllersAP'] = []
 
     def countThreads(self):
         return len(self.threadsAP['RougeAP'])

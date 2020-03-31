@@ -96,7 +96,7 @@ class Sniffkin3Core(QtCore.QThread):
         self.interface  = interface
         self.session    = session
         self.stopped    = False
-        self.config     = SettingsINI(C.CONFIG_TP_INI)
+        self.config     = SettingsINI(C.CONFIG_SK_INI)
 
     def run(self):
         self.main()
