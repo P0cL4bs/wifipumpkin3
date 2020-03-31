@@ -98,8 +98,8 @@ LOG_CAPTIVEPO    = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/capti
 
 #APP SETTINGS
 CONFIG_INI          = user_config_dir+'/.config/wifipumpkin3/config/app/config.ini'
-CONFIG_TP_INI       = user_config_dir + '/.config/wifipumpkin3/config/app/tcpproxy.ini'
-CONFIG_PP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/proxy.ini'
+CONFIG_SK_INI       = user_config_dir + '/.config/wifipumpkin3/config/app/sniffkin3.ini'
+CONFIG_PP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/pumpkinproxy.ini'
 CONFIG_CP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/captive-portal.ini'
 
 TEMPLATES           = 'templates/fakeupdate/Windows_Update/Settins_WinUpdate.html'
