@@ -3,9 +3,17 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 from wifipumpkin3.core.servers.dhcp import *
 
 class DHCPController(ControllerBlueprint):
+    ID = 'dhcp_controller'
+
+    @staticmethod
+    def getID():
+        return DHCPController.ID
+
     def __init__(self,parent):
         super(DHCPController,self).__init__()
         self.parent = parent
+        # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         __dhcpmode = dhcp.DHCPSettings.instances[0].dhmode
         self.mode = {}
         for k in __dhcpmode:

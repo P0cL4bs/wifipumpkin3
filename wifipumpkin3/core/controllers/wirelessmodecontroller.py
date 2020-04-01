@@ -13,14 +13,22 @@ from datetime import datetime
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.wirelessmode import *
+from wifipumpkin3.core.utility.component import ControllerBlueprint
 
-class WirelessModeController(object):
+class WirelessModeController(ControllerBlueprint):
+    ID = 'wireless_controller'
+
+    @staticmethod
+    def getID():
+        return WirelessModeController.ID
 
     def __init__(self, parent, **kwargs):
         super(WirelessModeController,self).__init__()
         self.parent = parent
         #self.setHidden(True) # hide widget on home
         self.conf = SettingsINI.getInstance()
+        # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         #self.SessionsAP = loads(str(self.FSettings.Settings.get_setting('accesspoint', 'sessions')))
         #self.currentSessionID = self.parent.currentSessionID
         #self.SettingsAP = self.parent.SettingsAP
@@ -30,8 +38,7 @@ class WirelessModeController(object):
     def Activated(self):
         return self.Settings.getActiveMode
 
-    @property
-    def getAllModeInfo(self):
+    def getInfo(self):
         return self.Settings.getModesInfo
 
     @property

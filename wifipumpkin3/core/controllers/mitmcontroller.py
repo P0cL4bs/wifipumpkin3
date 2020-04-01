@@ -6,14 +6,21 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 
 class MitmController(PluginsUI,ControllerBlueprint):
     Name = "MITM"
+    ID = 'mitm_controller'
     Caption = "Activity Monitor"
     mitmhandler = {}
     SetNoMitmMode = QtCore.pyqtSignal(object)
     mitm_infor = {}
 
+    @staticmethod
+    def getID():
+        return MitmController.ID
+
     def __init__(self,parent = None,**kwargs):
         super(MitmController, self).__init__(parent)
         self.parent=parent
+         # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
         #self.uplinkIF = self.parent.Refactor.get_interfaces()
         #self.downlinkIF = self.parent.WLANCard.currentText()

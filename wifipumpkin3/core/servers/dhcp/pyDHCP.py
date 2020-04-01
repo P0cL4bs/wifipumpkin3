@@ -1,4 +1,3 @@
-from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.packets.dhcpserver import DHCPThread
 from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 

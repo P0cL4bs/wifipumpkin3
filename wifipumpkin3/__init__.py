@@ -1,13 +1,6 @@
 from wifipumpkin3.core.common.terminal import ConsoleUI
-from wifipumpkin3.core.common.defaultwidget import *
+from wifipumpkin3.core.controllers.defaultcontroller import *
 from wifipumpkin3.core.config.globalimport import *
-
-from wifipumpkin3.core.controllers.wirelessmodecontroller import *
-from wifipumpkin3.core.controllers.dhcpcontroller import *
-from wifipumpkin3.core.controllers.proxycontroller import *
-from wifipumpkin3.core.controllers.mitmcontroller import *
-from wifipumpkin3.core.controllers.dnscontroller import *
-from wifipumpkin3.core.controllers.uicontroller import *
 
 from wifipumpkin3.modules import *
 from wifipumpkin3.modules import module_list, all_modules
@@ -26,6 +19,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def getInstance(cls):
         return cls.instances[0]
 
+    @property
+    def getDefault(self):
+        """ return DefaultWidget instance for load controllers """
+        return DefaultController.getInstance()
+
     def __init__(self, parse_args):
         self.__class__.instances.append(weakref.proxy(self))
         self.parse_args = parse_args
@@ -36,27 +34,31 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def initialize_core(self):
         """ this method is called in __init__ """
-        self.coreui = DefaultWidget(self)
-        self.wireless = WirelessModeController(self)
-        self.dhcpcontrol = DHCPController(self)
-        self.dnsserver = DNSController(self)
-        self.tableUI = UIController(self)
+        self.coreui = DefaultController(self)
+        # self.wireless_controller = WirelessModeController(self)
+        # self.dhcpcontrol = DHCPController(self)
+        # self.dnsserver = DNSController(self)
         self.logger_manager = LoggerManager.getInstance()
 
-        self.proxy = self.coreui.Plugins.Proxy
-        self.mitmhandler = self.coreui.Plugins.MITM
+        #print(self.coreui.Plugins)
+        self.proxy_controller = self.coreui.getController('proxy_controller')
+        self.mitm_controller = self.coreui.getController('mitm_controller')
+        self.wireless_controller = self.coreui.getController('wireless_controller')
+        self.dhcp_controller = self.coreui.getController('dhcp_controller')
+        self.dns_controller = self.coreui.getController('dns_controller')
+        self.tableUI = self.coreui.getController('ui_controller')
 
         self.parser_list_func = {
             #parser_set_proxy is default extend class 
-            'parser_set_proxy' : self.proxy.pumpkinproxy,
-            'parser_set_plugin': self.mitmhandler.sniffkin3,
-            'parser_set_mode': self.wireless.Settings,
+            'parser_set_proxy' : self.proxy_controller.pumpkinproxy,
+            'parser_set_plugin': self.mitm_controller.sniffkin3,
+            'parser_set_mode': self.wireless_controller.Settings,
         }
         self.parser_complete_plugin = {}
 
         # hook function (plugins and proxys)
-        self.intialize_hook_func(self.proxy)
-        self.intialize_hook_func(self.mitmhandler)
+        self.intialize_hook_func(self.proxy_controller)
+        self.intialize_hook_func(self.mitm_controller)
 
         self.commands = \
         {
@@ -68,15 +70,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             'plugin': 'plugin',
             'mode': 'mode',
         }
-        for plugin_name, plugins_info in self.proxy.getInfo().items():
-            self.commands[plugin_name]  = ''
-        for plugin_name, plugins_info in self.mitmhandler.getInfo().items():
-            self.commands[plugin_name]  = ''
-        for mode_name, mode_info in self.wireless.getAllModeInfo.items():
-            self.commands[mode_name]  = ''
+        
+        # get all command plugins and proxys 
+        for ctr_name, ctr_instance in self.coreui.getController(None).items():
+            if hasattr(ctr_instance, 'getInfo'):
+                for plugin_name, plugins_info in ctr_instance.getInfo().items():
+                    self.commands[plugin_name]  = ''
         
 
-        self.Apthreads = {'RogueAP': [], 'ControllersAP' : []}
+        self.Apthreads = {'RogueAP': []}
 
     @property
     def all_modules(self):
@@ -109,7 +111,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """ all wireless mode available """
         headers_table, output_table = ["ID","Activate","Description"], []
         print(display_messages('Available Wireless Mode:',info=True,sublime=True))
-        for id_mode,info in self.wireless.getAllModeInfo.items():
+        for id_mode,info in self.wireless_controller.getInfo().items():
             output_table.append([id_mode, setcolor('True',color='green') if 
                     info['Checked']  else setcolor('False',color='red'),info['Name']])
         return display_tabulate(headers_table, output_table)
@@ -136,30 +138,22 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.conf.set('accesspoint',self.commands['interface'],self.parse_args.interface)
         self.conf.set('accesspoint','current_session',self.parse_args.session)
 
-        if self.wireless.Start() != None: return
-        self.Apthreads['ControllersAP'].append(self.dhcpcontrol)
-        self.Apthreads['ControllersAP'].append(self.dnsserver)
-        self.Apthreads['ControllersAP'].append(self.proxy)
-        self.Apthreads['ControllersAP'].append(self.mitmhandler)
+        if self.wireless_controller.Start() != None: return
+        for ctr_name, ctr_instance in self.coreui.getController(None).items():
+            if (ctr_name != 'wireless_controller'):
+                ctr_instance.Start()
 
-        for controller in self.Apthreads['ControllersAP']:
-            controller.Start()
-        self.Apthreads['ControllersAP'].append(self.wireless)
-
-        self.Apthreads['RogueAP'].insert(0,self.wireless.ActiveReactor)
-        self.Apthreads['RogueAP'].insert(1,self.dhcpcontrol.ActiveReactor)
-        self.Apthreads['RogueAP'].insert(2,self.dnsserver.ActiveReactor)
-        self.Apthreads['RogueAP'].extend(self.proxy.ActiveReactor)
-        self.Apthreads['RogueAP'].extend(self.mitmhandler.ActiveReactor)
+        self.Apthreads['RogueAP'].insert(0,self.wireless_controller.ActiveReactor)
+        self.Apthreads['RogueAP'].insert(1,self.dhcp_controller.ActiveReactor)
+        self.Apthreads['RogueAP'].insert(2,self.dns_controller.ActiveReactor)
+        self.Apthreads['RogueAP'].extend(self.proxy_controller.ActiveReactor)
+        self.Apthreads['RogueAP'].extend(self.mitm_controller.ActiveReactor)
 
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:
                 QtCore.QThread.sleep(1)
                 if not (isinstance(thread, list)):  
                     thread.start()
-
-        #self.dns = DNSServer(self.ifaceHostapd, self.conf.get('dhcpdefault','router'))
-        #self.dns.start()
     
     def addThreads(self,service):
         self.threadsAP.append(service)
@@ -168,11 +162,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         if not len(self.Apthreads['RogueAP']) > 0:
             return
 
-        self.proxy.Stop()
-        self.mitmhandler.Stop()
-        self.dnsserver.Stop()
-        self.dhcpcontrol.Stop()
-        self.wireless.Stop()
+        # get all command plugins and proxys 
+        for ctr_name, ctr_instance in self.coreui.getController(None).items():
+            ctr_instance.Stop()
 
         self.conf.set('accesspoint', 'statusAP',False)
         for thread in self.Apthreads['RogueAP']:
@@ -184,9 +176,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     continue
                 thread.stop()
 
-        for line in self.wireless.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
+        for line in self.wireless_controller.Activated.getSettings().SettingsAP['kill']: exec_bash(line)
         self.Apthreads['RogueAP'] = []
-        self.Apthreads['ControllersAP'] = []
 
     def countThreads(self):
         return len(self.threadsAP['RougeAP'])
@@ -218,8 +209,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         if len(self.Apthreads['RogueAP']) > 0:
             process_background = {}
             headers_table, output_table = ["ID", "PID"], []
-            for controller in self.Apthreads['ControllersAP']:
-                process_background.update(controller.getReactorInfo())
+            for ctr_name, ctr_instance in self.coreui.getController(None).items():
+                if hasattr(ctr_instance, 'getReactorInfo'):
+                    process_background.update(ctr_instance.getReactorInfo())
 
             for id_controller, info in process_background.items():
                 output_table.append([info['ID'], info['PID']])
@@ -233,8 +225,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """ get info from the module/plugin""" 
         try:
             command = args.split()[0]
-            plugins = self.mitmhandler.getInfo().get(command)
-            proxys = self.proxy.getInfo().get(command)
+            plugins = self.mitm_controller.getInfo().get(command)
+            proxys = self.proxy_controller.getInfo().get(command)
             if plugins or proxys:
                 print(display_messages('Information {}: '.format(command),info=True,sublime=True))
             if plugins:
@@ -294,7 +286,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         config_instance = None
         headers_plugins, output_plugins = ["Name", "Active"], []
 
-        for plugin_name, plugin_info in self.proxy.getInfo().items():
+        for plugin_name, plugin_info in self.proxy_controller.getInfo().items():
             status_plugin = self.conf.get('proxy_plugins',plugin_name, format=bool)
             # save plugin activated infor
             if (plugin_info['Config'] != None):
@@ -336,7 +328,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         headers_table, output_table = ["Name", "Active", "Description"], []
         headers_plugins, output_plugins = ["Name", "Active"], []
         all_plugins,config_instance = None, None
-        for plugin_name, plugin_info in self.mitmhandler.getInfo().items():
+        for plugin_name, plugin_info in self.mitm_controller.getInfo().items():
             status_plugin = self.conf.get('mitm_modules',plugin_name, format=bool)
             output_table.append(
             [   plugin_name,setcolor('True',color='green') if 
@@ -344,9 +336,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 plugin_info['Description'][:50] + '...' if len(plugin_info['Description']) > 50 else 
                 plugin_info['Description']
             ])   
-            if (self.mitmhandler.getInfo()[plugin_name]['Config'] !=  None and status_plugin):
-                config_instance = self.mitmhandler.getInfo()[plugin_name]['Config']
-                all_plugins = self.mitmhandler.getInfo()[plugin_name]['Config'].get_all_childname('plugins')
+            if (self.mitm_controller.getInfo()[plugin_name]['Config'] !=  None and status_plugin):
+                config_instance = self.mitm_controller.getInfo()[plugin_name]['Config']
+                all_plugins = self.mitm_controller.getInfo()[plugin_name]['Config'].get_all_childname('plugins')
         
         print(display_messages('Available Plugins:',info=True,sublime=True))
         display_tabulate(headers_table, output_table)
@@ -404,13 +396,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return command_list
         else:
             return list(self.commands.keys())
-
-    def complete_plugins(self, text, args, start_index, end_index):
-        if (text):
-            return [command for command in self.conf_pproxy.get_all_childname('plugins') if 
-            command.startswith(text)]
-        else:
-            return self.conf_pproxy.get_all_childname('plugins')
 
     def complete_use(self, text, args, start_index, end_index):
         if (text):

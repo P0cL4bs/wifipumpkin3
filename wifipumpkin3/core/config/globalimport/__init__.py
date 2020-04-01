@@ -13,7 +13,6 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.utility.collection import SettingsINI as SuperSettings
 from collections import OrderedDict
 from functools import  partial
-from wifipumpkin3.core.utility.component import ComponentBlueprint
 from netaddr import EUI
 from wifipumpkin3.core.utility.printer import display_messages,display_tabulate, setcolor
 from wifipumpkin3.core.common.platforms import Linux as Refactor
@@ -48,7 +47,7 @@ def exec_bash(command):
 
 
 __all__ = ["deleteObject","os","sys","exec_bash","LoggerManager","StandardLog","setup_logger","Qt","QtCore","SuperSettings","getLogger","ERROR",
-           "C","OrderedDict","partial","Refactor","ComponentBlueprint","getgrnam",
+           "C","OrderedDict","partial","Refactor","getgrnam",
            "getpwnam","ProgramPath","get_mac_vendor"]
 
 #root = QtCore.QCoreApplication.instance()

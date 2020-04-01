@@ -2,7 +2,7 @@ from re import *
 from netaddr import EUI
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
-from wifipumpkin3.core.utility.component import ControllerBlueprint
+from wifipumpkin3.core.utility.component import ComponentBlueprint
 from isc_dhcp_leases.iscdhcpleases import IscDhcpLeases
 from wifipumpkin3.core.controls.threads import ProcessThread
 

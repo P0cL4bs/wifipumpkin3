@@ -9,14 +9,21 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 class ProxyModeController(PluginsUI, ControllerBlueprint):
     Name = "Proxy"
     Caption = "Enable Proxy Server"
+    ID = 'proxy_controller'
     proxies = {}
     proxies_infor = {}
     SetNoProxy = QtCore.pyqtSignal(object)
     dockMount = QtCore.pyqtSignal(bool)
 
+    @staticmethod
+    def getID():
+        return ProxyModeController.ID
+
     def __init__(self,parent = None,**kwargs):
         super(ProxyModeController, self).__init__(parent)
         self.parent=parent
+         # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
 
         #self.setChecked(self.conf.get('plugins', 'disableproxy', format=bool))
@@ -135,7 +142,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     @property
     def get(self):
         return self.proxies
-
+    
     def getInfo(self):
         return self.proxies_infor
 
