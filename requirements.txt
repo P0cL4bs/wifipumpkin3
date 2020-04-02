@@ -8,7 +8,11 @@ tabulate==0.8.5
 beautifultable==0.8.0
 urwid==1.1.2
 termcolor==1.1.0
-PyQt5==5.10.1
+twisted==19.7.0
+PyQt5==5.14.0 #docker working 
+pyOpenSSL==19.0.0
+asn1crypto>=1.0.0
+Responder3==0.0.1
 bs4==0.0.1
 dnslib==0.9.7
 loguru==0.4.0
