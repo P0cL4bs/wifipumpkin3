@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 from logging import getLogger,ERROR
 getLogger('scapy.runtime').setLevel(ERROR)
@@ -21,10 +21,9 @@ if __name__ == '__main__':
     app = QtCore.QCoreApplication(sys.argv)
     conf       = SettingsINI(C.CONFIG_INI)
     ifacedefault = conf.get('accesspoint','interfaceAP')
-    session_default = conf.get('accesspoint','current_session')
     parser = argparse.ArgumentParser(description="WiFi-Pumpkin - pure line-oriented command")
     parser.add_argument('-i',  dest='interface',help='set interface for create AP',default=ifacedefault)
-    parser.add_argument('-s',  dest='session',help='set session for continue attack',default=session_default)
+    parser.add_argument('-s',  dest='session',help='set session for continue attack',default=None)
     parser.add_argument('-p', '--pulp', dest='pulp',help='interactive sessions can be scripted with .pulp file',default='')
     parser.add_argument('-x', '--xpulp', dest='xpulp',help='interactive sessions can be string with ";" as the separator',default='')
     parser.add_argument('-v','--version', action='version', dest='version',version='%(prog)s v{}'.format(_version))
