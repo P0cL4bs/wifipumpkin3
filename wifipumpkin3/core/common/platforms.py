@@ -15,6 +15,7 @@ import wifipumpkin3.core.utility.constants as C
 from shlex import split
 from glob import glob
 import warnings, json
+from uuid import uuid1
 
 
 loggers = {}
@@ -152,6 +153,12 @@ class Linux(QtCore.QObject):
             with open(filename, mode) as f:
                 datastore = json.load(f)
         return datastore
+
+    @staticmethod
+    def generate_session_id():
+        ''' return str session id '''
+        my_id = str(uuid1())
+        return my_id
 
 
 def is_hexadecimal(text):

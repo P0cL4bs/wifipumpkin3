@@ -27,17 +27,22 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def __init__(self, parse_args):
         self.__class__.instances.append(weakref.proxy(self))
         self.parse_args = parse_args
+        # load session parser 
+        self.currentSessionID = self.parse_args.session
+        if not self.currentSessionID:
+            self.currentSessionID = Refactor.generate_session_id()
+        print(display_messages('Session id: [{}]'.format(
+            setcolor(self.currentSessionID, color='red', underline=True)), info=True))
 
         self.all_modules = module_list
-        self.currentSessionID = self.parse_args.session
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
 
     def initialize_core(self):
         """ this method is called in __init__ """
+        # set current session unique id 
+        self.conf.set('accesspoint','current_session', self.currentSessionID)
+
         self.coreui = DefaultController(self)
-        # self.wireless_controller = WirelessModeController(self)
-        # self.dhcpcontrol = DHCPController(self)
-        # self.dnsserver = DNSController(self)
         self.logger_manager = LoggerManager.getInstance()
 
         #print(self.coreui.Plugins)
