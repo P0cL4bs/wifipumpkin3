@@ -164,4 +164,7 @@ class DHCPThread(QThread):
         self.started = False
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')
         print('Thread::[{}] successfully stopped.'.format(self.objectName()))
-        self.sock.close()
+        #TODO: bug:  Bad file descriptor with socket SO_REUSEADDR activate
+        # OSError: [Errno 9] Bad file descriptor when close socket 
+        # the tempp solution is not close socket in time excutation
+        #self.sock.close()

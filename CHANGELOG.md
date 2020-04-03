@@ -75,6 +75,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed Bad file descriptor with socket SO_REUSEADDR activate [mh4x0f]
 - Fixed session id not empty when start app. [mh4x0f]
 - Fixed wirelessmode docker remount ap without errors. [mh4x0f]
 - Fixed name file configuration. [mh4x0f]
