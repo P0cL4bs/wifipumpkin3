@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added parser wireless mode options [mh4x0f]
 - Added changelog 1.0.0 version. [mh4x0f]
 - Added generate random session id. [mh4x0f]
 - Added random banners ascii art. [mh4x0f]

@@ -47,7 +47,14 @@ class SettingsINI(object):
 		self.psettings.beginGroup(name_group)
 		self.psettings.setValue(key, value)
 		self.closeGroup()
-
+	
+	def set_one(self,name_group,key, value):
+		""" Sets the value of setting key to value """
+		self.set(name_group, key, value)
+		for item in self.get_all_childname(name_group):
+    			if (item != key):
+    					self.set(name_group, item, False)
+	
 	def get_by_index_key(self,index,key=str):
 		""" get specific key value by index type(list) """
 		return str(self.get(key,self.get_all_childname(key)[index]))
