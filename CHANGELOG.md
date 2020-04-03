@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- Added changelog 1.0.0 version. [mh4x0f]
 - Added generate random session id. [mh4x0f]
 - Added random banners ascii art. [mh4x0f]
 - Added somes improvements controller system. [mh4x0f]
@@ -60,7 +61,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
-
+- Removed history.md file [mh4x0f]
 - Removed keys not using in project. [mh4x0f]
 - Remove lib not using in the project. [mh4x0f]
 - Removed somes import nyscreen. [mh4x0f]
