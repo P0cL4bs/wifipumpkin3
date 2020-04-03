@@ -116,9 +116,9 @@ class Sniffkin3Core(QtCore.QThread):
         self.plugin_classes = default.PSniffer.__subclasses__()
         for p in self.plugin_classes:
             plugin_load = p()
-            self.plugins[plugin_load.name] = plugin_load
-            self.plugins[plugin_load.name].output = self._ProcssOutput
-            self.plugins[plugin_load.name].session = self.session
+            self.plugins[plugin_load.Name] = plugin_load
+            self.plugins[plugin_load.Name].output = self._ProcssOutput
+            self.plugins[plugin_load.Name].session = self.session
         print('\n[*] {} running on port 80/8080:\n'.format(self.getID()))
         for name in self.plugins.keys():
             if self.config.get('plugins', name, format=bool):
