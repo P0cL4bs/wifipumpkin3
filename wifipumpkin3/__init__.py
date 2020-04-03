@@ -31,7 +31,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.currentSessionID = self.parse_args.session
         if not self.currentSessionID:
             self.currentSessionID = Refactor.generate_session_id()
-        print(display_messages('Session id: [{}]'.format(
+        print(display_messages('Session id: {} '.format(
             setcolor(self.currentSessionID, color='red', underline=True)), info=True))
 
         self.all_modules = module_list

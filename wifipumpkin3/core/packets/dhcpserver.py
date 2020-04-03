@@ -163,4 +163,5 @@ class DHCPThread(QThread):
     def stop(self):
         self.started = False
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')
+        print('Thread::[{}] successfully stopped.'.format(self.objectName()))
         self.sock.close()
