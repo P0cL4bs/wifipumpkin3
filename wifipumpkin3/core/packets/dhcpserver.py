@@ -149,8 +149,12 @@ class DHCPThread(QThread):
         self.DHCPProtocol.connection_made(self.sock)
         #log.debug("Starting UDP server")
         while self.started:
-            message, address = self.sock.recvfrom(1024)
-            self.DHCPProtocol.datagram_received(message, address)
+            try:
+                message, address = self.sock.recvfrom(1024)
+                self.DHCPProtocol.datagram_received(message, address)
+            except Exception as e:
+                # OSError: [Errno 9] Bad file descriptor when close socket 
+                pass
 
     def getpid(self):
         """ return the pid of current process in background"""
@@ -164,7 +168,4 @@ class DHCPThread(QThread):
         self.started = False
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')
         print('Thread::[{}] successfully stopped.'.format(self.objectName()))
-        #TODO: bug:  Bad file descriptor with socket SO_REUSEADDR activate
-        # OSError: [Errno 9] Bad file descriptor when close socket 
-        # the tempp solution is not close socket in time excutation
-        #self.sock.close()
+        self.sock.close()
