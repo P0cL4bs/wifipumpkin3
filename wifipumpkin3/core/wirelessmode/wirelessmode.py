@@ -6,7 +6,7 @@ from os import (
 )
 from shutil import move
 from wifipumpkin3.core.widgets.default.session_config import *
-
+from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
 
 class Mode(Qt.QObject):
     configApMode = 'ap_mode'
@@ -22,9 +22,6 @@ class Mode(Qt.QObject):
         self.conf = SuperSettings.getInstance()
         self.SettingsAP = {}
         
-        #self.currentSessionID = self.parent.currentSessionID
-        #self.SettingsAP = self.parent.SettingsAP
-        #self.SessionsAP = self.parent.SessionsAP
         self.SessionConfig = SessionConfig.getInstance()
         self.interfacesLink = Refactor.get_interfaces()
 
@@ -43,27 +40,17 @@ class Mode(Qt.QObject):
 
     def get_soft_dependencies(self):
         ''' check if Hostapd, isc-dhcp-server is installed '''
-        if not path.isfile(self.hostapd_path):
-            return QtGui.QMessageBox.information(self,'Error Hostapd','hostapd is not installed')
-        if self.FSettings.get_setting('accesspoint','dhcpd_server',format=bool):
-            if not self.SettingsEnable['ProgCheck'][3]:
-                return QtGui.QMessageBox.warning(self,'Error dhcpd','isc-dhcp-server (dhcpd) is not installed')
-        return True
+        pass
+        # if not path.isfile(self.hostapd_path):
+        #     return QtGui.QMessageBox.information(self,'Error Hostapd','hostapd is not installed')
+        # if self.FSettings.get_setting('accesspoint','dhcpd_server',format=bool):
+        #     if not self.SettingsEnable['ProgCheck'][3]:
+        #         return QtGui.QMessageBox.warning(self,'Error dhcpd','isc-dhcp-server (dhcpd) is not installed')
+        # return True
 
     def configure_network_AP(self):
         self.parent.configure_network_AP()
         
-    def controlcheck(self,object):
-        self.FSettings.set_setting('accesspoint',
-                                            self.ID, self.controlui.isChecked())
-        if self.Settings:
-            self.Settings.setEnabled(self.controlui.isChecked())
-            if self.controlui.isChecked():
-                self.Settings.show()
-
-            else:
-                self.Settings.hide()
-
     @property
     def WirelessSettings(self):
         return self.SessionConfig.Wireless
@@ -87,19 +74,11 @@ class Mode(Qt.QObject):
         self.PostStart()
 
     def PostStart(self):
-        #self.parent.set_status_label_AP(True)
-        # TODO remove the code below as it has been replaced with proxy disables
-        # self.ProxyPluginsTAB.GroupSettings.setEnabled(False)
         print('-------------------------------')
         # set configure iptables 
         self.setIptables()
-        # print('AP::[{}] Running...'.format(self.WirelessSettings.EditSSID.text()))
-        # print('AP::BSSID::[{}] CH {}'.format(Refactor.get_interface_mac(
-        #     self.WirelessSettings.WLANCard.currentText()),
-        #     self.WirelessSettings.EditChannel.value()))
+        # set AP status true 
         self.conf.set('accesspoint', 'statusAP', True)
-        #self.conf.set('accesspoint', 'interfaceAP',str(self.WirelessSettings.WLANCard.currentText()))
-        # check if Advanced mode is enable
 
     def setIptables(self):
         self.interfacesLink = Refactor.get_interfaces()
@@ -119,10 +98,6 @@ class Mode(Qt.QObject):
     def Stop(self):
         self.Shutdown()
 
-    @property
-    def DHCPClient(self):
-        return DHCPClient.instances[0]
-
     def get_error_hostapdServices(self,data):
         '''check error hostapd on mount AP '''
         self.Shutdown()
@@ -130,15 +105,35 @@ class Mode(Qt.QObject):
         'Failed to initiate Access Point, '
         'check output process hostapd.\n\nOutput::\n{}'.format(data))
 
+    def check_Wireless_Security(self):
+        '''check if user add security password on AP'''
+        self.confgSecurity = []
+        wpa_type = self.conf.get('accesspoint', 'wpa_type', format=int)
+        wpa_algorithms = self.conf.get('accesspoint', 'wpa_algorithms')
+        wpa_sharedkey = self.conf.get('accesspoint', 'wpa_sharedkey')
+
+        if self.conf.get('accesspoint','enable_security',format=bool):
+        
+            if 1 <= wpa_type <= 2:
+                self.confgSecurity.append('wpa={}\n'.format(wpa_type))
+                self.confgSecurity.append('wpa_key_mgmt=WPA-PSK\n')
+                self.confgSecurity.append('wpa_passphrase={}\n'.format(wpa_sharedkey))
+                self.confgSecurity.append('wpa_pairwise={}\n'.format(wpa_algorithms))
+
+            if wpa_type == 0:
+                self.confgSecurity.append('auth_algs=1\n')
+                self.confgSecurity.append('wep_default_key=0\n')
+                if len(wpa_sharedkey) == 5 or len(wpa_sharedkey) == 13:
+                    self.confgSecurity.append('wep_key0="{}"\n'.format(wpa_sharedkey))
+                else:
+                    self.confgSecurity.append('wep_key0={}\n'.format(wpa_sharedkey))
+            print(display_messages('enable security authentication wireless', info=True))
+            for config in self.confgSecurity:
+                self.Settings.SettingsAP['hostapd'].append(config)
+
     def LogOutput(self,data):
         ''' get inactivity client from hostapd response'''
-
-        if self.DHCPClient.ClientTable.APclients != {}:
-            if data in self.DHCPClient.ClientTable.APclients.keys():
-                self.parent.StationMonitor.addRequests(data,self.DHCPClient.ClientTable.APclients[data],False)
-            self.DHCPClient.ClientTable.delete_item(data)
-            self.parent.connectedCount.setText(str(len(self.DHCPClient.ClientTable.APclients.keys())))
-
+        pass
 
 
 

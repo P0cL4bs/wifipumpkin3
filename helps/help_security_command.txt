@@ -1,0 +1,11 @@
+help security
+=============
+wpa_type : 0 for WEP, 1 for WPA, 2 for WPA2
+wpa_algorithms:
+    CCMP = AES in Counter mode with CBC-MAC [RFC 3610, IEEE 802.11i]
+    TKIP = Temporal Key Integrity Protocol [IEEE 802.11i]
+wpa_sharedkey:
+    secret in hex format (64 hex digits), wpa_psk, or as an ASCII passphrase
+
+usage: set security.[key] [value]
+

@@ -58,22 +58,27 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             'parser_set_proxy' : self.proxy_controller.pumpkinproxy,
             'parser_set_plugin': self.mitm_controller.sniffkin3,
             'parser_set_mode': self.wireless_controller.Settings,
+            'parser_set_security': self.wireless_controller.Settings
         }
-        self.parser_complete_plugin = {}
+        self.parser_autcomplete_func = {}
 
         # hook function (plugins and proxys)
         self.intialize_hook_func(self.proxy_controller)
         self.intialize_hook_func(self.mitm_controller)
 
+        # register autocomplete set security command 
+        self.parser_autcomplete_func['parser_set_security'] = self.wireless_controller.Settings.getCommands
+        
         self.commands = \
         {
             'interface': 'interfaceAP',
             'ssid': 'ssid',
             'bssid': 'bssid',
             'channel':'channel', 
-            'proxy': 'proxy_plugins',
-            'plugin': 'plugin',
-            'mode': 'mode',
+            'proxy': None, # only for settings proxy
+            'plugin': None, # only for settings plugin
+            'mode': None, # only for settings mdoe
+            'security' : 'enable_security'
         }
         
         # get all command plugins and proxys 
@@ -102,7 +107,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         for plugin_name in controller.getInfo():
             self.parser_list_func['parser_set_' + plugin_name] = getattr(controller, plugin_name) 
             if (getattr(controller, plugin_name).getPlugins != None):
-                self.parser_complete_plugin['parser_set_' + plugin_name] = getattr(controller, plugin_name).getPlugins
+                self.parser_autcomplete_func['parser_set_' + plugin_name] = getattr(controller, plugin_name).getPlugins
 
     def do_show(self, args):
         """ show available modules"""
@@ -251,9 +256,10 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         except IndexError:
             pass
 
-    def do_info_ap(self, args):
+    def do_ap(self, args):
         ''' show all variable and status for settings AP '''
-        headers_table, output_table = ["BSSID", "SSID", "Channel", "Iface", "StatusAP"], []
+        headers_table, output_table = ["BSSID", "SSID",
+                 "Channel", "Iface", "StatusAP", "Security"], []
         print(display_messages('Settings AccessPoint:',info=True,sublime=True))
         status_ap =self.conf.get('accesspoint',"statusAP", format=bool)
         output_table.append([
@@ -261,28 +267,45 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.conf.get('accesspoint',self.commands["ssid"]),
             self.conf.get('accesspoint',self.commands["channel"]),
             self.conf.get('accesspoint',self.commands["interface"]),
-            setcolor('is Running',color='green') if status_ap  else setcolor('not Running',color='red')])
-        return display_tabulate(headers_table, output_table)
+            setcolor('is Running',color='green') 
+            if status_ap  else setcolor('not Running',color='red'),
+            self.conf.get('accesspoint',self.commands["security"])])
+        display_tabulate(headers_table, output_table)
+        enable_security = self.conf.get('accesspoint',self.commands["security"], format=bool)
+        
+        if enable_security: 
+            headers_sec, output_sec = ['wpa_algorithms', 'wpa_sharedkey','wpa_type'], []
+            output_sec.append([
+                self.conf.get('accesspoint','wpa_algorithms'),
+                self.conf.get('accesspoint','wpa_sharedkey'),
+                self.conf.get('accesspoint','wpa_type')
+            ])
+            print(display_messages('Settings Security:',info=True,sublime=True))
+            display_tabulate(headers_sec, output_sec)
+            self.show_help_command('help_security_command')
 
     def do_set(self, args):
         ''' set variable proxy,plugin and access point '''
         try:
             command,value = args.split()[0],args.split()[1]
-            for func in self.parser_list_func:
-                if command in func:
-                    return getattr(self.parser_list_func[func], func)(value, args)
-            # hook function configure plugin 
-            for plugin in self.parser_complete_plugin:
-                if command in self.parser_complete_plugin[plugin]:
-                    return getattr(self.parser_list_func[plugin], plugin)(value, command)
-
-            if (command in self.commands.keys()):
-                self.conf.set('accesspoint',self.commands[command],value)
-                print(display_messages('changed {} to => {}'.format(command, value),sucess=True))
-            else:
-                print(display_messages('unknown command: {} '.format(command),error=True))
         except IndexError:
-            pass
+            return print(display_messages('unknown sintax : {} '.format(args),error=True))
+
+        if (command in list(self.commands.keys()) and self.commands[command]):
+            # settings accesspoint if command is not None
+            self.conf.set('accesspoint',self.commands[command],value)
+            return
+
+        for func in self.parser_list_func:
+            if command in func:
+                return getattr(self.parser_list_func[func], func)(value, args)
+        # hook function configure plugin 
+        for plugin in self.parser_autcomplete_func:
+            if command in self.parser_autcomplete_func[plugin]:
+                return getattr(self.parser_list_func[plugin], plugin)(value, command)
+
+        print(display_messages('unknown command: {} '.format(command),error=True))
+
 
     def do_proxys(self, args):
         ''' show all proxys available for attack  '''
@@ -389,9 +412,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def complete_set(self, text, args, start_index, end_index):
         if text:
             command_list = []
-            for func in self.parser_complete_plugin:
+            for func in self.parser_autcomplete_func:
                 if text.startswith(func.split('_set_')[1]):
-                    for command in self.parser_complete_plugin[func]:
+                    for command in self.parser_autcomplete_func[func]:
                         if command.startswith(text):
                             command_list.append(command)
 

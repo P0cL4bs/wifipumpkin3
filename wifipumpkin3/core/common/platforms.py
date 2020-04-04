@@ -155,6 +155,15 @@ class Linux(QtCore.QObject):
         return datastore
 
     @staticmethod
+    def readFileHelp(filename, mode='r'):
+        """ return content the help files """
+        content= ''
+        with open('{}{}.txt'.format(C.HELPFILESPATH,filename), mode) as f:
+            content = f.read()
+            f.close()
+        return content
+
+    @staticmethod
     def generate_session_id():
         ''' return str session id '''
         my_id = str(uuid1())

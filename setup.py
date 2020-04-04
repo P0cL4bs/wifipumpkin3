@@ -27,6 +27,7 @@ def create_user_dir_config():
         os.makedirs(user_config_dir, exist_ok=True)
         copy_tree("config", user_config_dir +'/config')
         copy_tree("logs", user_config_dir + "/logs")
+        copy_tree("helps", user_config_dir + "/helps")
 
 
 # create dir config

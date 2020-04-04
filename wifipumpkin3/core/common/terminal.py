@@ -4,6 +4,7 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from os import popen
 import sys
+from wifipumpkin3.core.common.platforms import Linux
 
 class ConsoleUI(Cmd):
     ''' shell console UI '''
@@ -114,6 +115,10 @@ class ConsoleUI(Cmd):
         ''' load command separate for ; file or string'''
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
+
+    def show_help_command(self, filename):
+        '''read content file help command '''
+        print(Linux.readFileHelp(filename))
 
     def precmd(self, line):
         newline=line.strip()

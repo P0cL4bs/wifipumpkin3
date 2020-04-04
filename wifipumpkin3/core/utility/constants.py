@@ -46,6 +46,8 @@ NOTIFYSTYLE = "; ".join((
     "padding: 5px"))
 
 
+HELPFILESPATH = user_config_dir + '/.config/wifipumpkin3/helps/'
+
 #DHCP logger connected 
 CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/config/session/connected.json'
 

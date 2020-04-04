@@ -163,6 +163,24 @@ class AccessPointSettings(CoreSettings):
                 return
         return print(display_messages('unknown command: {} '.format(mode_name),error=True))
 
+    @property
+    def getCommands(self):
+        commands = ['wpa_algorithms', 'wpa_sharedkey','wpa_type']
+        list_commands = []
+        for command in commands:
+            list_commands.append('security' + '.' + command)
+        return list_commands
+
+    def parser_set_security(self, value, settings):
+        try:
+            # key = security.wpa_sharedkey
+            name,key = settings.split('.')[0],settings.split('.')[1]
+            if key in self.conf.get_all_childname('accesspoint'):
+                return self.conf.set('accesspoint',key, value)
+            print(display_messages('unknown flag: {}'.format(key),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))
+
    
     def configure_network_AP(self):
         ''' configure interface and dhcpd for mount Access Point '''

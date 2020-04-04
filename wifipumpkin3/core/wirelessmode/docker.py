@@ -32,11 +32,11 @@ class Docker(Mode):
         return self.Settings
 
     def Initialize(self):
-
-        self.check_Wireless_Security()
+        # settings ap
         self.Settings.Configure()
-        self.Settings.checkNetworkAP()
-
+        if not (self.Settings.checkNetworkAP()):
+            sys.exit(1)
+        self.check_Wireless_Security()
 
         ignore = ('interface=','ssid=','channel=','essid=')
         with open(C.DOCKERHOSTAPDCONF_PATH,'w') as apconf:
@@ -100,18 +100,13 @@ class Docker(Mode):
         popen('iptables-restore < {}'.format(C.DOCKERIPTABLESPATH))
 
     def get_Hostapd_Response(self,data):
+        #TODO: notify user client desconnected 
         print(data)
 
     def get_error_hostapdServices(self,data):
         if  self.conf.get('accesspoint','statusAP',format=bool):
             print(display_messages('Hostapd Error',error=True))
             print(data)
-
-
-    def check_Wireless_Security(self):
-        '''check if user add security password on AP'''
-        # New Implementation after refactored
-        pass
     
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''
@@ -153,6 +148,10 @@ class DockerSettings(CoreSettings):
     ID = "Static"
     Category = "Wireless"
     instances = []
+
+    @classmethod
+    def getInstance(cls):
+        return cls.instances[0]
 
     def __init__(self, parent):
         super(DockerSettings, self).__init__(parent)
@@ -266,17 +265,12 @@ class DockerSettings(CoreSettings):
             if gateway_wp[:len(gateway_wp)-len(gateway_wp.split('.').pop())] == \
                 gateway[:len(gateway)-len(gateway.split('.').pop())]:
                 print(display_messages('DHCP Server settings',error=True))
-                print('The DHCP server check if range ip class is same.\n'
+                print('\n'.join(['The DHCP server check if range ip class is same.\n'
                     'it works, but not share internet connection in some case.\n'
                     'for fix this, You need change on tab (settings -> Class Ranges)\n'
-                    'now you have choose the Class range different of your network.\n')
+                    'now you have choose the Class range different of your network.\n']))
                 return False
         return True
-
-    def check_StatusWPA_Security(self):
-        '''simple connect for get status security wireless click'''
-        self.FSettings.Settings.set_setting('accesspoint',
-                                            'enable_security', self.WSLayout.isChecked())
 
     def setAP_essid_random(self):
         ''' set random mac 3 last digits  '''
@@ -285,31 +279,6 @@ class DockerSettings(CoreSettings):
             prefix.append(int(item, 16))
         self.EditBSSID.setText(Refactor.randomMacAddress(
             [prefix[0], prefix[1], prefix[2]]).upper())
-
-    def update_security_settings(self):
-        if 1 <= self.WPAtype_spinbox.value() <= 2:
-            self.set_security_type_text('WPA')
-            if 8 <= len(self.editPasswordAP.text()) <= 63 and is_ascii(str(self.editPasswordAP.text())):
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid green;}")
-            else:
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid red;}")
-            self.wpa_pairwiseCB.setEnabled(True)
-            if self.WPAtype_spinbox.value() == 2:
-                self.set_security_type_text('WPA2')
-        if self.WPAtype_spinbox.value() == 0:
-            self.set_security_type_text('WEP')
-            if (len(self.editPasswordAP.text()) == 5 or len(self.editPasswordAP.text()) == 13) and \
-                    is_ascii(str(self.editPasswordAP.text())) or (len(self.editPasswordAP.text()) == 10 or len(self.editPasswordAP.text()) == 26) and \
-                    is_hexadecimal(str(self.editPasswordAP.text())):
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid green;}")
-            else:
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid red;}")
-            self.wpa_pairwiseCB.setEnabled(False)
-
 
     def get_supported_interface(self,dev):
         ''' get all support mode from interface wireless  '''
@@ -326,13 +295,3 @@ class DockerSettings(CoreSettings):
             return _iface
         return _iface
 
-    def set_security_type_text(self, string=str):
-        self.lb_type_security.setText(string)
-        self.lb_type_security.setFixedWidth(60)
-        self.lb_type_security.setStyleSheet("QLabel {border-radius: 2px;"
-                                            "padding-left: 10px; background-color: #3A3939; color : silver; } "
-                                            "QWidget:disabled{ color: #404040;background-color: #302F2F; } ")
-
-    @classmethod
-    def getInstance(cls):
-        return cls.instances[0]
