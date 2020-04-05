@@ -28,6 +28,7 @@ def create_user_dir_config():
         copy_tree("config", user_config_dir +'/config')
         copy_tree("logs", user_config_dir + "/logs")
         copy_tree("helps", user_config_dir + "/helps")
+        copy_tree("scripts", user_config_dir + "/scripts")
 
 
 # create dir config
