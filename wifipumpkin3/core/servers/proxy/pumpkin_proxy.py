@@ -33,35 +33,57 @@ class TCPProxyDock(DockableWidget):
         pass
 
 class PumpKinProxy(ProxyMode):
-    Name = "pumpkinproxy_plugin"
+    Name = "PumpkinProxy 3"
     Author = "Pumpkin-Dev"
     ID = "pumpkinproxy"
     Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
     Hidden = False
     LogFile = C.LOG_PUMPKINPROXY
+    CONFIGINI_PATH = C.CONFIG_PP_INI
     _cmd_array = []
     ModSettings = True
+    RunningPort = 8080
     ModType = "proxy" 
     TypePlugin =  1 
 
     def __init__(self,parent=None, **kwargs):
         super(PumpKinProxy,self).__init__(parent)
-        self.setID(self.Name)
+        self.setID(self.ID)
+        self.parent = parent
         self.setTypePlugin(self.TypePlugin)
-        self.config = SettingsINI(C.CONFIG_TP_INI)
+        self.setRunningPort(self.conf.get('proxy_plugins', 'pumpkinproxy_config_port'))
 
     @property
     def CMD_ARRAY(self):
-        port_ssltrip = self.conf.get('settings', 'sslstrip_redirect_port')
-        os.system(self.search[self.Name])
+        self.runDefaultRules()
+        port_ssltrip = self.conf.get('proxy_plugins', 'pumpkinproxy_config_port')
         self._cmd_array=['-l', port_ssltrip]
         return self._cmd_array
 
     def boot(self):
         self.reactor= ProcessThread({'sslstrip3': self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
-        self.reactor.setObjectName(self.Name)
-        
+        self.reactor.setObjectName(self.ID)
+
+    @property
+    def getPlugins(self):
+        commands = self.config.get_all_childname('plugins')
+        list_commands = []
+        for command in commands:
+            list_commands.append(self.ID + '.' + command)
+        return list_commands
+
     def LogOutput(self,data):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
             self.logger.info(data)
+
+    def parser_set_pumpkinproxy(self, status, plugin_name):
+        try:
+            # plugin_name = pumpkinproxy.no-cache 
+            name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
+            if key_plugin in self.config.get_all_childname('plugins'):
+                self.config.set('plugins',key_plugin, status)
+            else:
+                print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))

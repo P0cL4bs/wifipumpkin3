@@ -1,4 +1,4 @@
-from PyQt5 import QtGui,QtCore, Qt
+from PyQt5 import QtCore, Qt
 from functools import  partial
 
 class DockableWidget(Qt.QObject):

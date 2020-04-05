@@ -10,6 +10,12 @@ class html_inject(BasePumpkin):
         '_description' : 'inject arbitrary HTML code into a vulnerable web page.',
         '_author'    : 'by Maintainer'
     }
+
+
+    @staticmethod
+    def getName():
+        return html_inject.meta['_name']
+
     def __init__(self):
         for key,value in self.meta.items():
             self.__dict__[key] = value

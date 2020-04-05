@@ -6,13 +6,21 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 
 class MitmController(PluginsUI,ControllerBlueprint):
     Name = "MITM"
+    ID = 'mitm_controller'
     Caption = "Activity Monitor"
     mitmhandler = {}
     SetNoMitmMode = QtCore.pyqtSignal(object)
+    mitm_infor = {}
+
+    @staticmethod
+    def getID():
+        return MitmController.ID
 
     def __init__(self,parent = None,**kwargs):
         super(MitmController, self).__init__(parent)
         self.parent=parent
+         # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
         #self.uplinkIF = self.parent.Refactor.get_interfaces()
         #self.downlinkIF = self.parent.WLANCard.currentText()
@@ -21,6 +29,16 @@ class MitmController(PluginsUI,ControllerBlueprint):
         for k in __manipulator:
             #print(k.Name, 'mitmcontroller')
             self.mitmhandler[k.Name]=k
+            self.mitm_infor[k.ID] = {
+                'ID': k.ID,
+                'Name' : k.Name,
+                'Activate': k.isChecked(),
+                'Author' : k.Author,
+                'Logger' : k.LogFile,
+                'ConfigPath' : k.CONFIGINI_PATH,
+                'Description': k.Description,
+                'Config' : k.getConfig,
+            }
 
         self.m_name = []
         self.m_desc = []
@@ -72,6 +90,9 @@ class MitmController(PluginsUI,ControllerBlueprint):
     def get(self):
         return self.mitmhandler
 
+    def getInfo(self):
+        return self.mitm_infor
+
     @classmethod
     def disable(cls, val=True):
         pass
@@ -83,6 +104,23 @@ class MitmController(PluginsUI,ControllerBlueprint):
     def Start(self):
         for i in self.Active:
             i.boot()
+
+    
+    @property
+    def getAllReactor(self):
+        reactor=[]
+        for i in self.Active:
+            reactor.append(i.reactor)
+        return reactor
+
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        for reactor in self.getAllReactor:
+            info_reactor[reactor.getID()] = {
+                'ID' : reactor.getID(), 'PID' : reactor.getpid()
+            }
+        return info_reactor
 
     def Stop(self):
         for i in self.Active:

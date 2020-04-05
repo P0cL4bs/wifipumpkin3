@@ -30,6 +30,10 @@ class nocache(BasePumpkin):
         '_author': 'mh4x0f'
     }
 
+    @staticmethod
+    def getName():
+        return nocache.meta['_name']
+
     def __init__(self):
         for key, value in self.meta.items():
             self.__dict__[key] = value

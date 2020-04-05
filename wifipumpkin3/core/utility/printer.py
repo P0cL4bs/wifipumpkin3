@@ -1,17 +1,12 @@
-
+from tabulate import tabulate
+from wifipumpkin3.core.utility.banners import random_banners
 colors = {'BOLD': '\033[1m','BLUE': '\033[34m' ,
             'GREEN': '\033[32m','YELLOW' :'\033[33m',
             'RED': '\033[91m','ENDC' : '\033[0m','CIANO' :'\033[1;36m','ORAN' : '\033[91m',
             'GREY': '\033[37m','DARKGREY' : '\033[1;30m','UNDERLINE' : '\033[4m'}
 
 def banner(name=''):
-    print ('''
-  _      ___ _____     ___                  __    _      ____
- | | /| / (_) __(_)___/ _ \__ ____ _  ___  / /__ (_)__  |_  /
- | |/ |/ / / _// /___/ ___/ // /  ' \/ _ \/  '_// / _ \_/_ < 
- |__/|__/_/_/ /_/   /_/   \_,_/_/_/_/ .__/_/\_\/_/_//_/____/ 
-                                   /_/                       
-                                            codename: {}'''.format(name))
+    print (random_banners().format(name))
 
 def setcolor(text,color='',underline=False):
     strcolored = {
@@ -26,6 +21,11 @@ def setcolor(text,color='',underline=False):
     if underline:
         return colors['UNDERLINE']+strcolored[color]
     return strcolored[color]
+
+def display_tabulate(header=[], content=[], tablefmt='simple', newline=True):
+    print(tabulate(content, header,tablefmt=tablefmt))
+    if newline:
+        print('\n')
 
 def display_messages(string,error=False,sucess=False,info=False,sublime=False,without=False):
     if sublime:

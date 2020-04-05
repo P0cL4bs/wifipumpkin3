@@ -32,6 +32,11 @@ class js_inject(BasePumpkin):
         '_description' : 'url injection insert and use our own JavaScript code in a page.',
         '_author'    : 'by Maintainer'
     }
+
+    @staticmethod
+    def getName():
+        return js_inject.meta['_name']
+
     def __init__(self):
         for key,value in self.meta.items():
             self.__dict__[key] = value

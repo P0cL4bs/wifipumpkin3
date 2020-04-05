@@ -29,13 +29,16 @@ class MitmMode(Widget):
     Author = "Wahyudin Aziz"
     Description = "Generic Placeholder for Attack Scenario"
     LogFile = C.LOG_ALL
+    CONFIGINI_PATH = ''
     ModSettings = False
     ModType = "proxy" # proxy or server
+    ConfigMitm = None
     Hidden = True
     _cmd_array = []
     plugins = []
     sendError = QtCore.pyqtSignal(str)
     sendSingal_disable = QtCore.pyqtSignal(object)
+    config = None
 
     def __init__(self,parent=None):
         super(MitmMode, self).__init__(parent)
@@ -44,21 +47,48 @@ class MitmMode(Widget):
         self.reactor = None
         self.server = None
         
+        if (self.getConfigINIPath != ''):
+            self.config = SettingsINI(self.getConfigINIPath)
         #setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
         #self.logger = getLogger(self.Name)
         self.loggermanager = LoggerManager.getInstance()
         self.configure_logger()
 
     def configure_logger(self):
-        config_extra  = self.loggermanager.getExtraConfig(self.ID)
-        config_extra['extra']['session'] = self.parent.currentSessionID
+        if not self.Hidden:
+            config_extra  = self.loggermanager.getExtraConfig(self.ID)
+            config_extra['extra']['session'] = self.parent.currentSessionID
 
-        self.logger = StandardLog(self.ID, 
-            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
-            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
-        config=config_extra)
-        self.logger.filename = self.LogFile
-        self.loggermanager.add( self.ID, self.logger)
+            self.logger = StandardLog(self.ID, 
+                colorize=self.conf.get('settings', 'log_colorize', format=bool), 
+                serialize=self.conf.get('settings', 'log_serialize', format=bool), 
+            config=config_extra)
+            self.logger.filename = self.LogFile
+            self.loggermanager.add( self.ID, self.logger)
+
+    def parser_set_plugin(self, proxy_name, args):
+        # default parser plugin commands complete
+        try:
+            plugin_name,plugin_status = list(args.split())[1],list(args.split())[2]
+            if (plugin_status not in ['true','false','True','False']):
+                return print(display_messages('wifipumpkin3: error: unrecognized arguments {}'.format(plugin_status),error=True))
+            if (plugin_name in self.conf.get_all_childname('mitm_modules')):
+                return self.conf.set('mitm_modules',plugin_name, plugin_status)
+            return print(display_messages('plugin {} not found'.format(plugin_name),error=True))
+        except IndexError:
+            return self.help_plugins()
+
+    @property
+    def getPlugins(self):
+        return None
+
+    @property
+    def getConfigINIPath(self):
+        return self.CONFIGINI_PATH
+
+    @property
+    def getConfig(self):
+        return self.config
 
     def getModType(self):
         return self.ModType
@@ -111,7 +141,7 @@ class MitmMode(Widget):
         if self.CMD_ARRAY:
             self.reactor= ProcessThread({'python': self.CMD_ARRAY})
             self.reactor._ProcssOutput.connect(self.LogOutput)
-            self.reactor.setObjectName(self.Name)
+            self.reactor.setObjectName(self.ID)
 
     def shutdown(self):
         if self.reactor is not None:

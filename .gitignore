@@ -67,3 +67,4 @@ deb_tmp/
 # IDE
 # PyCharm
 .idea/
+tests/

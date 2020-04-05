@@ -32,6 +32,11 @@ class replaceImages(BasePumpkin):
         '_description' : 'this module proxy replace all images with the picture .',
         '_author'    : 'mh4x0f'
     }
+
+    @staticmethod
+    def getName():
+        return replaceImages.meta['_name']
+
     def __init__(self):
         for key,value in self.meta.items():
             self.__dict__[key] = value
