@@ -6,6 +6,7 @@ class PyDNSServer(DNSBase):
     ID = "pydns_server"
     Name = "PyDNS Server"
     Author = 'Samuel Colvin @samuelcolvin'
+    LogFile = C.LOG_PYDNSSERVER
     ExecutableFile = ""
 
     def __init__(self,parent):
@@ -25,4 +26,4 @@ class PyDNSServer(DNSBase):
         # future: check another alternative
         self.reactor = DNSServerThread(self.conf)
         self.reactor.sendRequests.connect(self.LogOutput)
-        self.reactor.setObjectName(self.Name)  # use dns2proxy as DNS server
+        self.reactor.setObjectName(self.ID)  # use dns2proxy as DNS server

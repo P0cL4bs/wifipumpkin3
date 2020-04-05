@@ -83,7 +83,7 @@ class ClientRequest(Request):
         return "lock.ico"        
 
     def handleHostResolvedSuccess(self, address):
-        logging.debug("Resolved host successfully: %s -> %s" % (self.getHeader('host'), address))
+        print("Resolved host successfully: %s -> %s" % (self.getHeader('host'), address))
         host              = self.getHeader("host")
         headers           = self.cleanHeaders()
         client            = self.getClientIP()
@@ -91,26 +91,26 @@ class ClientRequest(Request):
 
         self.content.seek(0,0)
         postData          = self.content.read()
-        logging.debug("cookies...")
+        print("cookies...")
         url               = 'http://' + host + path.decode()
-        logging.debug("cookies...")
+        print("cookies...")
         self.uri          = url # set URI to absolute
 
         self.dnsCache.cacheResolution(host, address)
 
         if (not self.cookieCleaner.isClean(self.method, client, host, headers)):
-            logging.debug("Sending expired cookies...")
+            print("Sending expired cookies...")
             self.sendExpiredCookies(host, path, self.cookieCleaner.getExpireHeaders(self.method, client,
                                                                                     host, headers, path))
         elif (self.urlMonitor.isSecureFavicon(client, path)):
-            logging.debug("Sending spoofed favicon response...")
+            print("Sending spoofed favicon response...")
             self.sendSpoofedFaviconResponse()
         elif (self.urlMonitor.isSecureLink(client, url)):
-            logging.debug("Sending request via SSL...")
+            print("Sending request via SSL...")
             self.proxyViaSSL(address, self.method, path, postData, headers,
                              self.urlMonitor.getSecurePort(client, url))
         else:
-            logging.debug("Sending request via HTTP...")
+            print("Sending request via HTTP...")
             self.proxyViaHTTP(address, self.method, path, postData, headers)
 
     def handleHostResolvedError(self, error):
@@ -121,14 +121,14 @@ class ClientRequest(Request):
         address = self.dnsCache.getCachedAddress(host)
 
         if address != None:
-            logging.debug("Host cached.")
+            print("Host cached.")
             return defer.succeed(address)
         else:
-            logging.debug("Host not cached.")
+            print("Host not cached.")
             return reactor.resolve(host)
 
     def process(self):
-        logging.debug("Resolving host: %s" % (self.getHeader('host')))
+        print("Resolving host: %s" % (self.getHeader('host')))
         host     = self.getHeader('host')               
         deferred = self.resolveHost(host)
 

@@ -4,6 +4,7 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from os import popen
 import sys
+from wifipumpkin3.core.common.platforms import Linux
 
 class ConsoleUI(Cmd):
     ''' shell console UI '''
@@ -14,6 +15,17 @@ class ConsoleUI(Cmd):
         self.set_prompt()
         self.initialize_core()
         self.setOptions()
+
+    def cmdloop(self, intro=None):
+        print(intro)
+        doQuit = False
+        while doQuit != True:
+            try:
+                super(ConsoleUI, self).cmdloop(intro="")
+                doQuit = True
+            except KeyboardInterrupt:
+                print('caught ctrl+c, press return to exit')
+                self.do_exit([])
     
     def initialize_core(self):
         raise NotImplementedError()
@@ -104,6 +116,10 @@ class ConsoleUI(Cmd):
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
 
+    def show_help_command(self, filename):
+        '''read content file help command '''
+        print(Linux.readFileHelp(filename))
+
     def precmd(self, line):
         newline=line.strip()
         is_cmt=newline.startswith('#')
@@ -171,7 +187,7 @@ class ModuleUI(Cmd):
             if (command in self.options.keys()):
                 #self.conf.set('accesspoint',self.commands[command],value)
                 print(display_messages('changed to {} => {}'.format(command, value),sucess=True))
-                self.options.update({command: value})
+                self.options[command] = [value, self.options[command][1]]
             else:
                 print(display_messages('unknown command: {} '.format(command),error=True))
                 print(display_messages("Example : set host 127.0.0.1", info=True))
@@ -180,12 +196,11 @@ class ModuleUI(Cmd):
 
     def do_options(self, line):
         """ show options of current module"""
-        print(display_messages('Available Options:',info=True,sublime=True))
-        self.stdout.write('    {}	 {}\n'.format('Option', 'Value'))
-        self.stdout.write('    {}	 {}\n'.format('------', '-----'))
+        headers_table, output_table = ["Option", "Value", "Description"], []
         for option,value in self.options.items():
-            self.stdout.write('    {:<10}	 {}\n'.format(option, value))
-        print("\n")
+            output_table.append([option,value[0], value[1]])
+        print(display_messages('Available Options:',info=True,sublime=True))
+        return display_tabulate(headers_table, output_table)
 
     def do_help(self,args):
         """ show this help """

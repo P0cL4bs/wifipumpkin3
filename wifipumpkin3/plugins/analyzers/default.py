@@ -8,9 +8,9 @@ import wifipumpkin3.core.utility.constants as C
 
 class PSniffer(object):
     ''' plugins data sniffers'''
-    name    = 'plugin TCP proxy master'
+    name    = 'plugin sniffkin3 master'
     version = '1.0'
-    config  = SettingsINI(C.CONFIG_TP_INI)
+    config  = SettingsINI(C.CONFIG_SK_INI)
     loggers = {}
     output  = pyqtSignal(object)
     session = None

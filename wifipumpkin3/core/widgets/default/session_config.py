@@ -6,7 +6,6 @@ class SessionConfig(TabsWidget):
     ConfigRoot="Settings"
     Name = "Settings"
     ID = "SessionConfig"
-    Icon = "icons/settings-AP.png"
     __subitem = False
     tablayout={}
     tabwidget={}

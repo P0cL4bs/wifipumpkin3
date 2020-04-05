@@ -8,14 +8,14 @@ from re import search,compile,VERBOSE,IGNORECASE
 import netifaces
 from scapy.all import *
 from PyQt5 import QtCore
-from PyQt5 import QtGui
 import logging
 import signal
 import configparser
 import wifipumpkin3.core.utility.constants as C
 from shlex import split
 from glob import glob
-import warnings
+import warnings, json
+from uuid import uuid1
 
 
 loggers = {}
@@ -140,6 +140,34 @@ class Linux(QtCore.QObject):
         st = stat(filename)
         return st.st_size
 
+    @staticmethod
+    def writeFileDataToJson(filename, content, mode='w'):
+        if (path.isfile(filename)):
+            with open(filename, mode) as f:
+                json.dump(content, f)
+
+    @staticmethod
+    def readFileDataToJson(filename, mode='r'):
+        datastore = {}
+        if (path.isfile(filename)):
+            with open(filename, mode) as f:
+                datastore = json.load(f)
+        return datastore
+
+    @staticmethod
+    def readFileHelp(filename, mode='r'):
+        """ return content the help files """
+        content= ''
+        with open('{}{}.txt'.format(C.HELPFILESPATH,filename), mode) as f:
+            content = f.read()
+            f.close()
+        return content
+
+    @staticmethod
+    def generate_session_id():
+        ''' return str session id '''
+        my_id = str(uuid1())
+        return my_id
 
 
 def is_hexadecimal(text):

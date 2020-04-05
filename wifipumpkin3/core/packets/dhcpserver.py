@@ -6,6 +6,7 @@ import ipaddress as ip
 from queue import Queue
 log = logging.getLogger(__name__)
 from PyQt5.QtCore import QThread,pyqtSignal,pyqtSlot,QProcess,QObject
+from wifipumpkin3.core.config.globalimport import *
 
 
 class IpAddressClass(object):
@@ -90,6 +91,7 @@ class DHCPProtocol(QObject):
                         break
             self._request.emit(self.leases[mac])
             self.queue.put(self.leases[mac])
+            Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, self.leases, 'w')
             send = True
         if send:
             log.debug('SEND to %s:\n%s\n', addr, packet)
@@ -147,9 +149,23 @@ class DHCPThread(QThread):
         self.DHCPProtocol.connection_made(self.sock)
         #log.debug("Starting UDP server")
         while self.started:
-            message, address = self.sock.recvfrom(1024)
-            self.DHCPProtocol.datagram_received(message, address)
+            try:
+                message, address = self.sock.recvfrom(1024)
+                self.DHCPProtocol.datagram_received(message, address)
+            except Exception as e:
+                # OSError: [Errno 9] Bad file descriptor when close socket 
+                pass
+
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return 'thread'
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
 
     def stop(self):
         self.started = False
+        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, 'w')
+        print('Thread::[{}] successfully stopped.'.format(self.objectName()))
         self.sock.close()

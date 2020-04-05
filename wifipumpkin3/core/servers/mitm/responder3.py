@@ -30,9 +30,12 @@ class Responder3(MitmMode):
     Author = "PumpkinDev"
     Description = "New and improved Responder for Python3"
     LogFile = C.LOG_RESPONDER3
+    ConfigMitmPath = None
     _cmd_array = []
     ModSettings = True
-    ModType = "proxy"  # proxy or server
+    ModType = "server"  # proxy or server
+    config = None
+    
     def __init__(self,parent,FSettingsUI=None,main_method=None,  **kwargs):
         super(Responder3, self).__init__(parent)
         self.setID(self.ID)
@@ -50,6 +53,17 @@ class Responder3(MitmMode):
         if self.CMD_ARRAY:
             self.reactor= ProcessThread({'responder3': self.CMD_ARRAY})
             self.reactor._ProcssOutput.connect(self.LogOutput)
-            self.reactor.setObjectName(self.Name)
+            self.reactor.setObjectName(self.ID)
 
 
+    def parser_set_responder3(self, status, plugin_name):
+        try:
+            # plugin_name = pumpkinproxy.no-cache 
+            name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
+            if key_plugin in self.config.get_all_childname('plugins'):
+                self.config.set('plugins',key_plugin, status)
+                print(display_messages('responder3: {} status: {}'.format(key_plugin, status),sucess=True))
+            else:
+                print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))

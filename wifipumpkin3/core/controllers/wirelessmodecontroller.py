@@ -13,14 +13,22 @@ from datetime import datetime
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.wirelessmode import *
+from wifipumpkin3.core.utility.component import ControllerBlueprint
 
-class WirelessModeController(object):
+class WirelessModeController(ControllerBlueprint):
+    ID = 'wireless_controller'
+
+    @staticmethod
+    def getID():
+        return WirelessModeController.ID
 
     def __init__(self, parent, **kwargs):
         super(WirelessModeController,self).__init__()
         self.parent = parent
         #self.setHidden(True) # hide widget on home
         self.conf = SettingsINI.getInstance()
+        # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         #self.SessionsAP = loads(str(self.FSettings.Settings.get_setting('accesspoint', 'sessions')))
         #self.currentSessionID = self.parent.currentSessionID
         #self.SettingsAP = self.parent.SettingsAP
@@ -30,9 +38,19 @@ class WirelessModeController(object):
     def Activated(self):
         return self.Settings.getActiveMode
 
+    def getInfo(self):
+        return self.Settings.getModesInfo
+
     @property
     def ActiveReactor(self):
         return self.Settings.getActiveMode.reactor
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.ActiveReactor.getID()] = {
+            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
+            }
+        return info_reactor
 
     @property
     def Settings(self):
@@ -117,11 +135,51 @@ class AccessPointSettings(CoreSettings):
         for mode in self.__modelist:
             if mode.isChecked():
                 return mode
-
+    
+    @property
+    def getModesInfo(self):
+        mode_info = {}
+        for mode in self.__modelist:
+            mode_info[mode.ID] = {
+                'Name' : mode.Name,
+                'Checked' : mode.isChecked(),
+                'ID': mode.ID}  
+        return mode_info 
+    
     @property
     def getInstances(self):
         return self.instances
 
+
+    def parser_set_mode(self, mode_name, *args):
+        # default parser mode commands complete
+        if mode_name in self.conf.get_all_childname('ap_mode'):
+            mode_selected =self.conf.get_name_activated_plugin('ap_mode')
+            if (mode_selected != None):
+                self.conf.set('ap_mode', mode_name, True)
+                for mode in self.conf.get_all_childname('ap_mode'):
+                    if mode != mode_name:
+                        self.conf.set('ap_mode', mode, False)
+                return
+        return print(display_messages('unknown command: {} '.format(mode_name),error=True))
+
+    @property
+    def getCommands(self):
+        commands = ['wpa_algorithms', 'wpa_sharedkey','wpa_type']
+        list_commands = []
+        for command in commands:
+            list_commands.append('security' + '.' + command)
+        return list_commands
+
+    def parser_set_security(self, value, settings):
+        try:
+            # key = security.wpa_sharedkey
+            name,key = settings.split('.')[0],settings.split('.')[1]
+            if key in self.conf.get_all_childname('accesspoint'):
+                return self.conf.set('accesspoint',key, value)
+            print(display_messages('unknown flag: {}'.format(key),error=True))
+        except IndexError:
+            print(display_messages('unknown sintax command',error=True))
 
    
     def configure_network_AP(self):

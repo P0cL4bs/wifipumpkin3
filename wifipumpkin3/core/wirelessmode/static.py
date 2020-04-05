@@ -12,13 +12,13 @@ from wifipumpkin3.core.controls.threads import ProcessHostapd, ProcessThread
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.printer import display_messages
-
+import sys
 
 class Static(Mode):
-    ConfigRoot = "Static"
-    SubConfig = "Static"
-    ID = "Static"
-    Name = "Static AP Mode"
+    configRoot = "static"
+    subConfig = "static"
+    ID = "static"
+    Name = "Wireless Static AP Mode"
 
     def __init__(self, parent=0):
         super(Static, self).__init__(parent)
@@ -32,67 +32,32 @@ class Static(Mode):
         return self.Settings
 
     def Initialize(self):
-
-        self.check_Wireless_Security()
         self.Settings.Configure()
-        self.Settings.checkNetworkAP()
-
+        if not (self.Settings.checkNetworkAP()):
+            sys.exit(1)
+        self.check_Wireless_Security()
 
         ignore = ('interface=','ssid=','channel=','essid=')
         with open(C.HOSTAPDCONF_PATH,'w') as apconf:
             for i in self.Settings.SettingsAP['hostapd']:apconf.write(i)
             apconf.close()
 
-        # ignore = ('interface=', 'ssid=', 'channel=', 'essid=')
-        # with open(C.HOSTAPDCONF_PATH, 'w') as apconf:
-        #     for i in self.parent.SettingsAP['hostapd']:
-        #         apconf.write(i)
-        #     for config in str(self.FSettings.ListHostapd.toPlainText()).split('\n'):
-        #         if not config.startswith('#') and len(config) > 0:
-        #             if not config.startswith(ignore):
-        #                 apconf.write(config + '\n')
-        #     apconf.close()
-
     def boot(self):
-        # create thread for hostapd and connect get_Hostapd_Response function
-        # self.reactor = ProcessHostapd(
-        #     {self.hostapd_path: [C.HOSTAPDCONF_PATH]}, self.parent.currentSessionID)
-        # self.reactor.setObjectName('StaticHostapd')
-        # self.reactor.statusAP_connected.connect(self.LogOutput)
-        # self.reactor.statusAPError.connect(self.Shutdown)
-
-        self.hostapd_path = self.conf.get('accesspoint', 'hostapd_path')
-        #self.Thread_hostapd = ProcessHostapd([self.hostapd_path,C.HOSTAPDCONF_PATH], 'MDSNjD')
-        self.reactor = ProcessHostapd({self.hostapd_path :[C.HOSTAPDCONF_PATH]}, 'MDSNjD')
-        self.reactor.setObjectName('hostapd')
+        # create thread for hostapd and connect get_Hostapd_Response functio
+        self.reactor = ProcessHostapd({self.getHostapdPath :[C.HOSTAPDCONF_PATH]}, 'MDSNjD')
+        self.reactor.setObjectName('hostapd_{}'.format(self.ID))
         self.reactor.statusAP_connected.connect(self.get_Hostapd_Response)
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 
 
     def get_Hostapd_Response(self,data):
+        #TODO: notify user client desconnected 
         print(data)
 
     def get_error_hostapdServices(self,data):
         if  self.conf.get('accesspoint','statusAP',format=bool):
             print(display_messages('Hostapd Error',error=True))
             print(data)
-
-
-    def check_Wireless_Security(self):
-        '''check if user add security password on AP'''
-        # New Implementation after refactored
-        pass
-
-    # def LogOutput(self, data):
-    #     if self.parent.Home.DHCP.ClientTable.APclients != {}:
-    #         if data in self.parent.Home.DHCP.ClientTable.APclients.keys():
-    #             self.parent.StationMonitor.addRequests(
-    #                 data, self.parent.Home.DHCP.ClientTable.APclients[data], False)
-    #         self.parent.Home.DHCP.ClientTable.delete_item(data)
-    #         self.parent.connectedCount.setText(
-    #             str(len(self.parent.Home.DHCP.ClientTable.APclients.keys())))
-
-
 
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''
@@ -135,6 +100,10 @@ class StaticSettings(CoreSettings):
     Category = "Wireless"
     instances = []
 
+    @classmethod
+    def getInstance(cls):
+        return cls.instances[0]
+
     def __init__(self, parent):
         super(StaticSettings, self).__init__(parent)
         self.__class__.instances.append(weakref.proxy(self))
@@ -147,7 +116,6 @@ class StaticSettings(CoreSettings):
         self.ifaceHostapd   = self.conf.get('accesspoint','interfaceAP')
         self.DHCP           = self.getDHCPConfig()
 
-
     def getDHCPConfig(self):
         DHCP ={}
         DHCP['leasetimeDef'] = self.conf.get('dhcpdefault','leasetimeDef')
@@ -158,7 +126,6 @@ class StaticSettings(CoreSettings):
         DHCP['broadcast'] = self.conf.get('dhcpdefault','broadcast')
         DHCP['range'] = self.conf.get('dhcpdefault','range')
         return DHCP
-
 
     def Configure(self):
         ''' configure interface and dhcpd for mount Access Point '''
@@ -218,13 +185,12 @@ class StaticSettings(CoreSettings):
                 if not path.isdir('/etc/dhcp/'): mkdir('/etc/dhcp')
                 move(C.DHCPCONF_PATH, '/etc/dhcp/')
 
-
     def checkNetworkAP(self):
         # check if interface has been support AP mode (necessary for hostapd)
         if self.conf.get('accesspoint','check_support_ap_mode',format=bool):
             if not 'AP' in self.get_supported_interface(self.ifaceHostapd)['Supported']:
                 print(display_messages('No Network Supported failed',error=True))
-                print('failed AP ode: warning interface, the feature\n'
+                print('failed AP mode: warning interface, the feature\n'
                 'Access Point Mode is Not Supported By This Device ->({}).\n'
                 'Your adapter does not support for create Access Point Network.\n'.format(self.ifaceHostapd))
                 return False
@@ -247,17 +213,12 @@ class StaticSettings(CoreSettings):
             if gateway_wp[:len(gateway_wp)-len(gateway_wp.split('.').pop())] == \
                 gateway[:len(gateway)-len(gateway.split('.').pop())]:
                 print(display_messages('DHCP Server settings',error=True))
-                print('The DHCP server check if range ip class is same.\n'
+                print('\n'.join(['The DHCP server check if range ip class is same.\n'
                     'it works, but not share internet connection in some case.\n'
                     'for fix this, You need change on tab (settings -> Class Ranges)\n'
-                    'now you have choose the Class range different of your network.\n')
+                    'now you have choose the Class range different of your network.\n']))
                 return False
         return True
-
-    def check_StatusWPA_Security(self):
-        '''simple connect for get status security wireless click'''
-        self.FSettings.Settings.set_setting('accesspoint',
-                                            'enable_security', self.WSLayout.isChecked())
 
     def setAP_essid_random(self):
         ''' set random mac 3 last digits  '''
@@ -266,31 +227,6 @@ class StaticSettings(CoreSettings):
             prefix.append(int(item, 16))
         self.EditBSSID.setText(Refactor.randomMacAddress(
             [prefix[0], prefix[1], prefix[2]]).upper())
-
-    def update_security_settings(self):
-        if 1 <= self.WPAtype_spinbox.value() <= 2:
-            self.set_security_type_text('WPA')
-            if 8 <= len(self.editPasswordAP.text()) <= 63 and is_ascii(str(self.editPasswordAP.text())):
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid green;}")
-            else:
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid red;}")
-            self.wpa_pairwiseCB.setEnabled(True)
-            if self.WPAtype_spinbox.value() == 2:
-                self.set_security_type_text('WPA2')
-        if self.WPAtype_spinbox.value() == 0:
-            self.set_security_type_text('WEP')
-            if (len(self.editPasswordAP.text()) == 5 or len(self.editPasswordAP.text()) == 13) and \
-                    is_ascii(str(self.editPasswordAP.text())) or (len(self.editPasswordAP.text()) == 10 or len(self.editPasswordAP.text()) == 26) and \
-                    is_hexadecimal(str(self.editPasswordAP.text())):
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid green;}")
-            else:
-                self.editPasswordAP.setStyleSheet(
-                    "QLineEdit { border: 1px solid red;}")
-            self.wpa_pairwiseCB.setEnabled(False)
-
 
     def get_supported_interface(self,dev):
         ''' get all support mode from interface wireless  '''
@@ -306,14 +242,3 @@ class StaticSettings(CoreSettings):
         except CalledProcessError:
             return _iface
         return _iface
-
-    def set_security_type_text(self, string=str):
-        self.lb_type_security.setText(string)
-        self.lb_type_security.setFixedWidth(60)
-        self.lb_type_security.setStyleSheet("QLabel {border-radius: 2px;"
-                                            "padding-left: 10px; background-color: #3A3939; color : silver; } "
-                                            "QWidget:disabled{ color: #404040;background-color: #302F2F; } ")
-
-    @classmethod
-    def getInstance(cls):
-        return cls.instances[0]

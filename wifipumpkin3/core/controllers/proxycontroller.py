@@ -9,13 +9,21 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 class ProxyModeController(PluginsUI, ControllerBlueprint):
     Name = "Proxy"
     Caption = "Enable Proxy Server"
+    ID = 'proxy_controller'
     proxies = {}
+    proxies_infor = {}
     SetNoProxy = QtCore.pyqtSignal(object)
     dockMount = QtCore.pyqtSignal(bool)
+
+    @staticmethod
+    def getID():
+        return ProxyModeController.ID
 
     def __init__(self,parent = None,**kwargs):
         super(ProxyModeController, self).__init__(parent)
         self.parent=parent
+         # append controller in DefaultWidget
+        self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
 
         #self.setChecked(self.conf.get('plugins', 'disableproxy', format=bool))
@@ -26,6 +34,20 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         #Keep Proxy in a dictionary
         for k in __proxlist:
             self.proxies[k.Name]=k
+
+            self.proxies_infor[k.ID] = {
+                'ID': k.ID,
+                'Name' : k.Name,
+                'Port' : k.getRunningPort(),
+                'Activate': k.isChecked(),
+                'Author' : k.Author,
+                'Logger' : k.LogFile,
+                'ConfigPath' : k.CONFIGINI_PATH,
+                'Description': k.Description,
+                'Config' : k.getConfig,
+            }
+
+
 
         self.p_name = []
         self.p_desc = []
@@ -42,7 +64,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
             #p.sendSingal_disable.connect(self.DisableProxy)
             #p.dockwidget.addDock.connect(self.dockUpdate)
             if (hasattr(p,'ID')):
-                setattr(self.parent, p.ID, p)
+                setattr(self, p.ID, p)
 
         self.THeadersPluginsProxy = OrderedDict(
             [('Proxies', self.p_name),
@@ -120,6 +142,9 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     @property
     def get(self):
         return self.proxies
+    
+    def getInfo(self):
+        return self.proxies_infor
 
     @classmethod
     def disable(cls, val=True):
@@ -139,6 +164,18 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 proxy.Initialize()
                 proxy.Serve()
                 proxy.boot()
+
+
+    @property
+    def getReactor(self):
+        return self.Active.reactor
+    
+    def getReactorInfo(self):
+        info_reactor = {}
+        info_reactor[self.getReactor.getID()] = {
+            'ID' : self.getReactor.getID(), 'PID' : self.getReactor.getpid()
+            }
+        return info_reactor
 
     def Stop(self):
         self.Active.Serve(False)

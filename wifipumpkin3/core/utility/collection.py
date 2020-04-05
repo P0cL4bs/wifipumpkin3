@@ -47,7 +47,14 @@ class SettingsINI(object):
 		self.psettings.beginGroup(name_group)
 		self.psettings.setValue(key, value)
 		self.closeGroup()
-
+	
+	def set_one(self,name_group,key, value):
+		""" Sets the value of setting key to value """
+		self.set(name_group, key, value)
+		for item in self.get_all_childname(name_group):
+    			if (item != key):
+    					self.set(name_group, item, False)
+	
 	def get_by_index_key(self,index,key=str):
 		""" get specific key value by index type(list) """
 		return str(self.get(key,self.get_all_childname(key)[index]))
@@ -55,6 +62,14 @@ class SettingsINI(object):
 	def get_all_childname(self,key):
 		""" get list all childskeys on file config.ini """
 		return [x.split('/')[1] for x in self.get_all_keys() if x.split('/')[0] == key]
+	
+	def get_name_activated_plugin(self, key):
+		""" get status by plugin name """
+		plugins = self.get_all_childname(key)
+		for plugin in plugins:
+			if self.get(key, plugin, format=bool):
+				return plugin
+		return None
 
 	def get_all_keys(self):
 		""" get all keys on settings"""

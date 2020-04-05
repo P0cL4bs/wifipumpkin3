@@ -252,6 +252,15 @@ class DNSServerThread(QThread):
         except KeyboardInterrupt:
             pass
 
+    def getpid(self):
+        """ return the pid of current process in background"""
+        return 'thread'
+
+    def getID(self):
+        """ return the name of process in background"""
+        return self.objectName()
+
     def stop(self):
         self.udp_server.stop()
         self.tcp_server.stop()
+        print('Thread::[{}] successfully stopped.'.format(self.objectName()))

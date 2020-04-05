@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 from distutils.util import strtobool
@@ -27,6 +27,8 @@ def create_user_dir_config():
         os.makedirs(user_config_dir, exist_ok=True)
         copy_tree("config", user_config_dir +'/config')
         copy_tree("logs", user_config_dir + "/logs")
+        copy_tree("helps", user_config_dir + "/helps")
+        copy_tree("scripts", user_config_dir + "/scripts")
 
 
 # create dir config
@@ -44,9 +46,9 @@ setup(name='wifipumpkin3',
       license='apache 2.0',
       long_description=open('README.md').read(),
       install_requires=required,
-      scripts=['bin/wifipumpkin3', 'bin/sslstrip3'],
+      scripts=['bin/wifipumpkin3', 'bin/sslstrip3','bin/captiveflask'],
       include_package_data=True,
-      packages=find_packages(),
+      packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
       python_requires='>=3',
       classifiers=[
           'Programming Language :: Python :: 3',

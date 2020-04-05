@@ -46,6 +46,11 @@ NOTIFYSTYLE = "; ".join((
     "padding: 5px"))
 
 
+HELPFILESPATH = user_config_dir + '/.config/wifipumpkin3/helps/'
+
+#DHCP logger connected 
+CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/config/session/connected.json'
+
 DHCPSERVERBINARY = 'core/packets/binary/dhcpserver'
 
 PUMPKINPROXY_notify = 'the package requirement mitmproxy==0.18.2 is ' \
@@ -71,26 +76,26 @@ ALGORITMS = ('TKIP','CCMP','TKIP + CCMP')
 NETWORKMANAGER = '/etc/NetworkManager/NetworkManager.conf'
 IPFORWARD      = '/proc/sys/net/ipv4/ip_forward'
 
+# Docker settings 
+DOCKERIPTABLESPATH = '/etc/iptables.ipv4.nat'
+DOCKERHOSTAPDCONF_PATH = '/etc/hostapd/hostapd.conf'
+
 #logging
-LOG_PUMPKINPROXY = user_config_dir+ '/.config/wifipumpkin3/logs/AccessPoint/pumpkin-proxy.log'
-LOG_URLCAPTURE   = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/urls.log'
-LOG_CREDSCAPTURE = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/credentials.log'
-LOG_TCPPROXY     = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/tcp-proxy.log'
-LOG_RESPONDER3   = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/responder3.log'
-LOG_BDFPROXY     = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/bdfproxy.log'
-LOG_DNS2PROXY    = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/dns2proxy.log'
-LOG_SSLSTRIP     = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/injectionPage.log'
-LOG_DNSSPOOF     = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/dnsspoof.log'
-LOG_PHISHING     = user_config_dir+'/.config/wifipumpkin3/logs/Phishing/requests.log'
-LOG_DHCP         = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/dhcp.log'
-LOG_HOSTAPD      = user_config_dir+'/.config/wifipumpkin3/logs/AccessPoint/hostapd.log'
+LOG_PUMPKINPROXY = user_config_dir+ '/.config/wifipumpkin3/logs/ap/pumpkin_proxy.log'
+LOG_PYDNSSERVER  = user_config_dir+'/.config/wifipumpkin3/logs/ap/pydns_server.log'
+LOG_SNIFFKIN3    = user_config_dir+'/.config/wifipumpkin3/logs/ap/sniffkin3.log'
+LOG_CAPTIVEPO    = user_config_dir+'/.config/wifipumpkin3/logs/ap/captiveportal.log'
+LOG_RESPONDER3   = user_config_dir+'/.config/wifipumpkin3/logs/ap/responder3.log'
+LOG_HOSTAPD      = user_config_dir+'/.config/wifipumpkin3/logs/ap/hostapd.log'
 LOG_ALL          = user_config_dir+'/.config/wifipumpkin3/logs/everything.log'
+
 
 
 #APP SETTINGS
 CONFIG_INI          = user_config_dir+'/.config/wifipumpkin3/config/app/config.ini'
-CONFIG_TP_INI       = user_config_dir + '/.config/wifipumpkin3/config/app/tcpproxy.ini'
-CONFIG_PP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/proxy.ini'
+CONFIG_SK_INI       = user_config_dir + '/.config/wifipumpkin3/config/app/sniffkin3.ini'
+CONFIG_PP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/pumpkinproxy.ini'
+CONFIG_CP_INI       = user_config_dir +'/.config/wifipumpkin3/config/app/captive-portal.ini'
 
 TEMPLATES           = 'templates/fakeupdate/Windows_Update/Settins_WinUpdate.html'
 TEMPLATE_PH         = 'templates/phishing/custom/index.html'
@@ -99,7 +104,10 @@ EXTRACT_TEMP        = 'cd templates/ && tar -xf fakeupdate.tar.gz'
 LCOMMITS            = 'https://raw.githubusercontent.com/P0cL4bs/WiFi-Pumpkin/master/Core/config/commits/Lcommits.cfg'
 SOURCE_URL          = 'https://github.com/P0cL4bs/WiFi-Pumpkin.git'
 
+
+
 #settings template
+TEMPLATES_FLASK     = user_config_dir+ '/.config/wifipumpkin3/config/'
 TEMP_CUSTOM = dir_path+'/templates/phishing/custom'
 TEMP_Win    = dir_path+'/templates/fakeupdate/Windows_Update'
 TEMP_Java   = dir_path+'/templates/fakeupdate/Java_Update'

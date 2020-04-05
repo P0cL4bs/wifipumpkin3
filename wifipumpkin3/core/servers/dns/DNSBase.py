@@ -13,6 +13,7 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
     Author = "Dev"
     ConfigRoot="DNSServer"
     ExecutableFile = ""
+    LogFile = ""
     hasPreference = False
     arguments =[['label','switch','type','defaultvalue','enabled','required'],
                 ]
@@ -22,20 +23,8 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         super(DNSBase,self).__init__(parent)
         self.parent = parent
         self.conf = SuperSettings.getInstance()
-        #self.SessionConfig = SessionConfig.getInstance()
+
         self.reactor = None
-        self.LogFile ="logs/AccessPoint/{}.log".format(self.ID)
-
-        #setup_logger(self.Name, self.LogFile, self.parent.currentSessionID)
-        #self.logger = getLogger(self.Name)
-
-        # self.btnsettings.clicked.connect(self.showarguments)
-        # self.btnsettings.setMaximumWidth(100)
-        # self.btnsettings.setMaximumHeight(30)
-        # self.controlui = QtGui.QRadioButton("{}".format(self.Name))
-        # self.controlui.toggled.connect(self.controluiCallback)
-        # self.controlui.setChecked(self.FSettings.Settings.get_setting(self.ConfigRoot,self.ID,format=bool))
-        # self.controluiCallback()
         self.loggermanager = LoggerManager.getInstance()
         self.configure_logger()
 
@@ -72,15 +61,7 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
 
     def LogOutput(self,data):
         if self.conf.get('accesspoint', 'statusAP', format=bool):
-            self.logger.info(line)
-            # try:
-            #     data = str(data).split(' : ')[1]
-            #     for line in data.split('\n'):
-            #         if len(line) > 2 and not self.parent.currentSessionID in line:
-            #             print(line)
-            #         self.logger.info(line)
-            # except IndexError:
-            #     return None
+            self.logger.info(data)
 
 
 class DNSSettings(CoreSettings):
@@ -96,11 +77,6 @@ class DNSSettings(CoreSettings):
         self.title = self.__class__.__name__
         
         self.dnslist = [dns(self.parent) for dns in DNSBase.__subclasses__()]
-        # for dns in self.dnslist:
-        #     if dns.hasPreference:
-        #         self.forml.addRow(dns.controlui,dns.btnsettings)
-        #     else:
-        #         self.forml.addRow(dns.controlui)
 
     @classmethod
     def getInstance(cls):

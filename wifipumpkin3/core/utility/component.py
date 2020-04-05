@@ -1,5 +1,6 @@
 from wifipumpkin3.core.config.globalimport import *
 
+
 class ComponentBlueprint(object):
     Name = "GenericComponent"
     ID = "Generic"
@@ -14,58 +15,82 @@ class ComponentBlueprint(object):
         :return:
         """
         pass
+    
     def boot(self):
         """
         Thing you will need to do aftere initialization here
         :return:
         """
         pass
+
     def postBoot(self):
         """
         Things you do after boot here
         :return:
         """
         pass
+
     def shutdown(self):
         pass
+
     def LogOutput(self,data):
         print(data)
+
     def Start(self):
         self.PreBoot()
         self.Initialize()
         self.boot()
         self.PostBoot()
+
     def Stop(self):
         pass
+
     @property
     def Settings(self):
         pass
 
     def stupidthings(self):
         print("From Component Blueprint")
+
     def PreBoot(self):
         pass
+
     def PostBoot(self):
         pass
 
 
 class ControllerBlueprint(object):
+    Name = "GenericController"
+    ID = "Generic"
     def __init__(self):
         super(ControllerBlueprint,self).__init__()
+
+    @staticmethod
+    def getID():
+        """
+        Initialise everything here
+        :return ID:
+        """
+        return ComponentBlueprint.ID
+
     @property
     def Active(self):
         pass
+
     @property
     def ActiveReactor(self):
         pass
+
     @property
     def ActiveService(self):
         pass
-    @property
+    
     def Start(self):
         pass
+
     def Stop(self):
         pass
+
     def SaveLog(self):
         pass
 
