@@ -185,8 +185,6 @@ class ModuleUI(Cmd):
         try:
             command,value = args.split()[0],args.split()[1]
             if (command in self.options.keys()):
-                #self.conf.set('accesspoint',self.commands[command],value)
-                print(display_messages('changed to {} => {}'.format(command, value),sucess=True))
                 self.options[command] = [value, self.options[command][1]]
             else:
                 print(display_messages('unknown command: {} '.format(command),error=True))

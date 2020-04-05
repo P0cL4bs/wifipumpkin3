@@ -78,6 +78,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed module print infor data [mh4x0f]
 - fixed bug file descriptor bad dhcpserver [mh4x0f]
 - fixed bug when try to load all plugins on sniffkin3 [mh4x0f]
 - fixed mascared bug file descriptor bad partial solution [mh4x0f]
