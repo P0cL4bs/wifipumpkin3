@@ -66,6 +66,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed old implementation loader accesspoint [mh4x0f]
 - Removed history.md file [mh4x0f]
 - Removed keys not using in project. [mh4x0f]
 - Remove lib not using in the project. [mh4x0f]
