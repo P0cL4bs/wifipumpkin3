@@ -55,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- changed codename to nidavellir [mh4x0f]
 - moved /scripts to user dir config [mh4x0f]
 - changed logs folder model [mh4x0f]
 - Moved __main__ code  to __init__ [mh4x0f]
