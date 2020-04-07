@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added license header all files in core/common [mh4x0f]
 - added start tool with finish install on docker [mh4x0f]
 - added enable security WPA,WEP, WPA2 mode wireless [mh4x0f]
 - added parser wireless mode options [mh4x0f]

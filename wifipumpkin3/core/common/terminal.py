@@ -6,6 +6,23 @@ from os import popen
 import sys
 from wifipumpkin3.core.common.platforms import Linux
 
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class ConsoleUI(Cmd):
     ''' shell console UI '''
     def __init__(self,parse_args=None):
@@ -39,10 +56,6 @@ class ConsoleUI(Cmd):
     def set_prompt(self):
         self.prompt = '{} > '.format(setcolor('wp3',color='blue',underline=True))
 
-    # def do_modules(self,args):
-    #     """ show modules available"""
-    #     pass
-
     def do_search(self,args):
         """ search  modules by name"""
         pass
@@ -50,10 +63,6 @@ class ConsoleUI(Cmd):
     def do_use(self,args):
         """ load module on session"""
         pass
-
-    # def do_back(self,args):
-    #     """ unload module on session"""
-    #     pass
 
     ## Override methods in Cmd object ##
     def preloop(self):
@@ -64,7 +73,6 @@ class ConsoleUI(Cmd):
         self._hist    = []      ## No history yet
         self._locals  = {}      ## Initialize execution namespace for user
         self._globals = {}
-
 
     def do_help(self,args):
         """ show this help """
@@ -96,7 +104,6 @@ class ConsoleUI(Cmd):
                 output = popen(args).read()
                 if (len(output) > 0):
                     print(output) 
-
 
     def loadPulpFiles(self, file, data=None):
         ''' load and execute all commands in file pulp separate for \n '''
@@ -138,9 +145,6 @@ class ConsoleUI(Cmd):
         """ exit the program."""
         print('Quitting.')
         raise SystemExit
-
-
-
 
 class ModuleUI(Cmd):
     ''' shell console UI '''
@@ -215,14 +219,12 @@ class ModuleUI(Cmd):
                 else:
                     cmds_doc.append((cmd, ""))
 
-        #self.stdout.write('%s\n'%str(self.doc_header))
         self.stdout.write('    {}	 {}\n'.format('Commands', 'Description'))
         self.stdout.write('    {}	 {}\n'.format('--------', '-----------'))
         for command,doc in cmds_doc:
             if (len(doc) > 0):
                 self.stdout.write('    {:<10}	{}\n'.format(command, doc))
         print('\n')
-
 
     def loadPulpFiles(self, file, data=None):
         ''' load and execute all commands in file pulp separate for \n '''
@@ -235,6 +237,7 @@ class ModuleUI(Cmd):
         sys.exit(1)
 
     def default(self, args=str):
+        ''' run commands system allow by tool '''
         for goodArgs in C.SYSTEMCOMMAND:
             if (args.startswith(goodArgs)):
                 output = popen(args).read()
