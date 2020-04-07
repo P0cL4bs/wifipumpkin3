@@ -8,12 +8,28 @@ from pwd import getpwnam
 from grp import getgrnam
 from wifipumpkin3.core.wirelessmode import *
 from json import dumps,loads
-#from core.widgets.default.SessionConfig import *
 from datetime import datetime
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.wirelessmode import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
+
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class WirelessModeController(ControllerBlueprint):
     ID = 'wireless_controller'
@@ -29,10 +45,6 @@ class WirelessModeController(ControllerBlueprint):
         self.conf = SettingsINI.getInstance()
         # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
-        #self.SessionsAP = loads(str(self.FSettings.Settings.get_setting('accesspoint', 'sessions')))
-        #self.currentSessionID = self.parent.currentSessionID
-        #self.SettingsAP = self.parent.SettingsAP
-        #self.SessionConfig = SessionConfig.instances[0]
 
     @property
     def Activated(self):
@@ -58,61 +70,13 @@ class WirelessModeController(ControllerBlueprint):
 
     def Start(self):
         ''' start Access Point and settings plugins  '''
-        # if len(self.Settings.WLANCard.currentText()) == 0:
-        #     return QtGui.QMessageBox.warning(self, 'Error interface ', 'Network interface is not found')
-        # if not type(self.Activated.get_soft_dependencies()) is bool: return
-
-        # # check if interface has been support AP mode (necessary for hostapd)
-        # if self.FSettings.Settings.get_setting('accesspoint', 'check_support_ap_mode', format=bool):
-        #     if not 'AP' in Refactor.get_supported_interface(self.Settings.WLANCard.currentText())['Supported']:
-        #         return QtGui.QMessageBox.warning(self, 'No Network Supported failed',
-        #                                          "<strong>failed AP mode: warning interface </strong>, the feature "
-        #                                          "Access Point Mode is Not Supported By This Device -><strong>({})</strong>.<br><br>"
-        #                                          "Your adapter does not support for create Access Point Network."
-        #                                          " ".format(self.Settings.WLANCard.currentText()))
-
-        # # check connection with internet
-        # #self.interfacesLink = Refactor.get_interfaces()
-        # # check if Wireless interface is being used
-        # if str(self.Settings.WLANCard.currentText()) == self.Activated.interfacesLink['activated'][0]:
-        #     iwconfig = Popen(['iwconfig'], stdout=PIPE, shell=False, stderr=PIPE)
-        #     for line in iwconfig.stdout.readlines():
-        #         if str(self.Settings.WLANCard.currentText()) in line:
-        #             return QtGui.QMessageBox.warning(self, 'Wireless interface is busy',
-        #                                              'Connection has been detected, this {} is joined the correct Wi-Fi network'
-        #                                              ' : Device or resource busy\n{}\nYou may need to another Wi-Fi USB Adapter'
-        #                                              ' for create AP or try use with local connetion(Ethernet).'.format(
-        #                                                  str(self.Settings.WLANCard.currentText()), line))
-        # # check if using ethernet or wireless connection
-        # print('[*] Configuring {}...'.format(self.Activated.Name))
-        # self.parent.SettingsEnable['AP_iface'] = str(self.Settings.WLANCard.currentText())
-        # set_monitor_mode(self.parent.SettingsEnable['AP_iface']).setDisable()
-        # if self.Activated.interfacesLink['activated'][1] == 'ethernet' or self.Activated.interfacesLink['activated'][1] == 'ppp' \
-        #         or self.Activated.interfacesLink['activated'][0] == None:  # allow use without internet connection
-        #     # change Wi-Fi state card
-        #     Refactor.kill_procInterfaceBusy()  # killing network process
-        #     try:
-        #         check_output(['nmcli', 'radio', 'wifi', "off"])  # old version
-        #     except Exception:
-        #         try:
-        #             check_output(['nmcli', 'nm', 'wifi', "off"])  # new version
-        #         except Exception as error:
-        #             return QtGui.QMessageBox.warning(self, 'Error nmcli', str(error))
-        #     finally:
-        #         call(['rfkill', 'unblock', 'wifi'])
+        if not type(self.Activated.get_soft_dependencies()) is bool: return
 
         self.Activated.Start()
-        #self.Settings.setEnabled(False)
         return None
-
 
     def Stop(self):
         pass
-        #self.Settings.setEnabled(True)
-
-
-
-
 
 class AccessPointSettings(CoreSettings):
     Name = "Access Point"
@@ -125,6 +89,7 @@ class AccessPointSettings(CoreSettings):
 
         self.title = self.__class__.__name__
 
+        #load all mode wireless 
         self.__modelist = [mode(self.parent) for mode in wirelessmode.Mode.__subclasses__()]
         
     def ModelistChanged(self,mode,widget):
@@ -132,6 +97,7 @@ class AccessPointSettings(CoreSettings):
 
     @property
     def getActiveMode(self):
+        ''' get mode activated from settings file '''
         for mode in self.__modelist:
             if mode.isChecked():
                 return mode
@@ -149,7 +115,6 @@ class AccessPointSettings(CoreSettings):
     @property
     def getInstances(self):
         return self.instances
-
 
     def parser_set_mode(self, mode_name, *args):
         # default parser mode commands complete

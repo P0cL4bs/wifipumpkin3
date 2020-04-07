@@ -3,6 +3,22 @@ from wifipumpkin3.core.servers.mitm import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
 
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class MitmController(PluginsUI,ControllerBlueprint):
     Name = "MITM"
@@ -22,8 +38,8 @@ class MitmController(PluginsUI,ControllerBlueprint):
          # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
-        #self.uplinkIF = self.parent.Refactor.get_interfaces()
-        #self.downlinkIF = self.parent.WLANCard.currentText()
+
+        # find all mitm plugin files
         __manipulator= [prox(parent=self.parent) for prox in mitmmode.MitmMode.__subclasses__()]
         #Keep Proxy in a dictionary
         for k in __manipulator:
@@ -40,29 +56,9 @@ class MitmController(PluginsUI,ControllerBlueprint):
                 'Config' : k.getConfig,
             }
 
-        self.m_name = []
-        self.m_desc = []
-        self.m_settings = []
+        # set all mitm plugin as child class
         for n,p in self.mitmhandler.items():
-            # self.m_name.append(p.controlui)
-            # self.m_settings.append(p.btnChangeSettings)
-            # self.m_desc.append(p.controlui.objectName())
-            #self.manipulatorGroup.addButton(p.controlui)
             setattr(self,p.ID,p)
-            #self.parent.LeftTabBar.addItem(p.tabinterface)
-            #self.parent.Stack.addWidget(p)
-
-        self.MitmModeTable = OrderedDict(
-            [('Activity Monitor', self.m_name),
-             ('Settings', self.m_settings),
-             ('Description', self.m_desc)
-             ])
-
-    def DisableMitmMode(self,status):
-        self.SetNoMitmMode.emit(status)
-
-    def dockUpdate(self,add=True):
-        self.dockMount.emit(add)
 
     @property
     def ActiveDock(self):
@@ -105,14 +101,12 @@ class MitmController(PluginsUI,ControllerBlueprint):
         for i in self.Active:
             i.boot()
 
-    
     @property
     def getAllReactor(self):
         reactor=[]
         for i in self.Active:
             reactor.append(i.reactor)
         return reactor
-
     
     def getReactorInfo(self):
         info_reactor = {}
