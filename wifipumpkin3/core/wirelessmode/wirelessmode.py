@@ -40,6 +40,7 @@ class Mode(Qt.QObject):
 
     def get_soft_dependencies(self):
         ''' check if Hostapd, isc-dhcp-server is installed '''
+        #TODO:  implement this method for check hostapd
         pass
         # if not path.isfile(self.hostapd_path):
         #     return QtGui.QMessageBox.information(self,'Error Hostapd','hostapd is not installed')

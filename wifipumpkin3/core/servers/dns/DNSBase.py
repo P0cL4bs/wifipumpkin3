@@ -4,7 +4,6 @@ from wifipumpkin3.core.common.uimodel import *
 #from core.widgets.default.SessionConfig import SessionConfig
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from wifipumpkin3.core.controls.threads import (ProcessThread)
-from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 
 class DNSBase(QtCore.QObject,ComponentBlueprint):

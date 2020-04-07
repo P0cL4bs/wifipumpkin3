@@ -11,7 +11,6 @@ class PyDNSServer(DNSBase):
 
     def __init__(self,parent):
         super(PyDNSServer,self).__init__(parent)
-        #self.logger.setIgnore(True)
 
     @property
     def commandargs(self):
@@ -22,8 +21,6 @@ class PyDNSServer(DNSBase):
             self.logger.info(data)
 
     def boot(self):
-        #TODO : the pyDnsServer is disabled because problem dns instance setting os
-        # future: check another alternative
         self.reactor = DNSServerThread(self.conf)
         self.reactor.sendRequests.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)  # use dns2proxy as DNS server

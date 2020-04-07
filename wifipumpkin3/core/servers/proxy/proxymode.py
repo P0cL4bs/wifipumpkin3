@@ -3,7 +3,6 @@ from wifipumpkin3.core.controls.threads import  ProcessThread
 from wifipumpkin3.core.controllers.wirelessmodecontroller import AccessPointSettings
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import *
-from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 from wifipumpkin3.core.utility.component import ComponentBlueprint

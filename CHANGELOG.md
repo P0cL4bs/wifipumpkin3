@@ -56,6 +56,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- refactored all controllers implementation codestyle [mh4x0f]
 - improved folder copy code on setup.py [mh4x0f]
 - exclude config folder from language statistics [mh4x0f]
 - changed codename to nidavellir [mh4x0f]
@@ -70,6 +71,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed function old setup_logger wp2 [mh4x0f] 
 - removed all python modules on test folder [mh4x0f]
 - removed old implementation loader accesspoint [mh4x0f]
 - Removed history.md file [mh4x0f]

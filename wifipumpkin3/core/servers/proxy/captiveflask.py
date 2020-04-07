@@ -6,7 +6,6 @@ import queue
 from scapy.all import *
 import logging, os
 import wifipumpkin3.core.utility.constants as C
-from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.uimodel import *
