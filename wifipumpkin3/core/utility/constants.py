@@ -1,50 +1,27 @@
 import os
 
-"""
-Description:
-    This program is a module for wifi-pumpkin.py file which includes functionality
-    declare constants .
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
 
-Copyright:
-    Copyright (C) 2015-2017 Marcos Nesster P0cl4bs Team
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-"""
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 dir_of_executable = os.path.dirname(__file__)
 dir_path          = os.getcwd()
 user_config_dir   = os.path.expanduser("~")
 
-# window constants
-GEOMETRYH = 820
-GEOMETRYW = 500
-
 SYSTEMCOMMAND = ['ifconfig','iw','iwconfig', 'route']
-
-MENU_STYLE = 'QListWidget::item {border-style: solid; border-width:1px; ' \
-             'border-color:#3A3939;}QListWidget::item:selected {border-style:' \
-             ' solid;color:#ff6600;  background-color: #3A3939; border-width:1px; border-radius: 2px; border: 1px solid #ff6600;}QListWidget ' \
-             '{background-color: #302F2F; border-radius 2px; border-width:1px;border-color:#201F1F;} QListWidget:item:hover'\
-'{color: #ff6600;border-radius: 2px; }'
-GTKTHEME = 'Plastique'
-
-NOTIFYSTYLE = "; ".join((
-    "color: #302F2F",
-    'background-color: #996633',
-    "border-color: #996633",
-    "border: 1dpx solid #996633",
-    "padding: 5px"))
-
 
 HELPFILESPATH = user_config_dir + '/.config/wifipumpkin3/helps/'
 
@@ -53,14 +30,12 @@ CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/config/session/conn
 
 DHCPSERVERBINARY = 'core/packets/binary/dhcpserver'
 
-PUMPKINPROXY_notify = 'the package requirement mitmproxy==0.18.2 is ' \
-                      'not satisfied.'
-
 #DNS file hosts
 DNSHOSTS = user_config_dir+ '/.config/wifipumpkin3/config/app/dns_hosts.ini'
 
 #donation button
-DONATE = 'https://github.com/P0cL4bs/WiFi-Pumpkin#donation'
+#TODO: add donation in readme 
+DONATE = 'https://github.com/P0cL4bs/wifipumpkin3#donation'
 DONATE_TXT = 'Consider donating to support the development and maintenance of WiFi-Pumpkin. '
 
 #settings DHCP
@@ -116,8 +91,3 @@ TEMP_Java   = dir_path+'/templates/fakeupdate/Java_Update'
 RESPONDER_EXEC  = 'plugins/external/Responder/Responder.py'
 DNS2PROXY_EXEC  = 'plugins/external/dns2proxy/dns2proxy.py'
 BDFPROXY_EXEC   = 'plugins/external/BDFProxy-ng/bdf_proxy.py'
-
-#colors
-YELLOW = '\033[33m'
-RED = '\033[91m'
-ENDC = '\033[0m'
