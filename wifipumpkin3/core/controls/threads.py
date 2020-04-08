@@ -6,10 +6,26 @@ from multiprocessing import Process, Queue
 from subprocess import (Popen, STDOUT, PIPE)
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
 from wifipumpkin3.core.packets.dhcpserver import DHCPProtocol
-# from core.servers.proxy.http.controller.handler import MasterHandler
 from wifipumpkin3.core.utility.printer import display_messages,colors
 from wifipumpkin3.core.common.platforms import Linux as Refactor
 import wifipumpkin3.core.utility.constants as C
+
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class DHCPServerProcess(QThread):
     _ProcssOutput = pyqtSignal(object)
@@ -46,15 +62,12 @@ class DHCPServerProcess(QThread):
         self.started = False
         self.queue.close()
 
-
-
 class ProcessThread(QThread):
     _ProcssOutput = pyqtSignal(object)
     def __init__(self,cmd ,directory_exec=None):
         QThread.__init__(self)
         self.directory_exec = directory_exec
         self.cmd = cmd
-
 
     @pyqtSlot()
     def getNameThread(self):
@@ -88,8 +101,6 @@ class ProcessThread(QThread):
             self.procThread.waitForFinished()
             self.procThread.kill()
 
-
-
 class DHCPServerProcess(QThread):
     _ProcssOutput = pyqtSignal(object)
     def __init__(self,cmd ,directory_exec=None):
@@ -116,7 +127,6 @@ class DHCPServerProcess(QThread):
         self.procDHCP.terminate()
         self.started = False
         self.queue.close()
-
 
 class ProcessHostapd(QObject):
     statusAP_connected = pyqtSignal(object)
@@ -147,47 +157,22 @@ class ProcessHostapd(QObject):
             del all_clients[client_mac]
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, all_clients)
 
-
     def read_OutputCommand(self):
-        # for line in proc.stdout:
-        #     if 'AP-STA-DISCONNECTED' in line.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in line.rstrip():
-        #         q.put(line.split()[2])
         self.data = str(self.procHostapd.readAllStandardOutput(),encoding='ascii')
         if 'AP-STA-DISCONNECTED' in self.data.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in self.data.rstrip():
             self.removeInactivityClient(self.data.split()[2])
             self.statusAP_connected.emit(self.data.split()[2])
-            #self.queue.put(self.data.split()[2])
-        # #self.log_hostapd.info(self.data)
-        # for error in self.errorAPDriver:
-        #     if self.data.find(error) != -1:
-        #         return self.statusAPError.emit(str(self.data))
-
-    def getHostapdResponse(self):
-        while self.started:
-            self.msg_inactivity.append(self.queue.get())
 
     def start(self):
-        self.makeLogger()
         self.procHostapd = QProcess(self)
         self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)
         self.procHostapd.start(list(self.cmd.keys())[0],self.cmd[list(self.cmd.keys())[0]])
         self.procHostapd.readyReadStandardOutput.connect(self.read_OutputCommand)
-        #print(display_messages('[New Thread {} ({})]'.format(self.procHostapd.pid(),self.objectName()),info=True))
         self.started = True
-        # self.proc = Popen(self.cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
-        # self.procHostapd = Process(target=self.read_OutputCommand, args=(self.queue,self.proc))
-        # self.procHostapd.start()
         print(display_messages('starting hostpad pid: [{}]'.format(self.procHostapd.pid()),sucess=True))
-
-    def makeLogger(self):
-        #setup_logger('hostapd', C.LOG_HOSTAPD, self.session)
-        #self.log_hostapd = logging.getLogger('hostapd')
-        pass
 
     def stop(self):
         print('Thread::[{}] successfully stopped.'.format(self.objectName()))
         if hasattr(self,'procHostapd'):
             self.started = False
-            #self.proc.kill()
-            #self.proc.terminate()
             self.procHostapd.terminate()
