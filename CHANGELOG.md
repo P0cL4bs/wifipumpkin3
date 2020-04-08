@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added license header all files in core/wirelessmode [mh4x0f]
 - added license header all files in core/widgets [mh4x0f]
 - added license header all files in core/utility [mh4x0f]
 - added license header all files in core/ui [mh4x0f]
