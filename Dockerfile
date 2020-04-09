@@ -24,5 +24,5 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
 RUN python3.7 -m pip install pip
 RUN python3.7 -m pip install -r requirements.txt 
 RUN python3.7 setup.py install
-CMD /bin/bash
+CMD /usr/local/bin/wifipumpkin3 -m docker
 

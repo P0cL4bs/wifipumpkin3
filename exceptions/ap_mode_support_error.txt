@@ -1,0 +1,3 @@
+failed AP mode: warning interface, the feature
+Access point mode is not supported by this device above.
+Your adapter does not support for create Access Point Network.

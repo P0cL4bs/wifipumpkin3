@@ -4,7 +4,22 @@ from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.servers.proxy import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
 
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
 
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class ProxyModeController(PluginsUI, ControllerBlueprint):
     Name = "Proxy"
@@ -26,9 +41,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
 
-        #self.setChecked(self.conf.get('plugins', 'disableproxy', format=bool))
-        #self.clicked.connect(self.get_disable_proxy)
-        
+        # load all plugin proxy 
         __proxlist= [prox(parent=self.parent) for prox in proxymode.ProxyMode.__subclasses__()]
 
         #Keep Proxy in a dictionary
@@ -47,58 +60,13 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 'Config' : k.getConfig,
             }
 
-
-
-        self.p_name = []
-        self.p_desc = []
-        self.p_settings = []
-        self.p_author = []
-        self.NoProxy = None
+        # set all proxy plugin as child class
         for n,p in self.proxies.items():
-            if p.Name == "No Proxy":
-                self.NoProxy = p
-            self.p_author.append(p.Author)
-            #self.p_desc.append(p.controlui.objectName())
-            # if (type(p.controlui) == type(QtGui.QRadioButton()) ):
-            #     self.proxyGroup.addButton(p.controlui)
-            #p.sendSingal_disable.connect(self.DisableProxy)
-            #p.dockwidget.addDock.connect(self.dockUpdate)
             if (hasattr(p,'ID')):
                 setattr(self, p.ID, p)
-
-        self.THeadersPluginsProxy = OrderedDict(
-            [('Proxies', self.p_name),
-             ('Settings', self.p_settings),
-             ('Author', self.p_author),
-             ('Description', self.p_desc)
-             ])
         
     def isChecked(self):
         return self.conf.get('plugins', self.ID, format=bool)
-        
-    def get_disable_proxy(self):
-
-
-        if self.isChecked():
-            if self.Active.Name == "No Proxy":
-                self.SetNoProxy.emit(False)
-            else:
-
-                self.parent.set_proxy_statusbar(self.Active.Name, disabled=False)
-                self.FSettings.Settings.set_setting('plugins', 'disableproxy',
-                                                    self.isChecked())
-
-        else:
-            self.SetNoProxy.emit(self.isChecked())
-            self.FSettings.Settings.set_setting('plugins', 'disableproxy',
-                                                self.isChecked())
-
-
-    def dockUpdate(self,add=True):
-        self.dockMount.emit(add)
-
-    def DisableProxy(self,status):
-        self.SetNoProxy.emit(status)
         
     @property
     def ActiveDocks(self):
@@ -117,8 +85,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                     if act.subreactor:
                         reactor.append(act.subreactor)
         return  reactor
-
-
 
     @property
     def Active(self):
@@ -165,7 +131,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 proxy.Serve()
                 proxy.boot()
 
-
     @property
     def getReactor(self):
         return self.Active.reactor
@@ -182,5 +147,4 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         self.Active.shutdown()
 
     def SaveLog(self):
-
         self.Active.SaveLog()

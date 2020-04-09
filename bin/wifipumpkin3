@@ -8,12 +8,12 @@ from PyQt5 import QtCore
 from wifipumpkin3 import PumpkinShell
 from wifipumpkin3.core.utility.printer import banner, setcolor,display_messages
 from wifipumpkin3.core.utility.collection import SettingsINI
-from wifipumpkin3._version import __version__
+from wifipumpkin3._version import __version__, __codename__
 import wifipumpkin3.core.utility.constants as C
 
 _author  = ('{}'.format(setcolor('@mh4x0f',color='yellow')))
 _version = setcolor(__version__,color='yellow')
-__codename__ = setcolor('sab1no',color='red')
+__codename__ = setcolor(__codename__,color='ciano')
 banner(__codename__)
 
 def parser_args_func(parse_args):
@@ -25,10 +25,9 @@ def parser_args_func(parse_args):
 
 if __name__ == '__main__':
     app = QtCore.QCoreApplication(sys.argv)
-    conf       = SettingsINI(C.CONFIG_INI)
-    ifacedefault = conf.get('accesspoint','interfaceAP')
+    conf = SettingsINI.getInstance()
     parser = argparse.ArgumentParser(description="WiFi-Pumpkin - pure line-oriented command")
-    parser.add_argument('-i',  dest='interface',help='set interface for create AP',default=ifacedefault)
+    parser.add_argument('-i',  dest='interface',help='set interface for create AP',default='')
     parser.add_argument('-s',  dest='session',help='set session for continue attack',default=None)
     parser.add_argument('-p', '--pulp', dest='pulp',help='interactive sessions can be scripted with .pulp file',default='')
     parser.add_argument('-x', '--xpulp', dest='xpulp',help='interactive sessions can be string with ";" as the separator',default='')
