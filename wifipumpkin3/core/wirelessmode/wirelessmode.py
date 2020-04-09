@@ -7,7 +7,7 @@ from os import (
 from shutil import move
 from wifipumpkin3.core.widgets.default.session_config import *
 from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
-
+from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
@@ -96,12 +96,15 @@ class Mode(Qt.QObject):
         # set configure iptables 
         self.setIptables()
         # set AP status true 
-        self.conf.set('accesspoint', 'statusAP', True)
+        self.setStatusAP(True)
+
+    def setStatusAP(self, value):
+        self.conf.set('accesspoint', 'status_ap', value)
 
     def setIptables(self):
         self.interfacesLink = Refactor.get_interfaces()
         print(display_messages('sharing internet connection with NAT...', info=True))
-        self.ifaceHostapd = self.conf.get('accesspoint','interfaceAP')
+        self.ifaceHostapd = self.conf.get('accesspoint','interface')
         try:
             for ech in self.conf.get_all_childname('iptables'):
                 ech = self.conf.get('iptables', ech)
@@ -118,10 +121,10 @@ class Mode(Qt.QObject):
 
     def get_error_hostapdServices(self,data):
         '''check error hostapd on mount AP '''
-        self.Shutdown()
-        return QtGui.QMessageBox.warning(self,'[ERROR] Hostpad',
-        'Failed to initiate Access Point, '
-        'check output process hostapd.\n\nOutput::\n{}'.format(data))
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
+            self.Shutdown()
+            raise HostapdInitializeError('[ERROR] Hostpad Failed', 
+                'check output process hostapd.\n {}'.format(data))
 
     def check_Wireless_Security(self):
         '''check if user add security password on AP'''

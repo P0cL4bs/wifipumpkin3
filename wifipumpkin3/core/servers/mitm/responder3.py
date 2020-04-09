@@ -60,7 +60,7 @@ class Responder3(MitmMode):
 
     @property
     def CMD_ARRAY(self):
-        iface  = self.conf.get('accesspoint', 'interfaceAP')
+        iface  = self.conf.get('accesspoint', 'interface')
         config_responder3_path = self.conf.get('mitm_modules', 'responder3_config')
         self._cmd_array=['-I',iface , '-4', '-p', config_responder3_path]
         return self._cmd_array

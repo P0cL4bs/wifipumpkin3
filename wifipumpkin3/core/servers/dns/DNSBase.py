@@ -74,7 +74,7 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         self.reactor.setObjectName(self.ID)
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.logger.info(data)
 
 

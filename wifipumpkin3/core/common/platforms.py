@@ -163,6 +163,15 @@ class Linux(QtCore.QObject):
         return content
 
     @staticmethod
+    def readFileExceptions(filename, mode='r'):
+        """ return content the any files .txt"""
+        content= ''
+        with open('{}{}.txt'.format(C.EXCEPTFILESPATH,filename), mode) as f:
+            content = f.read()
+            f.close()
+        return content        
+
+    @staticmethod
     def generate_session_id():
         ''' return str session id '''
         my_id = str(uuid1())

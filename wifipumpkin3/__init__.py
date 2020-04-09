@@ -51,13 +51,16 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages('Session id: {} '.format(
             setcolor(self.currentSessionID, color='red', underline=True)), info=True))
 
-        self.all_modules = module_list
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
 
     def initialize_core(self):
         """ this method is called in __init__ """
         # set current session unique id 
         self.conf.set('accesspoint','current_session', self.currentSessionID)
+        if self.parse_args.interface:
+            self.conf.set('accesspoint','interface', self.parse_args.interface)
+
+        self.all_modules = module_list
 
         self.coreui = DefaultController(self)
         self.logger_manager = LoggerManager.getInstance()
@@ -88,7 +91,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         
         self.commands = \
         {
-            'interface': 'interfaceAP',
+            'interface': 'interface',
             'ssid': 'ssid',
             'bssid': 'bssid',
             'channel':'channel', 
@@ -162,9 +165,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             print(display_messages('The interface not found! ',error=True))
             sys.exit(1)
 
-        self.conf.set('accesspoint',self.commands['interface'],self.parse_args.interface)
-        self.conf.set('accesspoint','current_session',self.parse_args.session)
-
         if self.wireless_controller.Start() != None: return
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             if (ctr_name != 'wireless_controller'):
@@ -188,12 +188,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def killThreads(self):
         if not len(self.Apthreads['RogueAP']) > 0:
             return
-
+        self.conf.set('accesspoint','status_ap', False)
         # get all command plugins and proxys 
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             ctr_instance.Stop()
 
-        self.conf.set('accesspoint', 'statusAP',False)
         for thread in self.Apthreads['RogueAP']:
             if thread is not None:
                 if (isinstance(thread, list)):
@@ -278,7 +277,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         headers_table, output_table = ["BSSID", "SSID",
                  "Channel", "Iface", "StatusAP", "Security"], []
         print(display_messages('Settings AccessPoint:',info=True,sublime=True))
-        status_ap =self.conf.get('accesspoint',"statusAP", format=bool)
+        status_ap =self.conf.get('accesspoint',"status_ap", format=bool)
         output_table.append([
             self.conf.get('accesspoint',self.commands["bssid"]),
             self.conf.get('accesspoint',self.commands["ssid"]),

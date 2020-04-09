@@ -69,19 +69,19 @@ class Sniffkin3(MitmMode):
     def setPluginOption(self, name, status):
         ''' get each plugins status'''
         # enable realtime disable and enable plugin
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.reactor.disablePlugin(name, status)
         self.conf.set('plugins', name, status)
 
     def boot(self):
         #self.handler = self.parent.Plugins.MITM
-        iface =  self.conf.get('accesspoint','interfaceAP')
+        iface =  self.conf.get('accesspoint','interface')
         self.reactor= Sniffkin3Core(iface, self.parent.currentSessionID)
         self.reactor.setObjectName(self.ID)
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
                         data['urlsCap']['IP'], data['urlsCap']['Headers']))
 

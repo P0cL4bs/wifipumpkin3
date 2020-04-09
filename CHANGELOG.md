@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added exceptions implementation error [mh4x0f]
 - added license header __init__ file [mh4x0f]
 - added license header all files in plugins [mh4x0f]
 - added license header all files in modules [mh4x0f]
@@ -95,6 +96,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed bug when try restart AP with modification in interface name [mh4x0f]
 - fixed bug when try mout AP on wirelesscontroller [mh4x0f]
 - fixed set as default require python version 3.7 [mh4x0f]
 - fixed  set linguist-documentation to false [mh4x0f]

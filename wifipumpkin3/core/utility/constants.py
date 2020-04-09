@@ -24,6 +24,7 @@ user_config_dir   = os.path.expanduser("~")
 SYSTEMCOMMAND = ['ifconfig','iw','iwconfig', 'route']
 
 HELPFILESPATH = user_config_dir + '/.config/wifipumpkin3/helps/'
+EXCEPTFILESPATH = user_config_dir + '/.config/wifipumpkin3/exceptions/'
 
 #DHCP logger connected 
 CLIENTS_CONNECTED = user_config_dir + '/.config/wifipumpkin3/config/session/connected.json'

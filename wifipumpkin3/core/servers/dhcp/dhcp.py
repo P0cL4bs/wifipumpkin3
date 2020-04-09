@@ -5,6 +5,7 @@ from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from isc_dhcp_leases.iscdhcpleases import IscDhcpLeases
 from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.exceptions.errors.dhcpException import DHCPServerSettingsError
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -36,16 +37,10 @@ class DHCPServers(QtCore.QObject,ComponentBlueprint):
         self.DHCPConf = self.Settings.confingDHCP
 
     def prereq(self):
-        dh, gateway = self.DHCPConf['router'], Linux.get_interfaces()
-        if dh[:len(dh) - len(dh.split('.').pop())] == gateway[:len(gateway) - len(gateway.split('.').pop())]:
-            #TODO: create exception file system message
-            print(display_messages('DHCP Server settings \n \
-            The DHCP server check if range ip class is same. \
-            it works, but not share internet connection in some case.\n \
-            for fix this, You need change on tab (settings -> Class Ranges) \
-            now you have choose the Class range different of your network',
-            error=True))
-            exit(1)
+        dh, gateway = self.DHCPConf['router'], Linux.get_interfaces()['gateway']
+        if gateway != None:
+            if dh[:len(dh) - len(dh.split('.').pop())] == gateway[:len(gateway) - len(gateway.split('.').pop())]:
+                raise DHCPServerSettingsError('DHCPServer', 'dhcp same ip range address ')
 
 
     def isChecked(self):

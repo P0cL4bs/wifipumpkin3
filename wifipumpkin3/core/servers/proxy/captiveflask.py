@@ -88,7 +88,7 @@ class CaptivePortal(ProxyMode):
         self.reactor.setObjectName(self.ID)
 
         # settings iptables for add support captive portal 
-        IFACE = self.conf.get('accesspoint', 'interfaceAP')
+        IFACE = self.conf.get('accesspoint', 'interface')
         IP_ADDRESS = self.conf.get('dhcp', 'router')
         PORT= 80
         
@@ -114,7 +114,7 @@ class CaptivePortal(ProxyMode):
 
     def LogOutput(self,data):
         headers_table, output_table = ["IP", "Login", "Password"], []
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.logger.info(data)
             try:
                 data = literal_eval(data)

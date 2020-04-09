@@ -90,7 +90,7 @@ class PumpKinProxy(ProxyMode):
         return list_commands
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.logger.info(data)
 
     def parser_set_pumpkinproxy(self, status, plugin_name):

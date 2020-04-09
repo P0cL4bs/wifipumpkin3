@@ -162,7 +162,11 @@ class ProcessHostapd(QObject):
         if 'AP-STA-DISCONNECTED' in self.data.rstrip() or 'inactivity (timer DEAUTH/REMOVE)' in self.data.rstrip():
             self.removeInactivityClient(self.data.split()[2])
             self.statusAP_connected.emit(self.data.split()[2])
-
+        # check error hostapd log
+        for error in self.errorAPDriver:
+            if self.data.find(error) != -1:
+                return self.statusAPError.emit(self.data)
+                
     def start(self):
         self.procHostapd = QProcess(self)
         self.procHostapd.setProcessChannelMode(QProcess.MergedChannels)

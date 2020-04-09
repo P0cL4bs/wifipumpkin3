@@ -13,6 +13,7 @@ from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.printer import display_messages
 import sys
+from wifipumpkin3.exceptions.errors.networkException import *
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -71,11 +72,6 @@ class Static(Mode):
         #TODO: notify user client desconnected 
         print(data)
 
-    def get_error_hostapdServices(self,data):
-        if  self.conf.get('accesspoint','statusAP',format=bool):
-            print(display_messages('Hostapd Error',error=True))
-            print(data)
-
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''
         networkmanager = C.NETWORKMANAGER
@@ -129,7 +125,6 @@ class StaticSettings(CoreSettings):
         self.SettingsAP = {}
         
         self.interfaces = Linux.get_interfaces()
-        self.ifaceHostapd   = self.conf.get('accesspoint','interfaceAP')
         self.DHCP           = self.getDHCPConfig()
 
     def getDHCPConfig(self):
@@ -145,6 +140,7 @@ class StaticSettings(CoreSettings):
 
     def Configure(self):
         ''' configure interface and dhcpd for mount Access Point '''
+        self.ifaceHostapd = self.conf.get('accesspoint','interface')
         self.SettingsAP = {
         'interface':
             [
@@ -202,47 +198,18 @@ class StaticSettings(CoreSettings):
                 move(C.DHCPCONF_PATH, '/etc/dhcp/')
 
     def checkNetworkAP(self):
+        self.ifaceHostapd = self.conf.get('accesspoint','interface')
         # check if interface has been support AP mode (necessary for hostapd)
         if self.conf.get('accesspoint','check_support_ap_mode',format=bool):
             if not 'AP' in self.get_supported_interface(self.ifaceHostapd)['Supported']:
-                print(display_messages('No Network Supported failed',error=True))
-                print('failed AP mode: warning interface, the feature\n'
-                'Access Point Mode is Not Supported By This Device ->({}).\n'
-                'Your adapter does not support for create Access Point Network.\n'.format(self.ifaceHostapd))
-                return False
+                raise ApModeSupportError('[Error] AP mode', 
+                '{} ap mode not found!'.format(self.ifaceHostapd))
 
         # check if Wireless interface is being used
         if self.ifaceHostapd == self.interfaces['activated'][0]:
-            iwconfig = Popen(['iwconfig'], stdout=PIPE,shell=False,stderr=PIPE)
-            for line in iwconfig.stdout.readlines():
-                if self.ifaceHostapd in str(line,encoding='ascii'):
-                    print(display_messages('Wireless interface is busy',error=True))
-                    print('Connection has been detected, this {} is joined the correct Wi-Fi network\n'
-                    'Device or resource busy\n{}\nYou may need to another Wi-Fi USB Adapter\n'
-                    'for create AP or try use with local connetion(Ethernet).\n'
-                    ''.format(self.ifaceHostapd,str(line,encoding='ascii')))
-                    return False
-
-        # check if range ip class is same
-        gateway_wp, gateway = self.DHCP['router'],self.interfaces['gateway']
-        if gateway != None:
-            if gateway_wp[:len(gateway_wp)-len(gateway_wp.split('.').pop())] == \
-                gateway[:len(gateway)-len(gateway.split('.').pop())]:
-                print(display_messages('DHCP Server settings',error=True))
-                print('\n'.join(['The DHCP server check if range ip class is same.\n'
-                    'it works, but not share internet connection in some case.\n'
-                    'for fix this, You need change on tab (settings -> Class Ranges)\n'
-                    'now you have choose the Class range different of your network.\n']))
-                return False
+            raise InterfaceBuzyError('Wireless interface is busy', 
+            'Device {} is busy'.format(self.ifaceHostapd ))
         return True
-
-    def setAP_essid_random(self):
-        ''' set random mac 3 last digits  '''
-        prefix = []
-        for item in [x for x in str(self.EditBSSID.text()).split(':')]:
-            prefix.append(int(item, 16))
-        self.EditBSSID.setText(Refactor.randomMacAddress(
-            [prefix[0], prefix[1], prefix[2]]).upper())
 
     def get_supported_interface(self,dev):
         ''' get all support mode from interface wireless  '''

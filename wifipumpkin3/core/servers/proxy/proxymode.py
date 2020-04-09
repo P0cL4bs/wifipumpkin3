@@ -90,7 +90,7 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     def parser_set_proxy(self, proxy_name, *args):
         # default parser proxy commands complete
-        if not self.conf.get('accesspoint', 'statusAP', format=bool):
+        if not self.conf.get('accesspoint', 'status_ap', format=bool):
             plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
             if (plugins_selected != []):
                 self.conf.set('proxy_plugins', plugins_selected[0], True)
@@ -182,7 +182,7 @@ class ProxyMode(Widget,ComponentBlueprint):
             self.unset_Rules(rules)
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             print(data)
 
     def Configure(self):

@@ -28,7 +28,7 @@ class ConsoleUI(Cmd):
     def __init__(self,parse_args=None):
         self.parse_args = parse_args
         Cmd.__init__(self)
-        self.conf = SettingsINI(C.CONFIG_INI)
+        self.conf = SettingsINI.getInstance()
         self.set_prompt()
         self.initialize_core()
         self.setOptions()

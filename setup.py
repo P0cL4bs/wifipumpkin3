@@ -22,7 +22,7 @@ with open('requirements.txt') as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
 
 
-folders = ['config', 'logs', 'helps', 'scripts']
+folders = ['config', 'logs', 'helps', 'scripts', 'exceptions']
 def create_user_dir_config():
     user_config_dir = os.path.expanduser("~") + "/.config/wifipumpkin3"
     if not os.path.isdir(user_config_dir):

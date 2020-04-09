@@ -27,7 +27,7 @@ class PyDHCP(DHCPServers):
         self._connected = {}
 
     def Initialize(self):
-        self.ifaceHostapd = self.conf.get('accesspoint','interfaceAP')
+        self.ifaceHostapd = self.conf.get('accesspoint','interface')
 
     def setIsRunning(self,value):
         self._isRunning = value
