@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added exceptions implementation error [mh4x0f]
+- added license header __init__ file [mh4x0f]
+- added license header all files in plugins [mh4x0f]
+- added license header all files in modules [mh4x0f]
+- added license header all files in core/wirelessmode [mh4x0f]
+- added license header all files in core/widgets [mh4x0f]
+- added license header all files in core/utility [mh4x0f]
+- added license header all files in core/ui [mh4x0f]
+- added partial codereview on servers plugins and proxys [mh4x0f]
+- added license header all files in core/packets and controls [mh4x0f]
+- added license header all files in core/common [mh4x0f]
+- added start tool with finish install on docker [mh4x0f]
 - added enable security WPA,WEP, WPA2 mode wireless [mh4x0f]
 - added parser wireless mode options [mh4x0f]
 - Added changelog 1.0.0 version. [mh4x0f]
@@ -54,6 +66,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- refactored all controllers implementation codestyle [mh4x0f]
+- improved folder copy code on setup.py [mh4x0f]
+- exclude config folder from language statistics [mh4x0f]
+- changed codename to nidavellir [mh4x0f]
 - moved /scripts to user dir config [mh4x0f]
 - changed logs folder model [mh4x0f]
 - Moved __main__ code  to __init__ [mh4x0f]
@@ -65,6 +81,9 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed function old setup_logger wp2 [mh4x0f] 
+- removed all python modules on test folder [mh4x0f]
+- removed old implementation loader accesspoint [mh4x0f]
 - Removed history.md file [mh4x0f]
 - Removed keys not using in project. [mh4x0f]
 - Remove lib not using in the project. [mh4x0f]
@@ -77,6 +96,14 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed set linguist-vendored=false to exclude language statistics [mh4x0f]
+- fixed try to exclude files from git language statistics [mh4x0f]
+- fixed bug when try restart AP with modification in interface name [mh4x0f]
+- fixed bug when try mout AP on wirelesscontroller [mh4x0f]
+- fixed set as default require python version 3.7 [mh4x0f]
+- fixed  set linguist-documentation to false [mh4x0f]
+- fixed exclude all files from config the language statistics [mh4x0f]
+- fixed module print infor data [mh4x0f]
 - fixed bug file descriptor bad dhcpserver [mh4x0f]
 - fixed bug when try to load all plugins on sniffkin3 [mh4x0f]
 - fixed mascared bug file descriptor bad partial solution [mh4x0f]

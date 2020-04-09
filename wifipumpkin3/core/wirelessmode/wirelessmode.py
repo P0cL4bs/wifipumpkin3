@@ -7,6 +7,23 @@ from os import (
 from shutil import move
 from wifipumpkin3.core.widgets.default.session_config import *
 from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
+from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class Mode(Qt.QObject):
     configApMode = 'ap_mode'
@@ -40,6 +57,7 @@ class Mode(Qt.QObject):
 
     def get_soft_dependencies(self):
         ''' check if Hostapd, isc-dhcp-server is installed '''
+        #TODO:  implement this method for check hostapd
         pass
         # if not path.isfile(self.hostapd_path):
         #     return QtGui.QMessageBox.information(self,'Error Hostapd','hostapd is not installed')
@@ -78,12 +96,15 @@ class Mode(Qt.QObject):
         # set configure iptables 
         self.setIptables()
         # set AP status true 
-        self.conf.set('accesspoint', 'statusAP', True)
+        self.setStatusAP(True)
+
+    def setStatusAP(self, value):
+        self.conf.set('accesspoint', 'status_ap', value)
 
     def setIptables(self):
         self.interfacesLink = Refactor.get_interfaces()
         print(display_messages('sharing internet connection with NAT...', info=True))
-        self.ifaceHostapd = self.conf.get('accesspoint','interfaceAP')
+        self.ifaceHostapd = self.conf.get('accesspoint','interface')
         try:
             for ech in self.conf.get_all_childname('iptables'):
                 ech = self.conf.get('iptables', ech)
@@ -100,10 +121,10 @@ class Mode(Qt.QObject):
 
     def get_error_hostapdServices(self,data):
         '''check error hostapd on mount AP '''
-        self.Shutdown()
-        return QtGui.QMessageBox.warning(self,'[ERROR] Hostpad',
-        'Failed to initiate Access Point, '
-        'check output process hostapd.\n\nOutput::\n{}'.format(data))
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
+            self.Shutdown()
+            raise HostapdInitializeError('[ERROR] Hostpad Failed', 
+                'check output process hostapd.\n {}'.format(data))
 
     def check_Wireless_Security(self):
         '''check if user add security password on AP'''

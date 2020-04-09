@@ -1,12 +1,27 @@
-#from core.widgets.docks.dock import *
 from wifipumpkin3.core.controls.threads import  ProcessThread
 from wifipumpkin3.core.controllers.wirelessmodecontroller import AccessPointSettings
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import *
-from wifipumpkin3.core.common.platforms import setup_logger
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 from wifipumpkin3.core.utility.component import ComponentBlueprint
+
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 class Widget(Qt.QObject):
     def __init__(self):
@@ -35,7 +50,6 @@ class ProxyMode(Widget,ComponentBlueprint):
     TypePlugin = 1
     RunningPort = 80
     config = None
-
 
     def __init__(self,parent):
         super(ProxyMode, self).__init__()
@@ -76,7 +90,7 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     def parser_set_proxy(self, proxy_name, *args):
         # default parser proxy commands complete
-        if not self.conf.get('accesspoint', 'statusAP', format=bool):
+        if not self.conf.get('accesspoint', 'status_ap', format=bool):
             plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
             if (plugins_selected != []):
                 self.conf.set('proxy_plugins', plugins_selected[0], True)
@@ -129,16 +143,6 @@ class ProxyMode(Widget,ComponentBlueprint):
     def Wireless(self):
         return AccessPointSettings.instances[0]
 
-    def get_disable_status(self):
-        if self.FSettings.Settings.get_setting('plugins', self.Name, format=bool) == True:
-            if self.Name == "No Proxy":
-                self.ClearRules()
-                self.parent.set_proxy_statusbar('', disabled=True)
-                self.sendSingal_disable.emit(self.controlui.isChecked())
-                return
-
-            self.parent.set_proxy_statusbar(self.Name)
-
     def onProxyEnabled(self):
         pass
 
@@ -148,24 +152,6 @@ class ProxyMode(Widget,ComponentBlueprint):
     @property
     def hasSettings(self):
         return self.ModSettings
-
-    def CheckOptions(self):
-        self.FSettings.Settings.set_setting('plugins', self.Name, self.controlui.isChecked())
-        self.dockwidget.addDock.emit(self.controlui.isChecked())
-        self.get_disable_status()
-        self.ClearRules()
-        self.Initialize()
-        if self.ModSettings:
-            self.btnChangeSettings.setEnabled(self.controlui.isChecked())
-        if self.controlui.isChecked() == True:
-            self.setEnabled(True)
-            self.onProxyEnabled()
-            self.tabinterface.setText("[ {} ]".format(self.Name))
-
-        else:
-            self.onProxyDisabled()
-            self.setEnabled(False)
-            self.tabinterface.setText(self.Name)
 
     @property
     def CMD_ARRAY(self):
@@ -191,38 +177,17 @@ class ProxyMode(Widget,ComponentBlueprint):
         ''' add rules iptable by type plugins'''
         return self.search[type]
 
-    def SetRules(self,strrules=""):
-        items = []
-        for index in xrange(self.FSettings.ListRules.count()):
-            items.append(str(self.FSettings.ListRules.item(index).text()))
-        if self.optionsRules(strrules) in items:
-            return
-        if (self.optionsRules(strrules) != None):
-            item = QtGui.QListWidgetItem()
-            item.setText(self.optionsRules(strrules))
-            item.setSizeHint(QtCore.QSize(30, 30))
-            self.FSettings.ListRules.addItem(item)
-
     def ClearRules(self):
         for rules in self.search.keys():
             self.unset_Rules(rules)
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             print(data)
 
     def Configure(self):
         self.ConfigWindow.show()
-
-    def unset_Rules(self,iptables):
-        ''' remove rules from Listwidget in settings widget'''
-        items = []
-        for index in xrange(self.FSettings.ListRules.count()):
-            items.append(str(self.FSettings.ListRules.item(index).text()))
-        for position,line in enumerate(items):
-            if self.optionsRules(iptables) == line:
-                self.FSettings.ListRules.takeItem(position)
-
+        
     def SaveLog(self):
         pass
 

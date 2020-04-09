@@ -9,6 +9,23 @@ from wifipumpkin3.plugins.analyzers import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.core.servers.mitm.mitmmode import MitmMode
 
+# This file is part of the wifipumpkin3 Open Source Project.
+# wifipumpkin3 is licensed under the Apache 2.0.
+
+# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class TCPProxyDock(DockableWidget):
     id = "TCPProxy"
     title = "TCPProxy"
@@ -52,19 +69,19 @@ class Sniffkin3(MitmMode):
     def setPluginOption(self, name, status):
         ''' get each plugins status'''
         # enable realtime disable and enable plugin
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.reactor.disablePlugin(name, status)
         self.conf.set('plugins', name, status)
 
     def boot(self):
         #self.handler = self.parent.Plugins.MITM
-        iface =  self.conf.get('accesspoint','interfaceAP')
+        iface =  self.conf.get('accesspoint','interface')
         self.reactor= Sniffkin3Core(iface, self.parent.currentSessionID)
         self.reactor.setObjectName(self.ID)
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
     def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'statusAP', format=bool):
+        if self.conf.get('accesspoint', 'status_ap', format=bool):
             self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
                         data['urlsCap']['IP'], data['urlsCap']['Headers']))
 
