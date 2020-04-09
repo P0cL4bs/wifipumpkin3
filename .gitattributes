@@ -1,1 +1,2 @@
-config/** linguist-vendored
+config/* linguist-vendored=false
+config/* linguist-documentation
