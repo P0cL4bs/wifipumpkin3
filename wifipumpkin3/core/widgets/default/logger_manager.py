@@ -152,6 +152,9 @@ class StandardLog:
         self.configure()
         self.logger.debug(message)
 
+    def addExtra(self,key=str ,data=dict):
+        self.extra[key] = data
+
 class LoggerManager(CoreSettings):
     Name = "Logger Manager"
     ID = "Logger"

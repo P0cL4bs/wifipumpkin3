@@ -82,8 +82,9 @@ class Sniffkin3(MitmMode):
 
     def LogOutput(self,data):
         if self.conf.get('accesspoint', 'status_ap', format=bool):
-            self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'.format(
-                        data['urlsCap']['IP'], data['urlsCap']['Headers']))
+            self.logger.addExtra('packet', data) # packet info save json
+            self.logger.info('[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}'
+                .format(data['urlsCap']['IP'], data['urlsCap']['Headers']))
 
     @property
     def getPlugins(self):
