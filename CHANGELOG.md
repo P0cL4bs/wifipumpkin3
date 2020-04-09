@@ -96,6 +96,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed try to exclude files from git language statistics [mh4x0f]
 - fixed bug when try restart AP with modification in interface name [mh4x0f]
 - fixed bug when try mout AP on wirelesscontroller [mh4x0f]
 - fixed set as default require python version 3.7 [mh4x0f]
