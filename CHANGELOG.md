@@ -95,6 +95,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed bug when try mout AP on wirelesscontroller [mh4x0f]
 - fixed set as default require python version 3.7 [mh4x0f]
 - fixed  set linguist-documentation to false [mh4x0f]
 - fixed exclude all files from config the language statistics [mh4x0f]

@@ -70,7 +70,7 @@ class WirelessModeController(ControllerBlueprint):
 
     def Start(self):
         ''' start Access Point and settings plugins  '''
-        if not type(self.Activated.get_soft_dependencies()) is bool: return
+        #if not type(self.Activated.get_soft_dependencies()) is bool: return
 
         self.Activated.Start()
         return None
