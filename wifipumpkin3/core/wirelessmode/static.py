@@ -11,7 +11,7 @@ from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
 from wifipumpkin3.core.controls.threads import ProcessHostapd, ProcessThread
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
-from wifipumpkin3.core.utility.printer import display_messages
+from wifipumpkin3.core.utility.printer import display_messages,setcolor
 import sys
 from wifipumpkin3.exceptions.errors.networkException import *
 
@@ -67,10 +67,9 @@ class Static(Mode):
         self.reactor.statusAP_connected.connect(self.get_Hostapd_Response)
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 
-
     def get_Hostapd_Response(self,data):
-        #TODO: notify user client desconnected 
-        print(data)
+        print(display_messages('{} client has left AP '
+            .format(setcolor(data, color='red')), info=True))
 
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''

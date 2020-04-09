@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added alert when the client left the ap [mh4x0f]
 - added exceptions implementation error [mh4x0f]
 - added license header __init__ file [mh4x0f]
 - added license header all files in plugins [mh4x0f]

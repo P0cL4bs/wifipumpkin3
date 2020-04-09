@@ -117,8 +117,8 @@ class Docker(Mode):
         popen('iptables-restore < {}'.format(C.DOCKERIPTABLESPATH))
 
     def get_Hostapd_Response(self,data):
-        #TODO: notify user client desconnected 
-        print(data)
+        print(display_messages('{} client has left AP '
+            .format(setcolor(data, color='red')), info=True))
     
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''
