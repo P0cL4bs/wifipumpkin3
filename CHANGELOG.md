@@ -98,6 +98,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed log hostapd send (state) with close the ap [mh4x0f]
 - fixed set linguist-vendored=false to exclude language statistics [mh4x0f]
 - fixed try to exclude files from git language statistics [mh4x0f]
 - fixed bug when try restart AP with modification in interface name [mh4x0f]

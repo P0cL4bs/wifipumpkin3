@@ -68,8 +68,9 @@ class Static(Mode):
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 
     def get_Hostapd_Response(self,data):
-        print(display_messages('{} client has left AP '
-            .format(setcolor(data, color='red')), info=True))
+        if self.conf.get('accesspoint','status_ap'):
+            print(display_messages('{} client has left AP '
+                .format(setcolor(data, color='red')), info=True))
 
     def setNetworkManager(self, interface=str,Remove=False):
         ''' mac address of interface to exclude '''
