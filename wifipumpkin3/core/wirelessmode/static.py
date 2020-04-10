@@ -68,7 +68,7 @@ class Static(Mode):
         self.reactor.statusAPError.connect(self.get_error_hostapdServices)
 
     def get_Hostapd_Response(self,data):
-        if self.conf.get('accesspoint','status_ap'):
+        if self.conf.get('accesspoint','status_ap', format=bool):
             print(display_messages('{} client has left AP '
                 .format(setcolor(data, color='red')), info=True))
 

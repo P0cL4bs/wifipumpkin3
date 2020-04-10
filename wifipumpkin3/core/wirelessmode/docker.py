@@ -11,7 +11,7 @@ from subprocess import check_output,Popen,PIPE,STDOUT,CalledProcessError,call
 from wifipumpkin3.core.controls.threads import ProcessHostapd, ProcessThread
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
-from wifipumpkin3.core.utility.printer import display_messages
+from wifipumpkin3.core.utility.printer import display_messages,setcolor
 from wifipumpkin3.exceptions.errors.networkException import *
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -117,7 +117,7 @@ class Docker(Mode):
         popen('iptables-restore < {}'.format(C.DOCKERIPTABLESPATH))
 
     def get_Hostapd_Response(self,data):
-        if self.conf.get('accesspoint','status_ap'):
+        if self.conf.get('accesspoint','status_ap', format=bool):
             print(display_messages('{} client has left AP '
                 .format(setcolor(data, color='red')), info=True))
     

@@ -98,6 +98,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed error hostpad_response when client left ap [mh4x0f] 
 - fixed log hostapd send (state) with close the ap [mh4x0f]
 - fixed set linguist-vendored=false to exclude language statistics [mh4x0f]
 - fixed try to exclude files from git language statistics [mh4x0f]
