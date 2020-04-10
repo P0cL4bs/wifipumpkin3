@@ -265,7 +265,19 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     if (name != 'Config'):
                         print(' {} : {}'.format(setcolor(name,color='blue'), 
                         setcolor(info,color='yellow')))
-            
+
+                commands = proxys['Config'].get_all_childname('plugins')
+                list_commands = []
+                headers_table, output_table = ["Plugin", "Value"], []
+                # search plugin of proxy has string "set_"
+                for command in commands:
+                    for sub_plugin in proxys['Config'].get_all_childname('set_{}'.format(command)):
+                        output_table.append([setcolor(command, color='blue'), 
+                        proxys['Config'].get('set_{}'.format(command), sub_plugin)])
+                if (output_table != []):
+                    print(display_messages('Plugins:',info=True,sublime=True))
+                    return display_tabulate(headers_table, output_table)
+                    
             if plugins or proxys:
                 print('\n')
 

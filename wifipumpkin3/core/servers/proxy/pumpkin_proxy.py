@@ -87,6 +87,9 @@ class PumpKinProxy(ProxyMode):
         list_commands = []
         for command in commands:
             list_commands.append(self.ID + '.' + command)
+            # find all plugin from pumpkinproxy 
+            for sub_plugin in self.config.get_all_childname('set_{}'.format(command)):
+                list_commands.append('{}.{}.{}'.format(self.ID, command, sub_plugin))
         return list_commands
 
     def LogOutput(self,data):
@@ -94,12 +97,23 @@ class PumpKinProxy(ProxyMode):
             self.logger.info(data)
 
     def parser_set_pumpkinproxy(self, status, plugin_name):
-        try:
-            # plugin_name = pumpkinproxy.no-cache 
-            name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
-            if key_plugin in self.config.get_all_childname('plugins'):
-                self.config.set('plugins',key_plugin, status)
-            else:
-                print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
-        except IndexError:
-            print(display_messages('unknown sintax command',error=True))
+        if (len(plugin_name.split('.')) == 2):
+            try:
+                # plugin_name = pumpkinproxy.no-cache 
+                name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
+                if key_plugin in self.config.get_all_childname('plugins'):
+                    self.config.set('plugins',key_plugin, status)
+                else:
+                    print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+            except IndexError:
+                print(display_messages('unknown sintax command',error=True))
+        elif (len(plugin_name.split('.')) == 3):
+            try:
+                # plugin_name = pumpkinproxy.beef.url_hook 
+                name_plugin,key_plugin = plugin_name.split('.')[1],plugin_name.split('.')[2]
+                if key_plugin in self.config.get_all_childname('set_{}'.format(name_plugin)):
+                    self.config.set('set_{}'.format(name_plugin), key_plugin, status)
+                else:
+                    print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+            except IndexError:
+                print(display_messages('unknown sintax command',error=True))
