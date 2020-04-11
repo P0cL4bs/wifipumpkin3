@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added parser args no-colors [mh4x0f] 
 - added info command list all plugin from proxys [mh4x0f]
 - added parser for set plugin pummpkinproxy [mh4x0f]
 - added packet http info into sniffkin3 json log [mh4x0f] 

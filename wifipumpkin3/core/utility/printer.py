@@ -18,6 +18,13 @@ from wifipumpkin3.core.utility.banners import random_banners
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+def set_nocolors():
+    global colors
+    colors = {'BOLD': '','BLUE': '' ,
+            'GREEN': '','YELLOW' :'',
+            'RED': '','ENDC' : '','CIANO' :'','ORAN' : '',
+            'GREY': '','DARKGREY' : '','UNDERLINE' : ''}
+
 colors = {'BOLD': '\033[1m','BLUE': '\033[34m' ,
             'GREEN': '\033[32m','YELLOW' :'\033[33m',
             'RED': '\033[91m','ENDC' : '\033[0m','CIANO' :'\033[1;36m','ORAN' : '\033[91m',
