@@ -11,7 +11,7 @@ setup:
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info
-	python3.7 
+	python3.7 setup.py clear --all
 
 distclean: clean
 	rm -rf .venv
