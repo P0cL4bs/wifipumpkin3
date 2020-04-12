@@ -22,56 +22,61 @@ import json
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def make_filter(name):
     def filter(record):
         return record["extra"].get("name") == name
+
     return filter
 
+
 class StandardLog:
-    _typelog  = None
+    _typelog = None
     _serialized = False
-    _colorized  = True
-    _ignore  = False
-    _config    = None
-    _file_name = 'file.log'
+    _colorized = True
+    _ignore = False
+    _config = None
+    _file_name = "file.log"
     _bgcolor = str()
     _color = str()
     _extra = {}
 
-    def __init__(self, typelog, colorize = False , serialize = False , **kwargs):
+    def __init__(self, typelog, colorize=False, serialize=False, **kwargs):
         self.typelog = typelog
         self.colorized = colorize
         self.serialized = serialize
-        self.color = kwargs['config'].get('color')
-        self.bgcolor = kwargs['config'].get('bg_color')
-        self.extra = kwargs['config'].get('extra')
+        self.color = kwargs["config"].get("color")
+        self.bgcolor = kwargs["config"].get("bg_color")
+        self.extra = kwargs["config"].get("extra")
         self.logger = logger.bind(name=self.typelog, specific=True)
 
     def configure(self):
         logger.configure(**self.config)
 
     def redirect_stdout(self):
-        if (self.ignore):
+        if self.ignore:
             return os.devnull
         return sys.stdout
 
     @property
     def config(self):
         self._config = {
-        "handlers": [
-            {
-                "sink": self.redirect_stdout(),"colorize": self.colorized,
-                "filter" : make_filter(self.typelog),
-                "format": " [<bg %s> <%s> {extra[name]} </%s> </bg %s>] {time:HH:mm:ss}  - {message} "%(self.bgcolor,self.color,self.color, self.bgcolor)
-             },
-
-            {   "sink": self.filename,
-                "serialize": self.serialized,
-                "format": "{time:YYYY-MM-DD at HH:mm:ss} {level} - {message}",
-                "filter" : make_filter(self.typelog)
-            },
-         ],
-        "extra": self.extra
+            "handlers": [
+                {
+                    "sink": self.redirect_stdout(),
+                    "colorize": self.colorized,
+                    "filter": make_filter(self.typelog),
+                    "format": " [<bg %s> <%s> {extra[name]} </%s> </bg %s>] {time:HH:mm:ss}  - {message} "
+                    % (self.bgcolor, self.color, self.color, self.bgcolor),
+                },
+                {
+                    "sink": self.filename,
+                    "serialize": self.serialized,
+                    "format": "{time:YYYY-MM-DD at HH:mm:ss} {level} - {message}",
+                    "filter": make_filter(self.typelog),
+                },
+            ],
+            "extra": self.extra,
         }
         return self._config
 
@@ -90,7 +95,7 @@ class StandardLog:
     @typelog.setter
     def typelog(self, name):
         self._typelog = name
-    
+
     @property
     def filename(self):
         return self._file_name
@@ -123,13 +128,13 @@ class StandardLog:
     @color.setter
     def color(self, color):
         self._color = color
-    
+
     @property
     def bgcolor(self):
         return self._bgcolor
 
     @bgcolor.setter
-    def bgcolor(self , value):
+    def bgcolor(self, value):
         self._bgcolor = value
 
     @property
@@ -137,7 +142,7 @@ class StandardLog:
         return self._ignore
 
     @ignore.setter
-    def ignore(self , value):
+    def ignore(self, value):
         self._ignore = value
 
     def setIgnore(self, value):
@@ -152,8 +157,9 @@ class StandardLog:
         self.configure()
         self.logger.debug(message)
 
-    def addExtra(self,key=str ,data=dict):
+    def addExtra(self, key=str, data=dict):
         self.extra[key] = data
+
 
 class LoggerManager(CoreSettings):
     Name = "Logger Manager"
@@ -173,17 +179,16 @@ class LoggerManager(CoreSettings):
 
         self.title = self.__class__.__name__
 
-    def add(self, ID ,logger=StandardLog):
+    def add(self, ID, logger=StandardLog):
         self._loggers[ID] = logger
 
     def get(self, ID):
         return self._loggers.get(ID)
-    
+
     def all(self):
         return self._loggers.keys()
 
     def getExtraConfig(self, name):
-        color = self.conf.get('colors_log', name,format=list)
-        config_extra = { "color" : color[0] , 
-            "extra" : {'dns': 0x90}, "bg_color" : color[1] }
+        color = self.conf.get("colors_log", name, format=list)
+        config_extra = {"color": color[0], "extra": {"dns": 0x90}, "bg_color": color[1]}
         return config_extra

@@ -19,22 +19,23 @@ from wifipumpkin3.core.servers.dns import *
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class DNSController(ControllerBlueprint):
-    
-    ID = 'dns_controller'
+
+    ID = "dns_controller"
 
     @staticmethod
     def getID():
         return DNSController.ID
 
-    def __init__(self,parent=None,**kwargs):
-        super(DNSController,self).__init__()
+    def __init__(self, parent=None, **kwargs):
+        super(DNSController, self).__init__()
         self.parent = parent
-         # append controller in DefaultWidget
+        # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
         self.DNSSettings = DNSBase.DNSSettings.getInstance()
         for dns in self.DNSSettings.dnslist:
-            setattr(self,dns.ID,dns)
+            setattr(self, dns.ID, dns)
 
     def Start(self):
         self.Active.Start()
@@ -52,6 +53,7 @@ class DNSController(ControllerBlueprint):
     def getReactorInfo(self):
         info_reactor = {}
         info_reactor[self.ActiveReactor.getID()] = {
-            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
-            }
+            "ID": self.ActiveReactor.getID(),
+            "PID": self.ActiveReactor.getpid(),
+        }
         return info_reactor

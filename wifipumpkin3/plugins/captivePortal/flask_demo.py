@@ -1,5 +1,5 @@
 import re
-from ast import literal_eval 
+from ast import literal_eval
 from wifipumpkin3.plugins.captivePortal.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 
@@ -20,27 +20,27 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class FlaskDemo(CaptiveTemplatePlugin):
     meta = {
-        'Name'      : 'FlaskDemo',
-        'Version'   : '1.0',
-        'Description' : 'Example is a simple portal default page',
-        'Author'    : 'Pumpkin-Dev',
-        'TemplatePath' : C.TEMPLATES_FLASK + 'templates/Flask',
-        'StaticPath' : C.TEMPLATES_FLASK + 'templates/Flask/static',
-        'Preview' : 'plugins/captivePortal/templates/Flask/preview.png'
+        "Name": "FlaskDemo",
+        "Version": "1.0",
+        "Description": "Example is a simple portal default page",
+        "Author": "Pumpkin-Dev",
+        "TemplatePath": C.TEMPLATES_FLASK + "templates/Flask",
+        "StaticPath": C.TEMPLATES_FLASK + "templates/Flask/static",
+        "Preview": "plugins/captivePortal/templates/Flask/preview.png",
     }
 
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
         self.dict_domain = {}
         self.ConfigParser = True
 
-
     def init_language(self, lang):
-        if (lang.lower() != 'default'):
-            self.TemplatePath = 'templates/Flask/language/{}'.format(lang)
+        if lang.lower() != "default":
+            self.TemplatePath = "templates/Flask/language/{}".format(lang)
             return
-        for key,value in self.meta.items():
-            self.__dict__[key] = value   
+        for key, value in self.meta.items():
+            self.__dict__[key] = value

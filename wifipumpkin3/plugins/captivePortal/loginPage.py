@@ -1,5 +1,5 @@
 import re
-from ast import literal_eval 
+from ast import literal_eval
 from wifipumpkin3.plugins.captivePortal.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 
@@ -20,20 +20,21 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class LoginPage(CaptiveTemplatePlugin):
     meta = {
-        'Name'      : 'loginPage',
-        'Version'   : '1.0',
-        'Description' : 'Example is a simple portal default page',
-        'Author'    : 'Pumpkin-Dev',
-        'Language' : 'En',
-        'TemplatePath' : C.TEMPLATES_FLASK + 'templates/loginPage',
-        'StaticPath' : C.TEMPLATES_FLASK + 'templates/loginPage/static',
-        'Preview' : 'plugins/captivePortal/templates/loginPage/preview.png'
+        "Name": "loginPage",
+        "Version": "1.0",
+        "Description": "Example is a simple portal default page",
+        "Author": "Pumpkin-Dev",
+        "Language": "En",
+        "TemplatePath": C.TEMPLATES_FLASK + "templates/loginPage",
+        "StaticPath": C.TEMPLATES_FLASK + "templates/loginPage/static",
+        "Preview": "plugins/captivePortal/templates/loginPage/preview.png",
     }
 
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
         self.dict_domain = {}
         self.ConfigParser = False

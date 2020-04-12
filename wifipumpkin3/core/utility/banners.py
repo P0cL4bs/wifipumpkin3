@@ -19,16 +19,20 @@ import random
 
 wp_banner = {}
 
-wp_banner['default']=  ('''
+wp_banner[
+    "default"
+] = """
   _      ___ _____     ___                  __    _      ____
  | | /| / (_) __(_)___/ _ \__ ____ _  ___  / /__ (_)__  |_  /
  | |/ |/ / / _// /___/ ___/ // /  ' \/ _ \/  '_// / _ \_/_ < 
  |__/|__/_/_/ /_/   /_/   \_,_/_/_/_/ .__/_/\_\/_/_//_/____/ 
                                    /_/                       
-                                            codename: {}''')
+                                            codename: {}"""
 
-#from https://asciiart.website/index.php?art=holiday/halloween
-wp_banner['halloween']=  ('''
+# from https://asciiart.website/index.php?art=holiday/halloween
+wp_banner[
+    "halloween"
+] = '''
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$PR$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 $$$$$$$$$$$$$$$$$$$$$$$$$$"    @$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 $$$$$$$$$$$$$$$$$$$$$$$$"      '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -51,10 +55,12 @@ $$$$$$N. `!!!. !!!!!!!!!!!!! ~!!!!!!!!!!!!!!!!~  !!~ .e$$$$$$$
 $$$$$$$$$bu  `  '!!!!!!!!!!~  !!!!!!!!!!!!!~` .uuue$$$$$$$$$$$
 $$$$$$$$$$$$$$$$e.  ````   wifi     ```   .e$$$$$$$$$$$$$$$$$$
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-                                            codename: {}''')
+                                            codename: {}'''
 
-#from https://ascii.co.uk/art/pumpkin
-wp_banner['pumpkin']=  ('''
+# from https://ascii.co.uk/art/pumpkin
+wp_banner[
+    "pumpkin"
+] = """
                             .,'
                         .''.'
                         .' .'
@@ -70,10 +76,12 @@ wp_banner['pumpkin']=  ('''
      `?000b?0000b?000b?0000Pd000Pd0000Pd000P
         `~?00b?000b?000b?000Pd00Pd000Pd00P'
             `~?0b?0b?000b?0Pd0Pd000PdP~'
-                                     codename: {}''')
+                                     codename: {}"""
 
 # from https://ascii.co.uk/art/pumpkin
-wp_banner['pumpkin2']=  ('''
+wp_banner[
+    "pumpkin2"
+] = """
                             .,'
                         .''.'
                         .' .'
@@ -90,11 +98,13 @@ wp_banner['pumpkin2']=  ('''
         ` .   `?00000P ?0bd0P ?00000P' .' . '
             . . `~~   ~~~~  .~~'  . .
                 ~     - ~~ -    ~
-                                  codename: {}''')
+                                  codename: {}"""
 
 
 # from https://textart.sh/topic/pumpkin
-wp_banner['textart']=  ('''
+wp_banner[
+    "textart"
+] = """
                              Jgy__
                             jWW  `""9Wf
                           _#WWW     IW
@@ -120,7 +130,8 @@ wp_banner['textart']=  ('''
          ^9Qy_`C.    `C.       I       .D'   _.D jgW"
             `9WQgC.__ `C.      I      .D'  _.Dp@@"`
            ilmk `""9WQQggyyyyyygyyyyyQggQWQH""
-                                            codename: {}''')
+                                            codename: {}"""
+
 
 def random_banners():
     return wp_banner.get(random.choice(list(wp_banner.keys())))

@@ -41,5 +41,4 @@ class PluginsManager:
         return PluginsManager._instance
 
     def hook(self, plugin, attr, request, *args):
-        return getattr(self.plugins[plugin], attr['function'])(request, *args)
-        
+        return getattr(self.plugins[plugin], attr["function"])(request, *args)

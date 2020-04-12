@@ -17,8 +17,10 @@ from wifipumpkin3.exceptions.base import ExceptionTemplate
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ApModeSupportError(ExceptionTemplate):
-    filename = 'ap_mode_support_error'
+    filename = "ap_mode_support_error"
+
 
 class InterfaceBuzyError(ExceptionTemplate):
-    filename = 'interface_buzy_error'
+    filename = "interface_buzy_error"

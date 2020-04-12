@@ -17,12 +17,13 @@ from wifipumpkin3.core.common.platforms import Linux
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class ExceptionTemplate(Exception):
-    
-    filename = None
-    content = ''
 
-    def __init__(self, title='', message='', filename=None):
+class ExceptionTemplate(Exception):
+
+    filename = None
+    content = ""
+
+    def __init__(self, title="", message="", filename=None):
         self.message = message
         self.title = title
         # read file is exist in folder .conffig/exceptions
@@ -32,5 +33,5 @@ class ExceptionTemplate(Exception):
 
     def __str__(self):
         if not self.content:
-            return '{}: {}'.format(self.title,self.message)
-        return '{} : {} \n {}'.format(self.title, self.message, self.content)
+            return "{}: {}".format(self.title, self.message)
+        return "{} : {} \n {}".format(self.title, self.message, self.content)

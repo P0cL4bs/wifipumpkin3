@@ -19,28 +19,36 @@
 import logging
 from configparser import ConfigParser
 
+
 class ResponseTampererFactory:
 
-    '''
+    """
     ResponseTampererFactory creates response tamperer that modifies responses to clients based on config file setting.
-    '''
+    """
 
-    _instance          = None
+    _instance = None
 
-    _default_config = {"enabled": False, "tamper_class": "sslstrip.DummyResponseTamperer"}
+    _default_config = {
+        "enabled": False,
+        "tamper_class": "sslstrip.DummyResponseTamperer",
+    }
 
     def __init__(self):
         pass
 
     def createTamperer(configFile):
-        logging.log(logging.DEBUG, "Reading tamper config file: %s"  % (configFile))
+        logging.log(logging.DEBUG, "Reading tamper config file: %s" % (configFile))
         config = ResponseTampererFactory._default_config.copy()
         if configFile:
-          config.update(ResponseTampererFactory.parseConfig(configFile))
-        if config['enabled']:
-          logging.log(logging.DEBUG, "Loading tamper class: %s"  % (config["tamper_class"]))
-          m = __import__(config["tamper_class"], globals(), locals(), config["tamper_class"])
-          return getattr(m, m.__name__.replace(m.__package__ + ".", ''))(config)
+            config.update(ResponseTampererFactory.parseConfig(configFile))
+        if config["enabled"]:
+            logging.log(
+                logging.DEBUG, "Loading tamper class: %s" % (config["tamper_class"])
+            )
+            m = __import__(
+                config["tamper_class"], globals(), locals(), config["tamper_class"]
+            )
+            return getattr(m, m.__name__.replace(m.__package__ + ".", ""))(config)
 
     def parseConfig(configFile):
         config = ConfigParser.ConfigParser()
@@ -54,10 +62,11 @@ class ResponseTampererFactory:
 
     def buildTamperer(configFile):
         if ResponseTampererFactory._instance == None:
-            ResponseTampererFactory._instance = ResponseTampererFactory.createTamperer(configFile)
+            ResponseTampererFactory._instance = ResponseTampererFactory.createTamperer(
+                configFile
+            )
 
     getTampererInstance = staticmethod(getTampererInstance)
     buildTamperer = staticmethod(buildTamperer)
     createTamperer = staticmethod(createTamperer)
     parseConfig = staticmethod(parseConfig)
-

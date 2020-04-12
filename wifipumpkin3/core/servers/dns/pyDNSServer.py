@@ -1,6 +1,6 @@
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.servers.dns.DNSBase import DNSBase
-from wifipumpkin3.core.packets.dnsserver import  DNSServerThread
+from wifipumpkin3.core.packets.dnsserver import DNSServerThread
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -19,22 +19,23 @@ from wifipumpkin3.core.packets.dnsserver import  DNSServerThread
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class PyDNSServer(DNSBase):
     ID = "pydns_server"
     Name = "PyDNS Server"
-    Author = 'Samuel Colvin @samuelcolvin'
+    Author = "Samuel Colvin @samuelcolvin"
     LogFile = C.LOG_PYDNSSERVER
     ExecutableFile = ""
 
-    def __init__(self,parent):
-        super(PyDNSServer,self).__init__(parent)
+    def __init__(self, parent):
+        super(PyDNSServer, self).__init__(parent)
 
     @property
     def commandargs(self):
         pass
 
     def LogOutput(self, data):
-        if self.conf.get('accesspoint', 'status_ap', format=bool):
+        if self.conf.get("accesspoint", "status_ap", format=bool):
             self.logger.info(data)
 
     def boot(self):

@@ -2,7 +2,7 @@ import weakref
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
-from wifipumpkin3.core.controls.threads import (ProcessThread)
+from wifipumpkin3.core.controls.threads import ProcessThread
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -22,19 +22,23 @@ from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class DNSBase(QtCore.QObject,ComponentBlueprint):
+
+class DNSBase(QtCore.QObject, ComponentBlueprint):
     Name = "DNSBaseClass"
     ID = "DNSBase"
     Author = "Dev"
-    ConfigRoot="DNSServer"
+    ConfigRoot = "DNSServer"
     ExecutableFile = ""
     LogFile = ""
     hasPreference = False
-    arguments =[['label','switch','type','defaultvalue','enabled','required'],]
+    arguments = [
+        ["label", "switch", "type", "defaultvalue", "enabled", "required"],
+    ]
 
     addDock = QtCore.pyqtSignal(object)
-    def __init__(self,parent,**kwargs):
-        super(DNSBase,self).__init__(parent)
+
+    def __init__(self, parent, **kwargs):
+        super(DNSBase, self).__init__(parent)
         self.parent = parent
         self.conf = SuperSettings.getInstance()
 
@@ -43,18 +47,20 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         self.configure_logger()
 
     def configure_logger(self):
-        config_extra  = self.loggermanager.getExtraConfig(self.ID)
-        config_extra['extra']['session'] = self.parent.currentSessionID
+        config_extra = self.loggermanager.getExtraConfig(self.ID)
+        config_extra["extra"]["session"] = self.parent.currentSessionID
 
-        self.logger = StandardLog(self.ID, 
-            colorize=self.conf.get('settings', 'log_colorize', format=bool), 
-            serialize=self.conf.get('settings', 'log_serialize', format=bool), 
-        config=config_extra)
+        self.logger = StandardLog(
+            self.ID,
+            colorize=self.conf.get("settings", "log_colorize", format=bool),
+            serialize=self.conf.get("settings", "log_serialize", format=bool),
+            config=config_extra,
+        )
         self.logger.filename = self.LogFile
-        self.loggermanager.add( self.ID, self.logger)
+        self.loggermanager.add(self.ID, self.logger)
 
     def isChecked(self):
-        return self.conf.get('accesspoint', self.ID, format=bool)
+        return self.conf.get("accesspoint", self.ID, format=bool)
 
     @property
     def commandargs(self):
@@ -62,7 +68,7 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
 
     @property
     def command(self):
-        cmdpath = os.popen('which {}'.format(self.ExecutableFile)).read().split('\n')[0]
+        cmdpath = os.popen("which {}".format(self.ExecutableFile)).read().split("\n")[0]
         if cmdpath:
             return cmdpath
         else:
@@ -73,8 +79,8 @@ class DNSBase(QtCore.QObject,ComponentBlueprint):
         self.reactor._ProcssOutput.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)
 
-    def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'status_ap', format=bool):
+    def LogOutput(self, data):
+        if self.conf.get("accesspoint", "status_ap", format=bool):
             self.logger.info(data)
 
 
@@ -82,18 +88,16 @@ class DNSSettings(CoreSettings):
     Name = "DNS Server"
     ID = "DNSSettings"
     Category = "DNS"
-    instances =[]
+    instances = []
 
-    def __init__(self,parent=None):
-        super(DNSSettings,self).__init__(parent)
+    def __init__(self, parent=None):
+        super(DNSSettings, self).__init__(parent)
         self.__class__.instances.append(weakref.proxy(self))
 
         self.title = self.__class__.__name__
-        
+
         self.dnslist = [dns(self.parent) for dns in DNSBase.__subclasses__()]
 
     @classmethod
     def getInstance(cls):
         return cls.instances[0]
-
-

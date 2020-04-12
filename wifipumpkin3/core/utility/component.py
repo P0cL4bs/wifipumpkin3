@@ -17,11 +17,13 @@ from wifipumpkin3.core.config.globalimport import *
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ComponentBlueprint(object):
     Name = "GenericComponent"
     ID = "Generic"
+
     def __init__(self):
-        super(ComponentBlueprint,self).__init__()
+        super(ComponentBlueprint, self).__init__()
         self.reactor = None
         self.service = None
 
@@ -31,7 +33,7 @@ class ComponentBlueprint(object):
         :return:
         """
         pass
-    
+
     def boot(self):
         """
         Thing you will need to do aftere initialization here
@@ -49,7 +51,7 @@ class ComponentBlueprint(object):
     def shutdown(self):
         pass
 
-    def LogOutput(self,data):
+    def LogOutput(self, data):
         print(data)
 
     def Start(self):
@@ -78,8 +80,9 @@ class ComponentBlueprint(object):
 class ControllerBlueprint(object):
     Name = "GenericController"
     ID = "Generic"
+
     def __init__(self):
-        super(ControllerBlueprint,self).__init__()
+        super(ControllerBlueprint, self).__init__()
 
     @staticmethod
     def getID():
@@ -100,7 +103,7 @@ class ControllerBlueprint(object):
     @property
     def ActiveService(self):
         pass
-    
+
     def Start(self):
         pass
 
@@ -112,4 +115,3 @@ class ControllerBlueprint(object):
 
     def LogOutput(self, data):
         pass
-
