@@ -17,6 +17,7 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3._version import __version__, __codename__
 from wifipumpkin3._author import __author__
 import wifipumpkin3.core.utility.constants as C
+from os import getuid
 
 
 def parser_args_func(parse_args):
@@ -37,6 +38,9 @@ def parser_args_func(parse_args):
 
 
 if __name__ == "__main__":
+    if not getuid() == 0:
+        sys.exit("[!] Wp3 must be run as root.")
+
     app = QtCore.QCoreApplication(sys.argv)
     conf = SettingsINI.getInstance()
     parser = argparse.ArgumentParser(
