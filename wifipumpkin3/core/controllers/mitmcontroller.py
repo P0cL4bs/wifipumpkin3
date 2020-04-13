@@ -20,9 +20,10 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class MitmController(PluginsUI,ControllerBlueprint):
+
+class MitmController(PluginsUI, ControllerBlueprint):
     Name = "MITM"
-    ID = 'mitm_controller'
+    ID = "mitm_controller"
     Caption = "Activity Monitor"
     mitmhandler = {}
     SetNoMitmMode = QtCore.pyqtSignal(object)
@@ -32,33 +33,35 @@ class MitmController(PluginsUI,ControllerBlueprint):
     def getID():
         return MitmController.ID
 
-    def __init__(self,parent = None,**kwargs):
+    def __init__(self, parent=None, **kwargs):
         super(MitmController, self).__init__(parent)
-        self.parent=parent
-         # append controller in DefaultWidget
+        self.parent = parent
+        # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
 
         # find all mitm plugin files
-        __manipulator= [prox(parent=self.parent) for prox in mitmmode.MitmMode.__subclasses__()]
-        #Keep Proxy in a dictionary
+        __manipulator = [
+            prox(parent=self.parent) for prox in mitmmode.MitmMode.__subclasses__()
+        ]
+        # Keep Proxy in a dictionary
         for k in __manipulator:
-            #print(k.Name, 'mitmcontroller')
-            self.mitmhandler[k.Name]=k
+            # print(k.Name, 'mitmcontroller')
+            self.mitmhandler[k.Name] = k
             self.mitm_infor[k.ID] = {
-                'ID': k.ID,
-                'Name' : k.Name,
-                'Activate': k.isChecked(),
-                'Author' : k.Author,
-                'Logger' : k.LogFile,
-                'ConfigPath' : k.CONFIGINI_PATH,
-                'Description': k.Description,
-                'Config' : k.getConfig,
+                "ID": k.ID,
+                "Name": k.Name,
+                "Activate": k.isChecked(),
+                "Author": k.Author,
+                "Logger": k.LogFile,
+                "ConfigPath": k.CONFIGINI_PATH,
+                "Description": k.Description,
+                "Config": k.getConfig,
             }
 
         # set all mitm plugin as child class
-        for n,p in self.mitmhandler.items():
-            setattr(self,p.ID,p)
+        for n, p in self.mitmhandler.items():
+            setattr(self, p.ID, p)
 
     @property
     def ActiveDock(self):
@@ -69,7 +72,7 @@ class MitmController(PluginsUI,ControllerBlueprint):
 
     @property
     def Active(self):
-        manobj =[]
+        manobj = []
         for manip in self.mitmhandler.values():
             if manip.isChecked():
                 manobj.append(manip)
@@ -77,7 +80,7 @@ class MitmController(PluginsUI,ControllerBlueprint):
 
     @property
     def ActiveReactor(self):
-        reactor=[]
+        reactor = []
         for i in self.Active:
             reactor.append(i.reactor)
         return reactor
@@ -103,16 +106,17 @@ class MitmController(PluginsUI,ControllerBlueprint):
 
     @property
     def getAllReactor(self):
-        reactor=[]
+        reactor = []
         for i in self.Active:
             reactor.append(i.reactor)
         return reactor
-    
+
     def getReactorInfo(self):
         info_reactor = {}
         for reactor in self.getAllReactor:
             info_reactor[reactor.getID()] = {
-                'ID' : reactor.getID(), 'PID' : reactor.getpid()
+                "ID": reactor.getID(),
+                "PID": reactor.getpid(),
             }
         return info_reactor
 

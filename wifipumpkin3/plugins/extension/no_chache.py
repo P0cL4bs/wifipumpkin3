@@ -20,15 +20,15 @@ from wifipumpkin3.plugins.extension.base import BasePumpkin
 
 class nocache(BasePumpkin):
     meta = {
-        '_name': 'no-cache',
-        '_version': '1.0',
-        '_description': 'disable browser caching, cache-control in HTML',
-        '_author': 'mh4x0f'
+        "_name": "no-cache",
+        "_version": "1.0",
+        "_description": "disable browser caching, cache-control in HTML",
+        "_author": "mh4x0f",
     }
 
     @staticmethod
     def getName():
-        return nocache.meta['_name']
+        return nocache.meta["_name"]
 
     def __init__(self):
         for key, value in self.meta.items():
@@ -36,10 +36,10 @@ class nocache(BasePumpkin):
         self.ConfigParser = False
 
     def handleHeader(self, request, key, value):
-        if (key.decode().lower() == 'cache-control'):
-            value = 'no-cache'.encode()
+        if key.decode().lower() == "cache-control":
+            value = "no-cache".encode()
 
-        if (key.decode().lower() == 'if-none-match'):
-            value = ''.encode()
-        if (key.decode().lower() == 'etag'):
-            value = ''.encode()
+        if key.decode().lower() == "if-none-match":
+            value = "".encode()
+        if key.decode().lower() == "etag":
+            value = "".encode()

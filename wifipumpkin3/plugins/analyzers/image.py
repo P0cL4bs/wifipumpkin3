@@ -21,18 +21,21 @@ from string import ascii_letters
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ImageCap(PSniffer):
-    ''' capture image content http'''
-    _activated     = False
-    _instance      = None
+    """ capture image content http"""
+
+    _activated = False
+    _instance = None
     meta = {
-        'Name'      : 'imageCap',
-        'Version'   : '1.0',
-        'Description' : 'capture image content http',
-        'Author'    : 'Pumpkin-Dev',
+        "Name": "imageCap",
+        "Version": "1.0",
+        "Description": "capture image content http",
+        "Author": "Pumpkin-Dev",
     }
+
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
 
     @staticmethod
@@ -41,8 +44,8 @@ class ImageCap(PSniffer):
             ImageCap._instance = ImageCap()
         return ImageCap._instance
 
-    def filterPackets(self,pkt):
+    def filterPackets(self, pkt):
         pass
 
-    def random_char(self,y):
-           return ''.join(random.choice(ascii_letters) for x in range(y))
+    def random_char(self, y):
+        return "".join(random.choice(ascii_letters) for x in range(y))

@@ -1,5 +1,5 @@
 import re
-from ast import literal_eval 
+from ast import literal_eval
 from wifipumpkin3.plugins.captivePortal.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 
@@ -20,19 +20,20 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class DarkLogin(CaptiveTemplatePlugin):
     meta = {
-        'Name'      : 'DarkLogin',
-        'Version'   : '1.0',
-        'Description' : 'Example is a simple portal default page',
-        'Author'    : 'Pumpkin-Dev',
-        'TemplatePath' : C.TEMPLATES_FLASK + 'templates/DarkLogin',
-        'StaticPath' : C.TEMPLATES_FLASK + 'templates/DarkLogin/static',
-        'Preview' : 'plugins/captivePortal/templates/DarkLogin/preview.png'
+        "Name": "DarkLogin",
+        "Version": "1.0",
+        "Description": "Example is a simple portal default page",
+        "Author": "Pumpkin-Dev",
+        "TemplatePath": C.TEMPLATES_FLASK + "templates/DarkLogin",
+        "StaticPath": C.TEMPLATES_FLASK + "templates/DarkLogin/static",
+        "Preview": "plugins/captivePortal/templates/DarkLogin/preview.png",
     }
 
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
         self.dict_domain = {}
-        self.ConfigParser = False  
+        self.ConfigParser = False

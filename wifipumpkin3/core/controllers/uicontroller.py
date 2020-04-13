@@ -20,24 +20,27 @@ from wifipumpkin3.core.ui import *
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class UIController(ControllerBlueprint):
-    ID = 'ui_controller'
+    ID = "ui_controller"
     ui_handler = {}
 
     @staticmethod
     def getID():
         return UIController.ID
 
-    def __init__(self,parent):
-        super(UIController,self).__init__()
+    def __init__(self, parent):
+        super(UIController, self).__init__()
         self.parent = parent
         # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
-        __manipulator= [prox(parent=self.parent) for prox in uimode.WidgetBase.__subclasses__()]
-        
+        __manipulator = [
+            prox(parent=self.parent) for prox in uimode.WidgetBase.__subclasses__()
+        ]
+
         for k in __manipulator:
-            self.ui_handler[k.Name]=k
+            self.ui_handler[k.Name] = k
 
         # set all ui plugin as child class
-        for n,p in self.ui_handler.items():
-            setattr(self,p.ID,p)
+        for n, p in self.ui_handler.items():
+            setattr(self, p.ID, p)

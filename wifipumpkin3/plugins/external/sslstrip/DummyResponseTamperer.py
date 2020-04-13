@@ -19,11 +19,12 @@
 import logging
 from wifipumpkin3.plugins.external.sslstrip.URLMonitor import URLMonitor
 
+
 class DummyResponseTamperer:
 
-    '''
+    """
     DummyResponseTamperer is an exemplary class for server response tampering.
-    '''
+    """
 
     def __init__(self, config):
         self.config = config
@@ -35,13 +36,12 @@ class DummyResponseTamperer:
 
     def tamper(self, url, data, headers, req_headers, ip):
         if not self.isEnabled():
-          return data
+            return data
 
         # headers manipulation - see http://twistedmatrix.com/documents/10.1.0/api/twisted.web.http_headers.Headers.html
         # setting headers
-        #headers.setRawHeaders("X-aaa", ["aaa"])
+        # headers.setRawHeaders("X-aaa", ["aaa"])
         # getting headers
-        #headers.getRawHeaders("Content-Type")
+        # headers.getRawHeaders("Content-Type")
 
         return data
-

@@ -18,18 +18,20 @@ from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class PyDHCP(DHCPServers):
     Name = "Python DHCP Server"
     ID = "pydhcp_server"
-    def __init__(self,parent=0):
-        super(PyDHCP,self).__init__(parent)
+
+    def __init__(self, parent=0):
+        super(PyDHCP, self).__init__(parent)
         self._isRunning = False
         self._connected = {}
 
     def Initialize(self):
-        self.ifaceHostapd = self.conf.get('accesspoint','interface')
+        self.ifaceHostapd = self.conf.get("accesspoint", "interface")
 
-    def setIsRunning(self,value):
+    def setIsRunning(self, value):
         self._isRunning = value
 
     @property
@@ -37,9 +39,9 @@ class PyDHCP(DHCPServers):
         return self._isRunning
 
     def get_DHCPoutPut(self, data):
-        self._connected[data['MAC']] = data
+        self._connected[data["MAC"]] = data
 
     def boot(self):
-        self.reactor = DHCPThread(self.ifaceHostapd,self.DHCPConf)
+        self.reactor = DHCPThread(self.ifaceHostapd, self.DHCPConf)
         self.reactor.DHCPProtocol._request.connect(self.get_DHCPoutPut)
         self.reactor.setObjectName(self.ID)

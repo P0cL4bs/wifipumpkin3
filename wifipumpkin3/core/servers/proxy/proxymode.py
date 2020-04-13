@@ -1,4 +1,4 @@
-from wifipumpkin3.core.controls.threads import  ProcessThread
+from wifipumpkin3.core.controls.threads import ProcessThread
 from wifipumpkin3.core.controllers.wirelessmodecontroller import AccessPointSettings
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import *
@@ -23,35 +23,38 @@ from wifipumpkin3.core.utility.component import ComponentBlueprint
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class Widget(Qt.QObject):
     def __init__(self):
         Qt.QObject.__init__(self)
+
 
 class VBox(Qt.QObject):
     def __init__(self):
         Qt.QObject.__init__(self)
 
-class ProxyMode(Widget,ComponentBlueprint):
+
+class ProxyMode(Widget, ComponentBlueprint):
     Name = "Generic"
     Author = "Wahyudin Aziz"
     ID = "generic"
     Description = "Generic Placeholder for Attack Scenario"
     LogFile = C.LOG_ALL
-    CONFIGINI_PATH = ''
+    CONFIGINI_PATH = ""
     ModSettings = False
-    ModType = "proxy" # proxy or server
-    EXEC_PATH = ''
+    ModType = "proxy"  # proxy or server
+    EXEC_PATH = ""
     _cmd_array = []
     Hidden = True
     plugins = []
     sendError = QtCore.pyqtSignal(str)
     sendSingal_disable = QtCore.pyqtSignal(object)
-    addDock=QtCore.pyqtSignal(object)
+    addDock = QtCore.pyqtSignal(object)
     TypePlugin = 1
     RunningPort = 80
     config = None
 
-    def __init__(self,parent):
+    def __init__(self, parent):
         super(ProxyMode, self).__init__()
         self.parent = parent
         self.conf = SuperSettings.getInstance()
@@ -60,17 +63,18 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.reactor = None
         self.subreactor = None
         self.defaults_rules = {
-            'ssslstrip': 
-                [
-                    'iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port ' + self.conf.get('settings','redirect_port')
-                ],
-            'pumpkinproxy': 
-                [
-                    'iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}'.format(self.conf.get('proxy_plugins','pumpkinproxy_config_port'))
-                ]
-            }
+            "ssslstrip": [
+                "iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port "
+                + self.conf.get("settings", "redirect_port")
+            ],
+            "pumpkinproxy": [
+                "iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}".format(
+                    self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
+                )
+            ],
+        }
         # set config path plugin
-        if (self.getConfigINIPath != ''):
+        if self.getConfigINIPath != "":
             self.config = SettingsINI(self.getConfigINIPath)
 
         self.loggermanager = LoggerManager.getInstance()
@@ -78,28 +82,40 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     def configure_logger(self):
         if not self.Hidden:
-            config_extra  = self.loggermanager.getExtraConfig(self.ID)
-            config_extra['extra']['session'] = self.parent.currentSessionID
+            config_extra = self.loggermanager.getExtraConfig(self.ID)
+            config_extra["extra"]["session"] = self.parent.currentSessionID
 
-            self.logger = StandardLog(self.ID, 
-                colorize=self.conf.get('settings', 'log_colorize', format=bool), 
-                serialize=self.conf.get('settings', 'log_serialize', format=bool), 
-            config=config_extra)
+            self.logger = StandardLog(
+                self.ID,
+                colorize=self.conf.get("settings", "log_colorize", format=bool),
+                serialize=self.conf.get("settings", "log_serialize", format=bool),
+                config=config_extra,
+            )
             self.logger.filename = self.LogFile
-            self.loggermanager.add( self.ID, self.logger)
+            self.loggermanager.add(self.ID, self.logger)
 
     def parser_set_proxy(self, proxy_name, *args):
         # default parser proxy commands complete
-        if not self.conf.get('accesspoint', 'status_ap', format=bool):
-            plugins_selected = [plugin for plugin in self.conf.get_all_childname('proxy_plugins') if plugin == proxy_name]
-            if (plugins_selected != []):
-                self.conf.set('proxy_plugins', plugins_selected[0], True)
-                for proxy in self.conf.get_all_childname('proxy_plugins'):
-                    if proxy != plugins_selected[0] and not '_config' in proxy:
-                        self.conf.set('proxy_plugins', proxy, False)
+        if not self.conf.get("accesspoint", "status_ap", format=bool):
+            plugins_selected = [
+                plugin
+                for plugin in self.conf.get_all_childname("proxy_plugins")
+                if plugin == proxy_name
+            ]
+            if plugins_selected != []:
+                self.conf.set("proxy_plugins", plugins_selected[0], True)
+                for proxy in self.conf.get_all_childname("proxy_plugins"):
+                    if proxy != plugins_selected[0] and not "_config" in proxy:
+                        self.conf.set("proxy_plugins", proxy, False)
                 return
-            return print(display_messages('unknown command: {} '.format(proxy_name),error=True))
-        print(display_messages('Error: 0x01 - the AP(access point) is running',error=True))
+            return print(
+                display_messages("unknown command: {} ".format(proxy_name), error=True)
+            )
+        print(
+            display_messages(
+                "Error: 0x01 - the AP(access point) is running", error=True
+            )
+        )
 
     def runDefaultRules(self):
         for rules in self.defaults_rules[self.ID]:
@@ -125,7 +141,7 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     def getTypePlugin(self):
         return self.TypePlugin
-    
+
     def setTypePlugin(self, type_plugin):
         self.TypePlugin = type_plugin
 
@@ -133,7 +149,7 @@ class ProxyMode(Widget,ComponentBlueprint):
         self.ID = id
 
     def isChecked(self):
-        return self.conf.get('proxy_plugins', self.ID, format=bool)
+        return self.conf.get("proxy_plugins", self.ID, format=bool)
 
     @property
     def iptablesrules(self):
@@ -155,11 +171,11 @@ class ProxyMode(Widget,ComponentBlueprint):
 
     @property
     def CMD_ARRAY(self):
-        #self._cmd_array.extend(self.parent.currentSessionID)
-        return  self._cmd_array
+        # self._cmd_array.extend(self.parent.currentSessionID)
+        return self._cmd_array
 
     def boot(self):
-        self.reactor= ProcessThread({'python3': self.CMD_ARRAY})
+        self.reactor = ProcessThread({"python3": self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)
 
@@ -169,33 +185,33 @@ class ProxyMode(Widget,ComponentBlueprint):
     @property
     def isEnabled(self):
         pass
-        
+
     def Initialize(self):
         pass
 
-    def optionsRules(self,type):
-        ''' add rules iptable by type plugins'''
+    def optionsRules(self, type):
+        """ add rules iptable by type plugins"""
         return self.search[type]
 
     def ClearRules(self):
         for rules in self.search.keys():
             self.unset_Rules(rules)
 
-    def LogOutput(self,data):
-        if self.conf.get('accesspoint', 'status_ap', format=bool):
+    def LogOutput(self, data):
+        if self.conf.get("accesspoint", "status_ap", format=bool):
             print(data)
 
     def Configure(self):
         self.ConfigWindow.show()
-        
+
     def SaveLog(self):
         pass
 
-    def Serve(self,on=True):
+    def Serve(self, on=True):
         pass
 
 
 class Dockable(DockableWidget):
-    def __init__(self,parent=0,title="",info={}):
-        super(Dockable,self).__init__(parent,title,info)
+    def __init__(self, parent=0, title="", info={}):
+        super(Dockable, self).__init__(parent, title, info)
         self.setObjectName(title)

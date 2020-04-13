@@ -1,4 +1,3 @@
-
 from wifipumpkin3.plugins.extension.base import BasePumpkin
 from os import path
 from bs4 import BeautifulSoup
@@ -24,30 +23,32 @@ from io import StringIO
 
 class replaceImages(BasePumpkin):
     meta = {
-        '_name'      : 'replaceImages',
-        '_version'   : '1.0',
-        '_description' : 'this module proxy replace all images with the picture .',
-        '_author'    : 'mh4x0f'
+        "_name": "replaceImages",
+        "_version": "1.0",
+        "_description": "this module proxy replace all images with the picture .",
+        "_author": "mh4x0f",
     }
 
     @staticmethod
     def getName():
-        return replaceImages.meta['_name']
+        return replaceImages.meta["_name"]
 
     def __init__(self):
-        for key,value in self.meta.items():
+        for key, value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.imagePath = self._config.get('set_replaceImages','path')
+        self.imagePath = self._config.get("set_replaceImages", "path")
 
-    def handleResponse(self,request, data):
-        self.content = request.responseHeaders.getRawHeaders('content-type')
-        if str(self.content).startswith('image'):
+    def handleResponse(self, request, data):
+        self.content = request.responseHeaders.getRawHeaders("content-type")
+        if str(self.content).startswith("image"):
             if path.isfile(self.imagePath):
                 try:
-                    img = StringIO(open(self.imagePath, 'rb').read().decode())
+                    img = StringIO(open(self.imagePath, "rb").read().decode())
                     data = img.getvalue()
-                    print('[{}] URL:{} image replaced...'.format(self._name,request.uri))
+                    print(
+                        "[{}] URL:{} image replaced...".format(self._name, request.uri)
+                    )
                 except:
                     pass
         return data
