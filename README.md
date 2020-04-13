@@ -1,9 +1,11 @@
 # Wifipumpkin3
+<a href="https://wifipumpkin3.github.io"><img alt="Wp3" height="96" src="https://github.com/mh4x0f/wifipumpkin3/blob/dev/docs/logo.png" /></a>
+
 **Powerful framework for rouge access point attack.**
 
-[![license](https://img.shields.io/badge/license-apache%202-orange)](https://github.com/P0cL4bs/wifipumpkin3//blob/master/LICENSE)
-[![changelog](https://img.shields.io/badge/change-log-yellow)](https://github.com/P0cL4bs/wifipumpkin3/blob/master/CHANGELOG.md)
-[![changelog](https://img.shields.io/badge/versioon-1.0.0-blue)](https://github.com/P0cL4bs/wifipumpkin3/)
+[![license](https://img.shields.io/badge/license-apache%202-orange)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/LICENSE.md)
+[![changelog](https://img.shields.io/badge/change-log-yellow)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/CHANGELOG.md)
+[![changelog](https://img.shields.io/badge/versioon-1.0.0-blue)](https://github.com/mh4x0f/wifipumpkin3/)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 ## Overview
