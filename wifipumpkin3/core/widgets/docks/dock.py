@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, Qt
-from functools import  partial
+from functools import partial
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -20,12 +20,12 @@ from functools import  partial
 
 
 class DockableWidget(Qt.QObject):
-    title = 'Default'
-    id = 'default'
+    title = "Default"
+    id = "default"
     addDock = QtCore.pyqtSignal(object)
 
-    def __init__(self,parent=0,t='Default',info={}):
-        super(DockableWidget,self).__init__()
+    def __init__(self, parent=0, t="Default", info={}):
+        super(DockableWidget, self).__init__()
         self.parent = parent
         self.title = t
         self.logger = info
@@ -33,7 +33,7 @@ class DockableWidget(Qt.QObject):
         self.processThread = None
 
     def runThread(self):
-        self.startThread=True
+        self.startThread = True
 
     def controlui_toggled(self):
         if self.controlui.isChecked():
@@ -41,7 +41,7 @@ class DockableWidget(Qt.QObject):
         else:
             self.addDock.emit(False)
 
-    def writeModeData(self,data):
+    def writeModeData(self, data):
         print(data)
 
     def clear(self):

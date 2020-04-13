@@ -19,21 +19,22 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class CaptiveTemplatePlugin(object):
-	Name		= 'plugin template captive-portal'
-	version		= '1.0'
-	config		= SettingsINI(C.CONFIG_CP_INI)
-	loggers 	= {}
+    Name = "plugin template captive-portal"
+    version = "1.0"
+    config = SettingsINI(C.CONFIG_CP_INI)
+    loggers = {}
 
-	def init_language(self, lang):
-		pass
+    def init_language(self, lang):
+        pass
 
-	def getSellectedLanguage(self):
-		selected_lang,key = None,'set_{}'.format(self.Name)
-		for lang in self.config.get_all_childname(key):
-			if (self.config.get_setting(key,lang, format=bool)):
-				selected_lang = lang
-		return selected_lang
-	
-	def initialize(self):
-		self.init_language(self.getSellectedLanguage())
+    def getSellectedLanguage(self):
+        selected_lang, key = None, "set_{}".format(self.Name)
+        for lang in self.config.get_all_childname(key):
+            if self.config.get_setting(key, lang, format=bool):
+                selected_lang = lang
+        return selected_lang
+
+    def initialize(self):
+        self.init_language(self.getSellectedLanguage())

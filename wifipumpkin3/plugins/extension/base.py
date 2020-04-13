@@ -18,15 +18,16 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class BasePumpkin(object):
-    _name    = 'plugin base PumpkinProxy '
-    _version = '1.0'
-    _config  = SettingsINI(C.CONFIG_PP_INI)
+    _name = "plugin base PumpkinProxy "
+    _version = "1.0"
+    _config = SettingsINI(C.CONFIG_PP_INI)
 
     @staticmethod
     def getName():
         return BasePumpkin._name
-        
+
     @property
     def config(self):
         return self._config

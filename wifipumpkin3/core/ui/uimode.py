@@ -20,10 +20,12 @@ import threading
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class WidgetBase(urwid.Frame):
     """
     common class for widgets
     """
+
     _conf = SettingsINI(C.CONFIG_INI)
 
     def __init__(self, *args, **kwargs):

@@ -7,6 +7,15 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added initial logo design tool on README.md [mh4x0f] 
+- added initial details for tool on  README.md [mh4x0f] 
+- added code formarter black tool [mh4x0f] 
+- added makefile configuration [mh4x0f]
+- added no-colors arguments commands [mh4x0f] 
+- added info command list all plugin from proxys [mh4x0f]
+- added parser for set plugin pummpkinproxy [mh4x0f]
+- added packet http info into sniffkin3 json log [mh4x0f] 
+- added alert when the client left the ap [mh4x0f]
 - added exceptions implementation error [mh4x0f]
 - added license header __init__ file [mh4x0f]
 - added license header all files in plugins [mh4x0f]
@@ -66,6 +75,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- changed name author to made by into bin/wifipumpkin3 [mh4x0f] 
 - refactored all controllers implementation codestyle [mh4x0f]
 - improved folder copy code on setup.py [mh4x0f]
 - exclude config folder from language statistics [mh4x0f]
@@ -96,6 +106,9 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed makefile option to clean setup.py [mh4x0f]
+- fixed error hostpad_response when client left ap [mh4x0f] 
+- fixed log hostapd send (state) with close the ap [mh4x0f]
 - fixed set linguist-vendored=false to exclude language statistics [mh4x0f]
 - fixed try to exclude files from git language statistics [mh4x0f]
 - fixed bug when try restart AP with modification in interface name [mh4x0f]

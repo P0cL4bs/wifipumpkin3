@@ -21,10 +21,11 @@ from wifipumpkin3.core.utility.component import ControllerBlueprint
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ProxyModeController(PluginsUI, ControllerBlueprint):
     Name = "Proxy"
     Caption = "Enable Proxy Server"
-    ID = 'proxy_controller'
+    ID = "proxy_controller"
     proxies = {}
     proxies_infor = {}
     SetNoProxy = QtCore.pyqtSignal(object)
@@ -34,40 +35,42 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     def getID():
         return ProxyModeController.ID
 
-    def __init__(self,parent = None,**kwargs):
+    def __init__(self, parent=None, **kwargs):
         super(ProxyModeController, self).__init__(parent)
-        self.parent=parent
-         # append controller in DefaultWidget
+        self.parent = parent
+        # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
         self.conf = SuperSettings.getInstance()
 
-        # load all plugin proxy 
-        __proxlist= [prox(parent=self.parent) for prox in proxymode.ProxyMode.__subclasses__()]
+        # load all plugin proxy
+        __proxlist = [
+            prox(parent=self.parent) for prox in proxymode.ProxyMode.__subclasses__()
+        ]
 
-        #Keep Proxy in a dictionary
+        # Keep Proxy in a dictionary
         for k in __proxlist:
-            self.proxies[k.Name]=k
+            self.proxies[k.Name] = k
 
             self.proxies_infor[k.ID] = {
-                'ID': k.ID,
-                'Name' : k.Name,
-                'Port' : k.getRunningPort(),
-                'Activate': k.isChecked(),
-                'Author' : k.Author,
-                'Logger' : k.LogFile,
-                'ConfigPath' : k.CONFIGINI_PATH,
-                'Description': k.Description,
-                'Config' : k.getConfig,
+                "ID": k.ID,
+                "Name": k.Name,
+                "Port": k.getRunningPort(),
+                "Activate": k.isChecked(),
+                "Author": k.Author,
+                "Logger": k.LogFile,
+                "ConfigPath": k.CONFIGINI_PATH,
+                "Description": k.Description,
+                "Config": k.getConfig,
             }
 
         # set all proxy plugin as child class
-        for n,p in self.proxies.items():
-            if (hasattr(p,'ID')):
+        for n, p in self.proxies.items():
+            if hasattr(p, "ID"):
                 setattr(self, p.ID, p)
-        
+
     def isChecked(self):
-        return self.conf.get('plugins', self.ID, format=bool)
-        
+        return self.conf.get("plugins", self.ID, format=bool)
+
     @property
     def ActiveDocks(self):
         return self.Active.dockwidget
@@ -84,31 +87,31 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                     reactor.append(act.reactor)
                     if act.subreactor:
                         reactor.append(act.subreactor)
-        return  reactor
+        return reactor
 
     @property
     def Active(self):
         for act in self.proxies.values():
             # exclude tcp proxy log
             if act.getTypePlugin() != 2:
-                #print(act.isChecked(),act.Name)
+                # print(act.isChecked(),act.Name)
                 if act.isChecked():
                     return act
 
     @property
     def ActiveLoad(self):
-        ''' load all proxies type checkbox UI in tab plugins '''
+        """ load all proxies type checkbox UI in tab plugins """
         proxies = []
         for act in self.proxies.values():
             if act.isChecked():
                 if act.Name != "No Proxy":
                     proxies.append(act)
-        return  proxies
+        return proxies
 
     @property
     def get(self):
         return self.proxies
-    
+
     def getInfo(self):
         return self.proxies_infor
 
@@ -126,7 +129,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         self.Active.boot()
         # load proxy checkbox all type all proxies
         for proxy in self.ActiveLoad:
-            if (proxy.Name != self.Active.Name):
+            if proxy.Name != self.Active.Name:
                 proxy.Initialize()
                 proxy.Serve()
                 proxy.boot()
@@ -134,12 +137,13 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     @property
     def getReactor(self):
         return self.Active.reactor
-    
+
     def getReactorInfo(self):
         info_reactor = {}
         info_reactor[self.getReactor.getID()] = {
-            'ID' : self.getReactor.getID(), 'PID' : self.getReactor.getpid()
-            }
+            "ID": self.getReactor.getID(),
+            "PID": self.getReactor.getpid(),
+        }
         return info_reactor
 
     def Stop(self):

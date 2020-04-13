@@ -23,27 +23,29 @@ import wifipumpkin3.core.utility.constants as C
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class PSniffer(object):
-    ''' plugins data sniffers'''
-    name    = 'plugin sniffkin3 master'
-    version = '1.0'
-    config  = SettingsINI(C.CONFIG_SK_INI)
+    """ plugins data sniffers"""
+
+    name = "plugin sniffkin3 master"
+    version = "1.0"
+    config = SettingsINI(C.CONFIG_SK_INI)
     loggers = {}
-    output  = pyqtSignal(object)
+    output = pyqtSignal(object)
     session = None
 
-    def filterPackets(self,pkt):
-        ''' intercept packetes data '''
+    def filterPackets(self, pkt):
+        """ intercept packetes data """
         raise NotImplementedError
 
-    def get_http_headers(self,http_payload):
-        ''' get header dict http request'''
+    def get_http_headers(self, http_payload):
+        """ get header dict http request"""
         try:
-            headers_raw = http_payload[:http_payload.index("\r\n\r\n")+2]
-            headers = dict(findall(r'(?P<name>.*?):(?P<value>.*?)\r\n', headers_raw))
+            headers_raw = http_payload[: http_payload.index("\r\n\r\n") + 2]
+            headers = dict(findall(r"(?P<name>.*?):(?P<value>.*?)\r\n", headers_raw))
         except:
             return None
-        if 'Content-Type' not in headers:
+        if "Content-Type" not in headers:
             return None
 
         return headers
@@ -53,13 +55,15 @@ class PSniffer(object):
             return self.loggers.get(logger_name)
         else:
             logger = logging.getLogger(logger_name)
-            formatter = logging.Formatter('SessionID[{}] %(asctime)s : %(message)s'.format(key))
-            fileHandler = logging.FileHandler(log_file, mode='a')
+            formatter = logging.Formatter(
+                "SessionID[{}] %(asctime)s : %(message)s".format(key)
+            )
+            fileHandler = logging.FileHandler(log_file, mode="a")
             fileHandler.setFormatter(formatter)
             logger.setLevel(logging.INFO)
             logger.addHandler(fileHandler)
         return logger
 
-    def hexdumpPackets(self,pkt):
-        ''' show packets hexdump '''
+    def hexdumpPackets(self, pkt):
+        """ show packets hexdump """
         return hexdump(pkt)

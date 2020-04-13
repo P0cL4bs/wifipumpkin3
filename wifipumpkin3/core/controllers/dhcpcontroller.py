@@ -19,23 +19,24 @@ from wifipumpkin3.core.servers.dhcp import *
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class DHCPController(ControllerBlueprint):
-    ID = 'dhcp_controller'
+    ID = "dhcp_controller"
 
     @staticmethod
     def getID():
         return DHCPController.ID
 
-    def __init__(self,parent):
-        super(DHCPController,self).__init__()
+    def __init__(self, parent):
+        super(DHCPController, self).__init__()
         self.parent = parent
         # append controller in DefaultWidget
         self.parent.getDefault.addController(self)
         __dhcpmode = dhcp.DHCPSettings.instances[0].dhmode
         self.mode = {}
         for k in __dhcpmode:
-            self.mode[k.ID]=k
-            
+            self.mode[k.ID] = k
+
     def Start(self):
         self.Active.Start()
 
@@ -48,9 +49,10 @@ class DHCPController(ControllerBlueprint):
         for i in self.mode.values():
             if i.isChecked():
                 return i
+
     @property
     def ActiveReactor(self):
-        #reactor=[self.Active.reactor,self.Active.service]
+        # reactor=[self.Active.reactor,self.Active.service]
         return self.Active.reactor
 
     def Stop(self):
@@ -59,7 +61,7 @@ class DHCPController(ControllerBlueprint):
     def getReactorInfo(self):
         info_reactor = {}
         info_reactor[self.ActiveReactor.getID()] = {
-            'ID' : self.ActiveReactor.getID(), 'PID' : self.ActiveReactor.getpid()
-            }
+            "ID": self.ActiveReactor.getID(),
+            "PID": self.ActiveReactor.getpid(),
+        }
         return info_reactor
-

@@ -19,26 +19,30 @@ import weakref
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class SessionConfig(TabsWidget):
-    ConfigRoot="Settings"
+    ConfigRoot = "Settings"
     Name = "Settings"
     ID = "SessionConfig"
     __subitem = False
-    tablayout={}
-    tabwidget={}
-    instances=[]
-    def __init__(self,parent=None,FSettings=None):
-        super(SessionConfig,self).__init__(parent,FSettings)
+    tablayout = {}
+    tabwidget = {}
+    instances = []
+
+    def __init__(self, parent=None, FSettings=None):
+        super(SessionConfig, self).__init__(parent, FSettings)
         self.__class__.instances.append(weakref.proxy(self))
         self.FSettings = SuperSettings.getInstance()
         self.title = self.__class__.__name__
 
-        settingsItem = [setitem(self.parent ) for setitem in CoreSettings.__subclasses__()]
+        settingsItem = [
+            setitem(self.parent) for setitem in CoreSettings.__subclasses__()
+        ]
         self.settingsItem = {}
 
         for mod in settingsItem:
-            self.settingsItem[mod.title]=mod
-            setattr(self.__class__,mod.ID,mod)
+            self.settingsItem[mod.title] = mod
+            setattr(self.__class__, mod.ID, mod)
 
     @property
     def isSubitem(self):
@@ -47,5 +51,3 @@ class SessionConfig(TabsWidget):
     @classmethod
     def getInstance(cls):
         return cls.instances[0]
-
-

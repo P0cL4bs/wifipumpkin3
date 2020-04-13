@@ -18,9 +18,10 @@ from wifipumpkin3.core.servers.proxy.proxymode import ProxyMode
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class NoProxy(ProxyMode):
-    Name="noproxy"
-    ID="noproxy"
+    Name = "noproxy"
+    ID = "noproxy"
     Description = "Runnning without proxy redirect traffic"
     Author = "Pumpkin-Dev"
     Hidden = True
@@ -30,6 +31,6 @@ class NoProxy(ProxyMode):
         super(NoProxy, self).__init__(parent)
         self.setID(self.ID)
         self.setTypePlugin(self.TypePlugin)
-        
+
     def boot(self):
         pass

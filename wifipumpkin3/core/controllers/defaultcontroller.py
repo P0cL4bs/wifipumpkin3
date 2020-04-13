@@ -27,28 +27,29 @@ from wifipumpkin3.core.controllers.uicontroller import *
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class DefaultController(Qt.QObject):
 
     _controllers = {}
-    instances=[]
+    instances = []
 
-    def __init__(self,parent = None,**kwargs):
-        super(DefaultController,self).__init__()
+    def __init__(self, parent=None, **kwargs):
+        super(DefaultController, self).__init__()
         self.__class__.instances.append(weakref.proxy(self))
         self.parent = parent
         self.FSettings = SuperSettings.getInstance()
         self.defaultui = []
-        self.allui =[]
+        self.allui = []
         self.__tabbyname = {}
-        # load all pluginsUI class 
-        __defaultui = [ui(parent,self.FSettings) for ui in TabsWidget.__subclasses__()]
+        # load all pluginsUI class
+        __defaultui = [ui(parent, self.FSettings) for ui in TabsWidget.__subclasses__()]
         for ui in __defaultui:
-            if not  ui.isSubitem:
+            if not ui.isSubitem:
                 self.defaultui.append(ui)
             self.allui.append(ui)
-            self.__tabbyname[ui.Name]=ui
-            setattr(self.__class__,ui.ID,ui)
-        
+            self.__tabbyname[ui.Name] = ui
+            setattr(self.__class__, ui.ID, ui)
+
         self.intialize_controllers(self.parent)
 
     def intialize_controllers(self, parent):
@@ -64,7 +65,7 @@ class DefaultController(Qt.QObject):
 
     def addController(self, instance):
         """ add controller instance app """
-        self._controllers[instance.getID()] = instance 
+        self._controllers[instance.getID()] = instance
 
     def getController(self, name):
         """ get controller instance app """
@@ -72,7 +73,7 @@ class DefaultController(Qt.QObject):
             return self._controllers.get(name)
         return self._controllers
 
-    def CoreTabsByName(self,name):
+    def CoreTabsByName(self, name):
 
         if self.__tabbyname.has_key(name):
             return self.__tabbyname[name]
@@ -80,4 +81,3 @@ class DefaultController(Qt.QObject):
     @property
     def CoreTabs(self):
         return self.defaultui
-
