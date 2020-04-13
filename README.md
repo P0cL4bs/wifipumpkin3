@@ -48,7 +48,7 @@
 
 ## Installation & Documentation
 
-Learn more about using [wp3 on the official site!](https://jestjs.io)
+Learn more about using [wp3 on the official site!](https://wifipumpkin3.github.io)
 
 - [Getting Started](http://gettingstarted)
 - [Installation](http://installationlink)
