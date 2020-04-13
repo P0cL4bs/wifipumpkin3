@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added initial details for tool on  README.md [mh4x0f] 
 - added code formarter black tool [mh4x0f] 
 - added makefile configuration [mh4x0f]
 - added no-colors arguments commands [mh4x0f] 
