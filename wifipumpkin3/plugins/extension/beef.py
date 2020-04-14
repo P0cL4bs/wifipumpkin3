@@ -36,7 +36,7 @@ class beef(BasePumpkin):
         for key, value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.urlhook = self.config.get("set_beef", "hook")
+        self.urlhook = self.config.get("set_beef", "url_hook")
 
     def handleResponse(self, request, data):
 
