@@ -51,7 +51,7 @@ class Sniffkin3(MitmMode):
     Name = "Sniffkin 3"
     Author = "Pumpkin-Dev"
     ID = "sniffkin3"
-    Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
+    Description = "Sniff for intercept network traffic on TCP protocol get password,hash, headers, packet infor, etc..."
     Hidden = False
     LogFile = C.LOG_SNIFFKIN3
     CONFIGINI_PATH = C.CONFIG_SK_INI

@@ -53,7 +53,7 @@ class PumpKinProxy(ProxyMode):
     Name = "PumpkinProxy 3"
     Author = "Pumpkin-Dev"
     ID = "pumpkinproxy"
-    Description = "Sniff for intercept network traffic on UDP,TCP protocol get password,hash,image,etc..."
+    Description = "Transparent proxies that you can use to intercept and manipulate HTTP traffic modifying requests and responses, that allow to inject javascripts into the targets visited."
     Hidden = False
     LogFile = C.LOG_PUMPKINPROXY
     CONFIGINI_PATH = C.CONFIG_PP_INI
