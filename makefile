@@ -7,11 +7,12 @@ test:
 	python3.7 -m unittest -v
 
 setup:
+	find . -name '*.pyc' -delete
 	python3.7 setup.py install
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info
-	python3.7 setup.py clear --all
+	python3.7 setup.py clean --all
 
 distclean: clean
 	rm -rf .venv

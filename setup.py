@@ -63,7 +63,6 @@ setup(
         "License :: OSI Approved :: Apache 2.0 License",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
-        "Topic :: Scientific/Engineering :: Information Analysis",
         "Environment :: Console",
     ],
 )

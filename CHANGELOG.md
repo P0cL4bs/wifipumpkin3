@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added file manifast.in [mh4x0f]
 - added check must be run as root. [mh4x0f]
 - added initial logo design tool on README.md [mh4x0f] 
 - added initial details for tool on  README.md [mh4x0f] 
