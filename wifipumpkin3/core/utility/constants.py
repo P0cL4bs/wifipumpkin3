@@ -21,7 +21,16 @@ dir_of_executable = os.path.dirname(__file__)
 dir_path = os.getcwd()
 user_config_dir = os.path.expanduser("~")
 
-SYSTEMCOMMAND = ["ifconfig", "iw", "iwconfig", "route"]
+SYSTEMCOMMAND = [
+    "ifconfig",
+    "iw",
+    "iwconfig",
+    "route",
+    "iptables",
+    "ls",
+    "clear",
+    "nano",
+]
 
 HELPFILESPATH = user_config_dir + "/.config/wifipumpkin3/helps/"
 EXCEPTFILESPATH = user_config_dir + "/.config/wifipumpkin3/exceptions/"

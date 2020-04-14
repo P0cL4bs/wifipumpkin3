@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added system commands iptables,ls, clear, nano [mh4x0f]
 - added file manifast.in [mh4x0f]
 - added check must be run as root. [mh4x0f]
 - added initial logo design tool on README.md [mh4x0f] 
@@ -108,6 +109,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed description plugin responder3 [mh4x0f]
 - fixed description all plugin and proxy [mh4x0f] 
 - fixed dependency of wireless-tools for use iwconfig command [mh4x0f] 
 - fixed beef parameter hook to url_hook [mh4x0f]

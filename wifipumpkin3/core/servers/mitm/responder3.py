@@ -47,7 +47,7 @@ class Responder3(MitmMode):
     Name = "Responder 3"
     ID = "responder3"
     Author = "PumpkinDev"
-    Description = "New and improved Responder for Python3"
+    Description = "LLMNR, NBT-NS and MDNS poisoner, with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication server "
     LogFile = C.LOG_RESPONDER3
     ConfigMitmPath = None
     _cmd_array = []
