@@ -533,6 +533,16 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         else:
             return list(self.logger_manager.all())
 
+    def complete_restore(self, text, args, start_index, end_index):
+        if text:
+            return [
+                command
+                for command in self.logger_manager.all()
+                if command.startswith(text)
+            ]
+        else:
+            return list(self.logger_manager.all())
+
     def complete_set(self, text, args, start_index, end_index):
         if text:
             command_list = []
