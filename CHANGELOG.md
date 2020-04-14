@@ -108,6 +108,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed dependency of wireless-tools for use iwconfig command [mh4x0f] 
 - fixed beef parameter hook to url_hook [mh4x0f]
 - fixed makefile option to clean setup.py [mh4x0f]
 - fixed error hostpad_response when client left ap [mh4x0f] 

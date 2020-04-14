@@ -7,6 +7,7 @@ RUN apt-get update \
         hostapd \
 	    nano \
 	    iw \
+        wireless-tools \
         ifupdown \
         python3.7 \
         python3-pip \
