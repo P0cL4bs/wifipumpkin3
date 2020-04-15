@@ -1,0 +1,33 @@
+name: Build
+on:
+  push:
+    branches:
+      - dev
+      - beta
+      - master
+      - tmp-*
+    tags:
+      - v*
+  pull_request:
+
+jobs:
+  wifipumpkin3:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7]
+        os: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install
+      run: make setup
+    - name: Test
+      run: make test
+    - name: Run
+      run: wifipumpkin3 -h
