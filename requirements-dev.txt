@@ -9,7 +9,8 @@ beautifultable==0.8.0
 urwid==1.1.2
 termcolor==1.1.0
 twisted==19.7.0
-PyQt5==5.14.0 #docker working 
+#PyQt5==5.14.0 #docker working 
+PyQt5==5.14.2 #docker working 
 pyOpenSSL==19.0.0
 asn1crypto>=1.0.0
 Responder3==0.0.1

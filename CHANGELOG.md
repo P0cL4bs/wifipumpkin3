@@ -79,6 +79,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- changed requirements PyQt5==5.14.0 to PyQt5==5.14.2 [mh4x0f]
 - restore folder logs from .gitignore [mh4x0f]
 - changed check is rootuser for use on github actions deploy [mh4x0f]
 - changed name author to made by into bin/wifipumpkin3 [mh4x0f] 
