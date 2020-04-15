@@ -50,8 +50,8 @@
 
 Learn more about using [wp3 on the official site!](https://wifipumpkin3.github.io)
 
-- [Getting Started](http://gettingstarted)
-- [Installation](http://installationlink)
+- [Getting Started](https://wifipumpkin3.github.io/docs/getting-started)
+- [Installation](https://wifipumpkin3.github.io/docs/getting-started#installation)
 
 ## Contributing
 
@@ -59,4 +59,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help out.
 
 ## License
 
-**Wp3** is licensed under the [Apche 2.0](./LICENSE).
+**Wp3** is licensed under the [Apche 2.0](./LICENSE.md).
