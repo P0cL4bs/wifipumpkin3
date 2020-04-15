@@ -38,8 +38,6 @@ def parser_args_func(parse_args):
 
 
 if __name__ == "__main__":
-    if not getuid() == 0:
-        sys.exit("[!] Wp3 must be run as root.")
 
     app = QtCore.QCoreApplication(sys.argv)
     conf = SettingsINI.getInstance()
@@ -90,6 +88,10 @@ if __name__ == "__main__":
 
     parse_args = parser.parse_args()
     parser_args_func(parse_args)
+    
+    # check is rootuser  
+    if not getuid() == 0:
+        sys.exit("[!] Wp3 must be run as root.")
 
     _author = "{}".format(setcolor(__author__, color="yellow"))
     _version = setcolor(__version__, color="yellow")

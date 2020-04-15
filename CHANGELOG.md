@@ -79,6 +79,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- changed check is rootuser for use on github actions deploy [mh4x0f]
 - changed name author to made by into bin/wifipumpkin3 [mh4x0f] 
 - refactored all controllers implementation codestyle [mh4x0f]
 - improved folder copy code on setup.py [mh4x0f]
