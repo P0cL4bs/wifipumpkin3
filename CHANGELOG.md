@@ -110,6 +110,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- force copy all files `config` to user_config_dir [mh4x0f]
 - fixed description plugin responder3 [mh4x0f]
 - fixed description all plugin and proxy [mh4x0f] 
 - fixed dependency of wireless-tools for use iwconfig command [mh4x0f] 
@@ -144,11 +145,3 @@ All notable changes to this project will be documented in this file.
 - Fixed somes bugs on UI and add more features. [mh4x0f]
 - Fixed argparse arguments. [mh4x0f]
 - Fixed window urwid implementation. [mh4x0f]
-
-
-
-### Security
-
-
-
----
