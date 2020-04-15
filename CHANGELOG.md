@@ -110,6 +110,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- stable version that contains [mh4x0f]
 - fixed website links on Readme.md [mh4x0f] 
 - force copy all files `config` to user_config_dir [mh4x0f]
 - fixed description plugin responder3 [mh4x0f]

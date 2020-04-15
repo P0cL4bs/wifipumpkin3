@@ -16,7 +16,7 @@ The branches are distributed in:
 
 - master - Stable version. Something will only be added to this branch when it is really relevant for the release of a new version.
 
-- beta - Beta stable version [Open track] in production on Google Play. relevant to the launch of a new beta version on google play.
+- beta - Stable version that contains most of the major features, but is not yet complete.relevant to the launch of a new beta version on release.
 
 - dev - Unstable version. It is the continuous version of development. All approved and tested modifications will be added to this branch.
 
