@@ -113,6 +113,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed downgrade version pyqt 5.14.2 to version 5.14 [mh4x0f]
 - fixed require coverage on test makefile [mh4x0f]
 - stable version that contains [mh4x0f]
 - fixed website links on Readme.md [mh4x0f] 
