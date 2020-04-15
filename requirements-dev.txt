@@ -21,4 +21,5 @@ isc_dhcp_leases==0.9.1
 dnspython==1.16.0
 Flask==1.1.1
 black
+coverage==5.1
 
