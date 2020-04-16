@@ -28,6 +28,11 @@
 
 ### Donation
 
+##### Patreon:
+
+[![patreon](https://img.shields.io/badge/donate-patreon-orange)](https://www.patreon.com/mh4x0f?fan_landing=true)
+
+
 ##### paypal:
 
 [![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PUPJEGHLJPFQL)

@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-02
 
 ### Added
+- added donate patreon on readme.md [mh4x0f]
 - added autocomplete on command restore [mh4x0f]
 - added system commands iptables,ls, clear, nano [mh4x0f]
 - added file manifast.in [mh4x0f]
