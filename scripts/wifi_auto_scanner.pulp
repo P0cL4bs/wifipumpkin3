@@ -1,5 +1,4 @@
-use wifipumpkin3.modules.wifi.wifiscan
-set interface wlxc83a35cef744 
+use wifipumpkin3.modules.wifi.wifiscan 
 #set timeout 0  for scan loop infinite
 set timeout 0
 run
