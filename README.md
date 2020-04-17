@@ -16,7 +16,7 @@
 
 - Rogue access point attack
 - Man-in-the-middle attack
-- Rouge **Dns Server**
+- Rogue **Dns Server**
 - Captive portal attack (captiveflask)
 - **Intercept**, inspect, modify and replay **web traffic**
 - **WiFi** networks scanning
@@ -62,6 +62,9 @@ Learn more about using [wp3 on the official site!](https://wifipumpkin3.github.i
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help out.
+
+## community
+on discord: https://discord.gg/jywYskR
 
 ## License
 
