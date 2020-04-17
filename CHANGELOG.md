@@ -116,6 +116,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed typo name on readme.md [mh4x0f]
 - fixed disable security auth wireless by default [mh4x0f]
 - added depedency PyQt5-sip==12.7.2 to requirements.txt [mh4x0f]
 - fixed downgrade version pyqt 5.14.2 to version 5.14 [mh4x0f]
