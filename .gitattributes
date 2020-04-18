@@ -1,0 +1,3 @@
+config/** linguist-vendored=false
+*.js linguist-vendored=false
+config/** linguist-documentation

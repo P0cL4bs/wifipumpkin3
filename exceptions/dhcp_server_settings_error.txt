@@ -1,0 +1,2 @@
+The DHCPServer is configured with same range ip class, 
+it works, but not share internet connection in some case.

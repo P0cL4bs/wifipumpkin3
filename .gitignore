@@ -4,7 +4,11 @@ __pycache__/
 *.pyc
 # C extensions
 *.so
-*.log
+#*.log
+
+#exclude vscode
+.vscode/
+.ideia/
 
 # Distribution / packaging
 .Python
@@ -49,7 +53,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
+#*.log
 
 # Sphinx documentation
 docs/_build/

@@ -1,0 +1,7 @@
+exclude *.pyc .gitignore MANIFEST.in
+include setup.py
+include README.md
+include LICENSE.md
+recursive-include bin *
+recursive-include wifipumpkin3 *.py
+recursive-include wifipumpkin3 *.*

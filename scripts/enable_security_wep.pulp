@@ -1,0 +1,6 @@
+set security true
+# set auth WPA2 
+set security.wpa_type 0
+# congure password of AP
+set security.wpa_sharedkey 0123456789
+start
