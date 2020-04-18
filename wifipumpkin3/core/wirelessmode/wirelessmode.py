@@ -105,16 +105,17 @@ class Mode(Qt.QObject):
         self.interfacesLink = Refactor.get_interfaces()
         print(display_messages("sharing internet connection with NAT...", info=True))
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
-        try:
-            for ech in self.conf.get_all_childname("iptables"):
+        
+        for ech in self.conf.get_all_childname("iptables"):
+            try:
                 ech = self.conf.get("iptables", ech)
                 if "$inet" in ech and self.interfacesLink["activated"][0] != None:
                     ech = ech.replace("$inet", self.interfacesLink["activated"][0])
                 if "$wlan" in ech:
                     ech = ech.replace("$wlan", self.ifaceHostapd)
                 popen(ech)
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(e)
 
     def Stop(self):
         self.Shutdown()
