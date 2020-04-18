@@ -6,7 +6,13 @@ test:
 	python3.7 -m coverage report
 	python3.7 -m unittest -v
 
-setup:
+install:
+	find . -name '*.pyc' -delete
+	python3.7 setup.py install
+
+install_env:
+	python3.7 -m pip install PyQt5==5.14
+	python3.7 -c "from PyQt5.QtCore import QSettings; print('done')"
 	find . -name '*.pyc' -delete
 	python3.7 setup.py install
 
