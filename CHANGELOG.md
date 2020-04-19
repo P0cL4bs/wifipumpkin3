@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [Released]
 
-## [1.0.0] - 2020-04-02
+## [1.0.0] - 2020-04-18
 
 ### Added
+- added check python version when install tool [mh4x0f]
 - added community tag discord on readme.md [mh4x0f]
 - added news pulp templates on scripts [mh4x0f]
 - added ISSUE_TEMPLATE.md on project [mh4x0f]

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 
 from flask import Flask, request, redirect, render_template, Response
 from urllib.parse import urlencode, unquote
