@@ -70,8 +70,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         self.all_modules = module_list
 
+        # intialize the LoggerManager 
+        #TODO: this change solve IndexError: list index out of range
+        # but not a definitive solution 
+        self.logger_manager = LoggerManager(self)
         self.coreui = DefaultController(self)
-        self.logger_manager = LoggerManager.getInstance()
 
         # print(self.coreui.Plugins)
         self.proxy_controller = self.coreui.getController("proxy_controller")

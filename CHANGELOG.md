@@ -119,6 +119,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed IndexError: list index out of range #14 [mh4x0f]
 - fixed error depedency PyQt5-sip when try on virtualenv [mh4x0f] 
 - fixed set iptables exception for each rules [mh4x0f] 
 - fixed typo name on readme.md [mh4x0f]
