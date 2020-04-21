@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """sslstrip is a MITM tool that implements Moxie Marlinspike's SSL stripping attacks."""
 
 __author__ = "Moxie Marlinspike"

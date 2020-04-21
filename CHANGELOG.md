@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-18
 
 ### Added
+- added notification when client joined the AP [mh4x0f]
 - added check python version when install tool [mh4x0f]
 - added community tag discord on readme.md [mh4x0f]
 - added news pulp templates on scripts [mh4x0f]
@@ -119,6 +120,7 @@ All notable changes to this project will be documented in this file.
 - Removed all files *.py compiler. [mh4x0f]
   
 ### Fixed
+- fixed Error: PyQt5.sip not found, but it is installed. [mh4x0f]
 - fixed IndexError: list index out of range #14 [mh4x0f]
 - fixed error depedency PyQt5-sip when try on virtualenv [mh4x0f] 
 - fixed set iptables exception for each rules [mh4x0f] 

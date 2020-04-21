@@ -105,7 +105,7 @@ class Mode(Qt.QObject):
         self.interfacesLink = Refactor.get_interfaces()
         print(display_messages("sharing internet connection with NAT...", info=True))
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
-        
+
         for ech in self.conf.get_all_childname("iptables"):
             try:
                 ech = self.conf.get("iptables", ech)
