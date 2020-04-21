@@ -8,10 +8,14 @@ import re
 from distutils.dir_util import copy_tree
 import sys
 
-# check version the python install 
+# check version the python install
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
     print("[!] Wifipumpkin3 requires Python 3.7 or higher!")
-    print("[*] You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
+    print(
+        "[*] You are using Python {}.{}.".format(
+            sys.version_info.major, sys.version_info.minor
+        )
+    )
     sys.exit(1)
 
 

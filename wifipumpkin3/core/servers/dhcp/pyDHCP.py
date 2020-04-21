@@ -1,5 +1,6 @@
 from wifipumpkin3.core.packets.dhcpserver import DHCPThread
 from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
+from wifipumpkin3.core.utility.printer import display_messages, setcolor
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -40,6 +41,15 @@ class PyDHCP(DHCPServers):
 
     def get_DHCPoutPut(self, data):
         self._connected[data["MAC"]] = data
+        if self.conf.get("accesspoint", "status_ap", format=bool):
+            print(
+                display_messages(
+                    "{} client join the AP ".format(
+                        setcolor(data["MAC"], color="green")
+                    ),
+                    info=True,
+                )
+            )
 
     def boot(self):
         self.reactor = DHCPThread(self.ifaceHostapd, self.DHCPConf)
