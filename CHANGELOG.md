@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-04-18
 
 ### Added
+- added allow sniffkin3 capture POST requests on session [mh4x0f]
 - added more terminal colors on function setcolor [mh4x0f]
 - added notification when client joined the AP [mh4x0f]
 - added check python version when install tool [mh4x0f]

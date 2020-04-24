@@ -81,12 +81,49 @@ class Sniffkin3(MitmMode):
         self.reactor.setObjectName(self.ID)
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
+    def setDataColor(self, data=dict):
+        """ set color in data log keys"""
+        if list(dict(data).keys())[0] == "urlsCap":
+            data["urlsCap"]["Headers"]["Method"] = setcolor(
+                data["urlsCap"]["Headers"]["Method"], color="orange_bg"
+            )
+            data["urlsCap"]["Headers"]["Host"] = setcolor(
+                data["urlsCap"]["Headers"]["Host"], color="yellow"
+            )
+        if list(dict(data).keys())[0] == "POSTCreds":
+            data["POSTCreds"]["Data"]["Payload"] = setcolor(
+                data["POSTCreds"]["Data"]["Payload"], color="blue"
+            )
+            data["POSTCreds"]["Data"]["User"] = setcolor(
+                data["POSTCreds"]["Data"]["User"], color="red"
+            )
+            data["POSTCreds"]["Packets"]["Headers"]["Method"] = setcolor(
+                data["POSTCreds"]["Packets"]["Headers"]["Method"], color="purple_bg"
+            )
+            data["POSTCreds"]["Data"]["Pass"] = setcolor(
+                data["POSTCreds"]["Data"]["Pass"], color="red"
+            )
+        return data
+
     def LogOutput(self, data):
         if self.conf.get("accesspoint", "status_ap", format=bool):
             self.logger.addExtra("packet", data)  # packet info save json
+            data = self.setDataColor(data)
+            if list(dict(data).keys())[0] == "urlsCap":
+
+                return self.logger.info(
+                    "[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}".format(
+                        data["urlsCap"]["IP"], data["urlsCap"]["Headers"]
+                    )
+                )
             self.logger.info(
-                "[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]}".format(
-                    data["urlsCap"]["IP"], data["urlsCap"]["Headers"]
+                "[ {0[src]} > {0[dst]} ] {1[Method]} {1[Host]}{1[Path]} \n \
+                    payload: {2[Payload]}\n \
+                    Username: {2[User]}\n \
+                    Password: {2[Pass]}\n".format(
+                    data["POSTCreds"]["Packets"]["IP"],
+                    data["POSTCreds"]["Packets"]["Headers"],
+                    data["POSTCreds"]["Data"],
                 )
             )
 

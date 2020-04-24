@@ -236,17 +236,30 @@ class decoded(object):
     :py:attr:`raw_content` has the encoded content.
     """
 
-    def __init__(self, message):  # pragma no cover
-        warnings.warn(
-            "decoded() is deprecated, you can now directly use .content instead. "
-            ".raw_content has the encoded content.",
-            DeprecationWarning,
-        )
+    _data_decoded = None
 
-    def __enter__(self):  # pragma no cover
-        pass
+    @property
+    def data_decoded(self):
+        return self._data_decoded
 
-    def __exit__(self, type, value, tb):  # pragma no cover
+    def __init__(self, data):
+        self._data_decoded = self.converter(data)
+
+    def converter(self, data):
+        # https://stackoverflow.com/questions/33137741/fastest-way-to-convert-a-dicts-keys-values-from-bytes-to-str-in-python3
+        if isinstance(data, bytes):
+            return data.decode("ascii")
+        if isinstance(data, dict):
+            return dict(map(self.converter, data.items()))
+        if isinstance(data, tuple):
+            return map(self.converter, data)
+        return data
+
+    def __enter__(self):
+        # return data decoded using with as data
+        return self.data_decoded
+
+    def __exit__(self, type, value, tb):
         pass
 
 

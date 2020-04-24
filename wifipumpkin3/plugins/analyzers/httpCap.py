@@ -2,6 +2,7 @@ from scapy.all import *
 from scapy_http import http
 from wifipumpkin3.plugins.analyzers.default import PSniffer
 import re
+from wifipumpkin3.core.common.platforms import decoded
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -53,18 +54,20 @@ class MonitorCreds(PSniffer):
         username = re.findall(user_regex, str(payload, "utf-8"))
         password = re.findall(pw_regex, str(payload, "utf-8"))
         if not username == [] and not password == []:
-            self.output.emit(
-                {
-                    "POSTCreds": {
+            data = {
+                "POSTCreds": {
+                    "Url": str(url),
+                    "Destination": "{}/{}".format(sport, dport),
+                    "Packets": pkt,
+                    "Data": {
                         "User": username[0][1],
                         "Pass": password[0][1],
-                        "Url": str(url),
-                        "Destination": "{}/{}".format(sport, dport),
-                        "Packets": pkt,
                         "Payload": payload,
-                    }
+                    },
                 }
-            )
+            }
+            with decoded(data) as data_decoded:
+                self.output.emit(data_decoded)
 
     def get_http_POST(self, load):
         dict_head = {}
@@ -103,9 +106,9 @@ class MonitorCreds(PSniffer):
                     self.src_ip_port,
                     {"IP": ip_layer.fields, "Headers": http_layer.fields},
                 )
-            self.output.emit(
-                {"urlsCap": {"IP": ip_layer.fields, "Headers": http_layer.fields}}
-            )
+            data = {"urlsCap": {"IP": ip_layer.fields, "Headers": http_layer.fields}}
+            with decoded(data) as data_decoded:
+                self.output.emit(data_decoded)
         except:
             pass
 
