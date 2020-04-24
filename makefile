@@ -9,14 +9,14 @@ test:
 install:
 	find . -name '*.pyc' -delete
 	python3.7 setup.py install
-	python3.7 -m pip install -e .
+	#python3.7 -m pip install -e .
 
 install_env:
 	python3.7 -m pip install PyQt5==5.14
 	python3.7 -c "from PyQt5.QtCore import QSettings; print('done')"
 	find . -name '*.pyc' -delete
 	python3.7 setup.py install
-	python3.7 -m pip install -e .
+	#python3.7 -m pip install -e .
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info

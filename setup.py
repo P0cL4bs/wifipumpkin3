@@ -64,7 +64,7 @@ setup(
     license="apache 2.0",
     long_description=open("README.md").read(),
     install_requires=required,
-    scripts=["bin/wifipumpkin3", "bin/sslstrip3", "bin/captiveflask"],
+    scripts=["bin/sslstrip3", "bin/captiveflask"],
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     python_requires=">=3.7",
@@ -76,4 +76,5 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Environment :: Console",
     ],
+    entry_points={"console_scripts": ["wifipumpkin3=wifipumpkin3.__main__:main",],},
 )
