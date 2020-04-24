@@ -44,7 +44,10 @@ colors = {
     "RED": "\033[91m",
     "ENDC": "\033[0m",
     "CIANO": "\033[1;36m",
-    "ORAN": "\033[91m",
+    "ORAN_BG": "\033[43m",
+    "PUR_BG": "\033[45m",
+    "PUR": "\033[35m",
+    "ORAN": "\033[33m",
     "GREY": "\033[37m",
     "DARKGREY": "\033[1;30m",
     "UNDERLINE": "\033[4m",
@@ -64,6 +67,18 @@ def setcolor(text, color="", underline=False):
         ),
         "green": "{}{}{}{}".format(
             colors["BOLD"], colors["GREEN"], text, colors["ENDC"]
+        ),
+        "purple": "{}{}{}{}".format(
+            colors["BOLD"], colors["PUR"], text, colors["ENDC"]
+        ),
+        "orange": "{}{}{}{}".format(
+            colors["BOLD"], colors["ORAN"], text, colors["ENDC"]
+        ),
+        "orange_bg": "{}{}{}{}".format(
+            colors["BOLD"], colors["ORAN_BG"], text, colors["ENDC"]
+        ),
+        "purple_bg": "{}{}{}{}".format(
+            colors["BOLD"], colors["PUR_BG"], text, colors["ENDC"]
         ),
         "yellow": "{}{}{}{}".format(
             colors["BOLD"], colors["YELLOW"], text, colors["ENDC"]
