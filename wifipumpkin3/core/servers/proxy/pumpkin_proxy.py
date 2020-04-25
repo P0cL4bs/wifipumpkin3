@@ -70,9 +70,16 @@ class PumpKinProxy(ProxyMode):
         self.setTypePlugin(self.TypePlugin)
         self.setRunningPort(self.conf.get("proxy_plugins", "pumpkinproxy_config_port"))
 
+    def Initialize(self):
+        self.add_default_rules(
+            "iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}".format(
+                self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
+            )
+        )
+        self.runDefaultRules()
+
     @property
     def CMD_ARRAY(self):
-        self.runDefaultRules()
         port_ssltrip = self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
         self._cmd_array = ["-l", port_ssltrip]
         return self._cmd_array

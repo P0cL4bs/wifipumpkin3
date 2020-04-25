@@ -62,17 +62,8 @@ class ProxyMode(Widget, ComponentBlueprint):
         self.handler = None
         self.reactor = None
         self.subreactor = None
-        self.defaults_rules = {
-            "ssslstrip": [
-                "iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port "
-                + self.conf.get("settings", "redirect_port")
-            ],
-            "pumpkinproxy": [
-                "iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}".format(
-                    self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
-                )
-            ],
-        }
+        self.defaults_rules = {}
+        self.defaults_rules[self.ID] = []
         # set config path plugin
         if self.getConfigINIPath != "":
             self.config = SettingsINI(self.getConfigINIPath)
@@ -132,6 +123,9 @@ class ProxyMode(Widget, ComponentBlueprint):
     @property
     def getConfig(self):
         return self.config
+
+    def add_default_rules(self, rule: str):
+        self.defaults_rules[self.ID].append(rule)
 
     def setRunningPort(self, value):
         self.RunningPort = value

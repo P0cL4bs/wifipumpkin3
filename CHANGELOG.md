@@ -87,6 +87,7 @@ All notable changes to this project will be documented in this file.
 - Initial commit. [mh4x0f]
 
 ### Changed
+- changed implemenation on proxymode base class [mh4x0f]
 - changed interface key to None in file config.ini [mh4x0f] 
 - changed requirements PyQt5==5.14.0 to PyQt5==5.14.2 [mh4x0f]
 - restore folder logs from .gitignore [mh4x0f]

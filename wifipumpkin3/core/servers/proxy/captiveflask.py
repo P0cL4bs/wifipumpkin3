@@ -87,42 +87,41 @@ class CaptivePortal(ProxyMode):
         ]
         return self._cmd_array
 
-    def boot(self):
-
-        self.reactor = ProcessThread({"captiveflask": self.CMD_ARRAY})
-        self.reactor._ProcssOutput.connect(self.LogOutput)
-        self.reactor.setObjectName(self.ID)
-
+    def Initialize(self):
         # settings iptables for add support captive portal
         IFACE = self.conf.get("accesspoint", "interface")
         IP_ADDRESS = self.conf.get("dhcp", "router")
         PORT = 80
 
-        self.defaults_rules[self.ID] = []
         print(display_messages("settings for captive portal:", info=True))
         print(display_messages("allow FORWARD UDP DNS", info=True))
-        self.defaults_rules[self.ID].append(
+        self.add_default_rules(
             "iptables -A FORWARD -i {iface} -p tcp --dport 53 -j ACCEPT".format(
                 iface=IFACE
             )
         )
         print(display_messages("allow traffic to captive portal", info=True))
-        self.defaults_rules[self.ID].append(
+        self.add_default_rules(
             "iptables -A FORWARD -i {iface} -p tcp --dport {port} -d {ip} -j ACCEPT".format(
                 iface=IFACE, port=PORT, ip=IP_ADDRESS
             )
         )
         print(display_messages("block all other traffic in access point", info=True))
-        self.defaults_rules[self.ID].append(
+        self.add_default_rules(
             "iptables -A FORWARD -i {iface} -j DROP ".format(iface=IFACE)
         )
         print(display_messages("redirecting HTTP traffic to captive portal", info=True))
-        self.defaults_rules[self.ID].append(
+        self.add_default_rules(
             "iptables -t nat -A PREROUTING -i {iface} -p tcp --dport 80 -j DNAT --to-destination {ip}:{port}".format(
                 iface=IFACE, ip=IP_ADDRESS, port=PORT
             )
         )
         self.runDefaultRules()
+
+    def boot(self):
+        self.reactor = ProcessThread({"captiveflask": self.CMD_ARRAY})
+        self.reactor._ProcssOutput.connect(self.LogOutput)
+        self.reactor.setObjectName(self.ID)
 
     @property
     def getPlugins(self):
