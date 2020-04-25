@@ -107,6 +107,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed force specific version of module PyQt [mh4x0f]
 - removed function old setup_logger wp2 [mh4x0f] 
 - removed all python modules on test folder [mh4x0f]
 - removed old implementation loader accesspoint [mh4x0f]
