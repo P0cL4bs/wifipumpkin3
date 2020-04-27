@@ -113,7 +113,9 @@ class Mode(Qt.QObject):
                     ech = ech.replace("$inet", self.interfacesLink["activated"][0])
                 if "$wlan" in ech:
                     ech = ech.replace("$wlan", self.ifaceHostapd)
-                popen(ech)
+
+                if not "$inet" in ech:
+                    system(ech)
             except Exception as e:
                 print(e)
 
