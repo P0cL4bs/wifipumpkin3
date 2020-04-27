@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added
+- added new format table for pretty printing [mh4x0f]
 
 ### Changed
 

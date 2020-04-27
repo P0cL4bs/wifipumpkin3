@@ -93,7 +93,7 @@ def setcolor(text, color="", underline=False):
     return strcolored[color]
 
 
-def display_tabulate(header=[], content=[], tablefmt="simple", newline=True):
+def display_tabulate(header=[], content=[], tablefmt="presto", newline=True):
     print(tabulate(content, header, tablefmt=tablefmt))
     if newline:
         print("\n")
