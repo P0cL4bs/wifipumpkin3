@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - added new format table for pretty printing [mh4x0f]
 
 ### Changed
+- update requirements files to unlock version [mh4x0f]
 
 ### Deprecated
 
