@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed keyError: args command --no-colors [mh4x0f]
 - fixed list sub-plugins currently on command info [mh4x0f]
 - fixed bug on dnserver try create AP without internet [mh4x0f]
 - fixed error iptables with try create AP without internet [mh4x0f]
