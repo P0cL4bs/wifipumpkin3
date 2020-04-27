@@ -129,6 +129,8 @@ class CaptivePortal(ProxyMode):
         list_commands = []
         for command in commands:
             list_commands.append(self.ID + "." + command)
+            for sub_plugin in self.config.get_all_childname("set_{}".format(command)):
+                list_commands.append("{}.{}.{}".format(self.ID, command, sub_plugin))
         return list_commands
 
     def LogOutput(self, data):
@@ -155,22 +157,43 @@ class CaptivePortal(ProxyMode):
                 pass
 
     def parser_set_captiveflask(self, status, plugin_name):
-        try:
-            # plugin_name = pumpkinproxy.no-cache
-            name_plugin, key_plugin = (
-                plugin_name.split(".")[0],
-                plugin_name.split(".")[1],
-            )
-            if key_plugin in self.config.get_all_childname("plugins"):
-                self.setPluginActivated(key_plugin, status)
-            else:
-                print(
-                    display_messages(
-                        "unknown plugin: {}".format(key_plugin), error=True
-                    )
+        if len(plugin_name.split(".")) == 2:
+            try:
+                # plugin_name = pumpkinproxy.no-cache
+                name_plugin, key_plugin = (
+                    plugin_name.split(".")[0],
+                    plugin_name.split(".")[1],
                 )
-        except IndexError:
-            print(display_messages("unknown sintax command", error=True))
+                if key_plugin in self.config.get_all_childname("plugins"):
+                    self.setPluginActivated(key_plugin, status)
+                else:
+                    print(
+                        display_messages(
+                            "unknown plugin: {}".format(key_plugin), error=True
+                        )
+                    )
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
+        elif len(plugin_name.split(".")) == 3:
+            try:
+                # plugin_name = pumpkinproxy.beef.url_hook
+                name_plugin, key_plugin = (
+                    plugin_name.split(".")[1],
+                    plugin_name.split(".")[2],
+                )
+                if key_plugin in self.config.get_all_childname(
+                    "set_{}".format(name_plugin)
+                ):
+                    # self.config.set("set_{}".format(name_plugin), key_plugin, status)
+                    self.setSubPluginActivated(name_plugin, key_plugin, status)
+                else:
+                    print(
+                        display_messages(
+                            "unknown plugin: {}".format(key_plugin), error=True
+                        )
+                    )
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
 
     def search_all_ProxyPlugins(self):
         """ load all plugins function """
@@ -184,6 +207,13 @@ class CaptivePortal(ProxyMode):
         for plugin in plugins:
             if plugin != key:
                 self.config.set("plugins", plugin, False)
+
+    def setSubPluginActivated(self, plugin, key, status):
+        self.config.set("set_{}".format(plugin), key, status)
+        plugins = self.config.get_all_childname("set_{}".format(plugin))
+        for plu in plugins:
+            if plu != key:
+                self.config.set("set_{}".format(plugin), plu, False)
 
     def getPluginActivated(self):
         for plugin in self.plugins:

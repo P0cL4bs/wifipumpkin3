@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 
 
+## [Unreleased]
+
+## [1.0.x] - 2020-xx-xx
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- fixed list sub-plugins currently on command info [mh4x0f]
+
+
+
 ## [Released]
 
 ## [1.0.0] - 2020-04-18

@@ -316,7 +316,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     ):
                         output_table.append(
                             [
-                                setcolor(command, color="blue"),
+                                setcolor(
+                                    "{}.{}".format(command, sub_plugin), color="blue"
+                                ),
                                 proxys["Config"].get(
                                     "set_{}".format(command), sub_plugin
                                 ),
@@ -335,7 +337,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def do_ap(self, args):
         """ show all variable and status for settings AP """
         headers_table, output_table = (
-            ["BSSID", "SSID", "Channel", "Iface", "StatusAP", "Security"],
+            ["BSSID", "SSID", "Channel", "Interface", "Status", "Security"],
             [],
         )
         print(display_messages("Settings AccessPoint:", info=True, sublime=True))
