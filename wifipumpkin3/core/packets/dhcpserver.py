@@ -8,6 +8,7 @@ from queue import Queue
 log = logging.getLogger(__name__)
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
 from wifipumpkin3.core.config.globalimport import *
+from wifipumpkin3.core.utility.printer import display_messages
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -167,6 +168,8 @@ class DHCPThread(QThread):
         self.sock.setsockopt(
             socket.SOL_SOCKET, socket.SO_BINDTODEVICE, str(self.iface + "\0").encode()
         )
+
+        print(display_messages("starting {}".format(self.objectName()), info=True))
 
         # self.DHCP._request.connect(self.get_DHCP_Response)
         self.DHCPProtocol.connection_made(self.sock)

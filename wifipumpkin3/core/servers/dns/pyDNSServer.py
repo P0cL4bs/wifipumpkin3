@@ -39,6 +39,9 @@ class PyDNSServer(DNSBase):
             self.logger.info(data)
 
     def boot(self):
-        self.reactor = DNSServerThread(self.conf)
-        self.reactor.sendRequests.connect(self.LogOutput)
-        self.reactor.setObjectName(self.ID)
+        self.interfaces = Refactor.get_interfaces()
+        # filter dns server for only run when is connected on internet
+        if self.interfaces.get("activated")[0] != None:
+            self.reactor = DNSServerThread(self.conf)
+            self.reactor.sendRequests.connect(self.LogOutput)
+            self.reactor.setObjectName(self.ID)

@@ -12,6 +12,7 @@ from dnslib import DNSLabel, QTYPE, RR, dns
 from dnslib.proxy import ProxyResolver
 from dnslib.server import DNSServer
 import binascii
+from wifipumpkin3.core.utility.printer import display_messages
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -270,6 +271,7 @@ class DNSServerThread(QThread):
         self.tcp_server = DNSServer(
             self.resolver, port=port, logger=self.logger_dns, tcp=True
         )
+        print(display_messages("starting {}".format(self.objectName()), info=True))
 
         # logger.info('starting DNS server on port %d, upstream DNS server "%s"', port, upstream)
         self.udp_server.start_thread()
