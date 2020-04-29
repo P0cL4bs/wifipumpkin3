@@ -80,7 +80,7 @@ class DHCPProtocol(QObject):
         mac = str(packet.get_hardware_address())
         if mac not in self.leases.keys():
             self.ip_client = next(self.IPADDR)
-            self.leases[mac] = {"MAC": mac, "IP": str(self.ip_client)}
+            self.leases[mac] = {"MAC": mac, "IP": str(self.ip_client),"HOSTNAME" : "" }
         else:
             self.ip_client = self.leases[mac]["IP"]
 

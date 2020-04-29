@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed set as default HOSTNAME  key on leases object [mh4x0f]
 - fixed settings default status_ap values that change on #23 [mh4x0f]
 - fixed lock command start when AP is running [mh4x0f]
 - fixed NoProxy object has no attribute parser_set_noproxy #24 [mh4x0f]
