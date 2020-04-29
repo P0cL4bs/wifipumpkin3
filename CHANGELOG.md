@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed AttributeError Sniffkin3 object has no attribute help_plugins [mh4x0f]
 - fixed set as default HOSTNAME  key on leases object [mh4x0f]
 - fixed settings default status_ap values that change on #23 [mh4x0f]
 - fixed lock command start when AP is running [mh4x0f]

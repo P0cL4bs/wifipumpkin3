@@ -104,8 +104,10 @@ class MitmMode(Widget):
             return print(
                 display_messages("plugin {} not found".format(plugin_name), error=True)
             )
-        except IndexError:
-            return self.help_plugins()
+        except IndexError as e:
+            pass
+        
+        print(display_messages("unknown sintax command: {}\n".format(proxy_name),error=True))
 
     @property
     def getPlugins(self):
