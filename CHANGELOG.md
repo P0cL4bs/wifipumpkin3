@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed lock command start when AP is running [mh4x0f]
 - fixed NoProxy object has no attribute parser_set_noproxy #24 [mh4x0f]
 - fixed keyError: args command --no-colors [mh4x0f]
 - fixed list sub-plugins currently on command info [mh4x0f]

@@ -180,12 +180,15 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_start(self, args):
         """ start access point """
+        if len(self.Apthreads["RogueAP"]) > 0:
+            print(display_messages("the AP is running at full power.", error=True))
+            return 
 
         self.interfaces = Linux.get_interfaces()
         if not self.conf.get(
             "accesspoint", self.commands["interface"]
         ) in self.interfaces.get("all"):
-            print(display_messages("The interface not found! ", error=True))
+            print(display_messages("the interface not found or is unavailable ", error=True))
             sys.exit(1)
 
         if self.wireless_controller.Start() != None:
