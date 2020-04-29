@@ -34,3 +34,6 @@ class NoProxy(ProxyMode):
 
     def boot(self):
         pass
+
+    def parser_set_noproxy(self, status, plugin_name):
+        print(display_messages("unknown sintax command", error=True))
