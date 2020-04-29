@@ -40,6 +40,10 @@ def main():
 
     app = QtCore.QCoreApplication(sys.argv)
     conf = SettingsINI.getInstance()
+
+    # settings default values that change on
+    conf.set("accesspoint", "status_ap", False)
+
     parser = argparse.ArgumentParser(
         description="WiFi-Pumpkin - pure line-oriented command"
     )
