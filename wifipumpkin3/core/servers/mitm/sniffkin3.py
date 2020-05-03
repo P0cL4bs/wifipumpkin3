@@ -195,11 +195,21 @@ class Sniffkin3Core(QtCore.QThread):
             self.plugins[plugin_load.Name] = plugin_load
             self.plugins[plugin_load.Name].output = self._ProcssOutput
             self.plugins[plugin_load.Name].session = self.session
-        print("\n[*] {} running on port 80/8080:\n".format(self.getID()))
+
+        print(
+            display_messages(
+                "starting {} port: [80, 8080]".format(self.getID()), info=True
+            )
+        )
         for name in self.plugins.keys():
             if self.config.get("plugins", name, format=bool):
                 self.plugins[name].getInstance()._activated = True
-                print("TCPProxy::{0:17} status:On".format(name))
+                print(
+                    display_messages(
+                        "sniffkin3 -> {0:10} activated".format(name), sucess=True
+                    )
+                )
+
         print("\n")
         q = queue.Queue()
         sniff = Thread(target=self.sniffer, args=(q,))
@@ -299,4 +309,8 @@ class Sniffkin3Core(QtCore.QThread):
 
     def stop(self):
         self.stopped = True
-        print("Thread::[{}] successfully stopped.".format(self.objectName()))
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )

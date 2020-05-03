@@ -1,11 +1,8 @@
-import logging
 import socket
 from dhcplib.packet import DHCPPacket, _FORMAT_CONVERSION_DESERIAL, DHCP_OPTIONS_TYPES
 from dhcplib import net, getifaddrslib
 import ipaddress as ip
 from queue import Queue
-
-log = logging.getLogger(__name__)
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.utility.printer import display_messages
@@ -61,11 +58,12 @@ class IpAddressClass(object):
 class DHCPProtocol(QObject):
     _request = pyqtSignal(object)
 
-    def __init__(self, DHCPConf):
+    def __init__(self, DHCPConf, output):
         QObject.__init__(self)
         self.dhcp_conf = DHCPConf
         self.IPADDR = iter(IpAddressClass(self.dhcp_conf["range"]))
         self.leases = {}
+        self.output_signal = output
         self.queue = Queue()
         self.message = []
         self.started = True
@@ -75,17 +73,17 @@ class DHCPProtocol(QObject):
 
     def datagram_received(self, data, addr):
         packet = DHCPPacket(data)
-        log.debug("RECV from %s:\n%s\n", addr, packet)
+        self.output_signal.emit("RECV from {}:\n{}\n".format(addr, packet))
         send = False
         mac = str(packet.get_hardware_address())
         if mac not in self.leases.keys():
             self.ip_client = next(self.IPADDR)
-            self.leases[mac] = {"MAC": mac, "IP": str(self.ip_client),"HOSTNAME" : "" }
+            self.leases[mac] = {"MAC": mac, "IP": str(self.ip_client), "HOSTNAME": ""}
         else:
             self.ip_client = self.leases[mac]["IP"]
 
         if packet.is_dhcp_discover_packet():
-            log.debug("DISCOVER")
+            self.output_signal.emit("DISCOVER: packet from {}".format(self.ip_client))
             packet.transform_to_dhcp_offer_packet()
             # self._request.emit(packet.)
             packet.set_option("yiaddr", self.ip_client)
@@ -93,7 +91,12 @@ class DHCPProtocol(QObject):
             # self._request.emit(packet.__str__())
             send = True
         elif packet.is_dhcp_request_packet():
-            log.debug("REQUEST")
+            self.output_signal.emit(
+                "REQUEST: packet from {} to {}".format(
+                    self.ip_client, self.dhcp_conf["router"]
+                )
+            )
+            # configure packet massage ack
             packet.transform_to_dhcp_ack_packet()
             packet.set_option("yiaddr", self.ip_client)
             packet.set_option("siaddr", self.dhcp_conf["router"])
@@ -104,17 +107,17 @@ class DHCPProtocol(QObject):
             packet.set_option(
                 "ip_address_lease_time", int(self.dhcp_conf["leasetimeMax"])
             )
+            # getting hostname is exist on packet
             for key in self.leases.keys():
                 for item in self.leases[key].keys():
                     if self.leases[key][item] == str(self.ip_client):
                         self.leases[key]["HOSTNAME"] = self.getHostnamePakcet(packet)
                         break
             self._request.emit(self.leases[mac])
-            self.queue.put(self.leases[mac])
             Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, self.leases, "w")
             send = True
         if send:
-            log.debug("SEND to %s:\n%s\n", addr, packet)
+            self.output_signal.emit("SEND to {}:\n{}\n".format(addr, packet))
             ipaddr, port = addr
             if ipaddr == "0.0.0.0":
                 ipaddr = "255.255.255.255"
@@ -138,23 +141,22 @@ class DHCPProtocol(QObject):
             if packet._get_option_name(option_id) == "hostname":
                 return result
 
-    def error_received(exc):
-        log.error("ERROR", exc_info=exc)
+    def error_received(self, exc):
+        self.output_signal("ERROR: {}".format(exc))
 
 
 class DHCPThread(QThread):
+    send_output = pyqtSignal(object)
+
     def __init__(self, iface, DHCPconf):
         QThread.__init__(self)
         self.iface = iface
         self.dhcp_conf = DHCPconf
-        self.DHCPProtocol = DHCPProtocol(self.dhcp_conf)
+        self.DHCPProtocol = DHCPProtocol(self.dhcp_conf, self.send_output)
         self.started = False
 
     def run(self):
         self.started = True
-        logging.basicConfig()
-        log = logging.getLogger("dhcplib")
-        log.setLevel(logging.DEBUG)
 
         server_address = self.dhcp_conf["router"]
         server_port = 67
@@ -180,7 +182,7 @@ class DHCPThread(QThread):
                 self.DHCPProtocol.datagram_received(message, address)
             except Exception as e:
                 # OSError: [Errno 9] Bad file descriptor when close socket
-                pass
+                print(display_messages("socket error: {}".format(e), error=True))
 
     def getpid(self):
         """ return the pid of current process in background"""
@@ -193,5 +195,9 @@ class DHCPThread(QThread):
     def stop(self):
         self.started = False
         Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, "w")
-        print("Thread::[{}] successfully stopped.".format(self.objectName()))
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )
         self.sock.close()

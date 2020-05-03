@@ -294,4 +294,8 @@ class DNSServerThread(QThread):
     def stop(self):
         self.udp_server.stop()
         self.tcp_server.stop()
-        print("Thread::[{}] successfully stopped.".format(self.objectName()))
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )

@@ -74,6 +74,7 @@ DOCKERHOSTAPDCONF_PATH = "/etc/hostapd/hostapd.conf"
 # logging
 LOG_PUMPKINPROXY = user_config_dir + "/.config/wifipumpkin3/logs/ap/pumpkin_proxy.log"
 LOG_PYDNSSERVER = user_config_dir + "/.config/wifipumpkin3/logs/ap/pydns_server.log"
+LOG_PYDHCPSERVER = user_config_dir + "/.config/wifipumpkin3/logs/ap/pydhcp_server.log"
 LOG_SNIFFKIN3 = user_config_dir + "/.config/wifipumpkin3/logs/ap/sniffkin3.log"
 LOG_CAPTIVEPO = user_config_dir + "/.config/wifipumpkin3/logs/ap/captiveportal.log"
 LOG_RESPONDER3 = user_config_dir + "/.config/wifipumpkin3/logs/ap/responder3.log"
@@ -81,11 +82,35 @@ LOG_HOSTAPD = user_config_dir + "/.config/wifipumpkin3/logs/ap/hostapd.log"
 LOG_ALL = user_config_dir + "/.config/wifipumpkin3/logs/everything.log"
 
 
+LOG_BASE = user_config_dir + "/.config/wifipumpkin3/logs/ap"
+
+
+ALL_LOGSPATH = (
+    LOG_PUMPKINPROXY,
+    LOG_PYDNSSERVER,
+    LOG_PYDHCPSERVER,
+    LOG_SNIFFKIN3,
+    LOG_SNIFFKIN3,
+    LOG_CAPTIVEPO,
+    LOG_RESPONDER3,
+    LOG_HOSTAPD,
+    LOG_ALL,
+)
+
 # APP SETTINGS
 CONFIG_INI = user_config_dir + "/.config/wifipumpkin3/config/app/config.ini"
 CONFIG_SK_INI = user_config_dir + "/.config/wifipumpkin3/config/app/sniffkin3.ini"
 CONFIG_PP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/pumpkinproxy.ini"
 CONFIG_CP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/captive-portal.ini"
+
+
+ALL_CONFIGSINI = {
+    "config": CONFIG_INI,
+    "sniffkin3": CONFIG_SK_INI,
+    "pumpkinproxy": CONFIG_PP_INI,
+    "captiveflask": CONFIG_CP_INI,
+}
+
 
 TEMPLATES = "templates/fakeupdate/Windows_Update/Settins_WinUpdate.html"
 TEMPLATE_PH = "templates/phishing/custom/index.html"

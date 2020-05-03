@@ -6,6 +6,7 @@ from wifipumpkin3.core.utility.component import ComponentBlueprint
 from isc_dhcp_leases.iscdhcpleases import IscDhcpLeases
 from wifipumpkin3.core.controls.threads import ProcessThread
 from wifipumpkin3.exceptions.errors.dhcpException import DHCPServerSettingsError
+from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -38,6 +39,22 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
 
         self.DHCPConf = self.Settings.confingDHCP
 
+        self.loggermanager = LoggerManager.getInstance()
+        self.configure_logger()
+
+    def configure_logger(self):
+        config_extra = self.loggermanager.getExtraConfig(self.ID)
+        config_extra["extra"]["session"] = self.parent.currentSessionID
+
+        self.logger = StandardLog(
+            self.ID,
+            colorize=self.conf.get("settings", "log_colorize", format=bool),
+            serialize=self.conf.get("settings", "log_serialize", format=bool),
+            config=config_extra,
+        )
+        self.logger.filename = self.LogFile
+        self.loggermanager.add(self.ID, self.logger)
+
     def prereq(self):
         dh, gateway = self.DHCPConf["router"], Linux.get_interfaces()["gateway"]
         if gateway != None:
@@ -48,6 +65,10 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
                 raise DHCPServerSettingsError(
                     "DHCPServer", "dhcp same ip range address "
                 )
+
+    def LogOutput(self, data):
+        if self.conf.get("accesspoint", "status_ap", format=bool):
+            self.logger.info(data)
 
     def isChecked(self):
         return self.conf.get("accesspoint", self.ID, format=bool)

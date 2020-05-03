@@ -116,6 +116,14 @@ class CaptivePortal(ProxyMode):
                 iface=IFACE, ip=IP_ADDRESS, port=PORT
             )
         )
+        print(
+            display_messages("redirecting HTTPS traffic to captive portal", info=True)
+        )
+        self.add_default_rules(
+            "iptables -t nat -A PREROUTING -i {iface} -p tcp --dport 443 -j DNAT --to-destination {ip}:{port}".format(
+                iface=IFACE, ip=IP_ADDRESS, port=PORT
+            )
+        )
         self.runDefaultRules()
 
     def boot(self):

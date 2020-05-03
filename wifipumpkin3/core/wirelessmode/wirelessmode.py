@@ -92,7 +92,6 @@ class Mode(Qt.QObject):
         self.PostStart()
 
     def PostStart(self):
-        print("-------------------------------")
         # set configure iptables
         self.setIptables()
         # set AP status true
@@ -115,7 +114,7 @@ class Mode(Qt.QObject):
                     ech = ech.replace("$wlan", self.ifaceHostapd)
 
                 if not "$inet" in ech:
-                    system(ech)
+                    popen(ech)
             except Exception as e:
                 print(e)
 

@@ -106,8 +106,12 @@ class MitmMode(Widget):
             )
         except IndexError as e:
             pass
-        
-        print(display_messages("unknown sintax command: {}\n".format(proxy_name),error=True))
+
+        print(
+            display_messages(
+                "unknown sintax command: {}\n".format(proxy_name), error=True
+            )
+        )
 
     @property
     def getPlugins(self):

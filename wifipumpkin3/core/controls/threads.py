@@ -80,8 +80,11 @@ class ProcessThread(QThread):
         return "[New Thread {} ({})]".format(self.procThread.pid(), self.objectName())
 
     def readProcessOutput(self):
-        self.data = str(self.procThread.readAllStandardOutput(), encoding="ascii")
-        self._ProcssOutput.emit(self.data)
+        try:
+            self.data = str(self.procThread.readAllStandardOutput(), encoding="ascii")
+            self._ProcssOutput.emit(self.data)
+        except Exception:
+            pass
 
     def getpid(self):
         """ return the pid of current process in background"""
@@ -100,10 +103,21 @@ class ProcessThread(QThread):
             list(self.cmd.keys())[0], self.cmd[list(self.cmd.keys())[0]]
         )
         self.procThread.readyReadStandardOutput.connect(self.readProcessOutput)
-        print("[New Thread {} ({})]".format(self.procThread.pid(), self.objectName()))
+        print(
+            display_messages(
+                "starting {} pid: [{}]".format(
+                    self.objectName(), self.procThread.pid()
+                ),
+                sucess=True,
+            )
+        )
 
     def stop(self):
-        print("Thread::[{}] successfully stopped.".format(self.objectName()))
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )
         if hasattr(self, "procThread"):
             self.procThread.terminate()
             self.procThread.waitForFinished()
@@ -201,7 +215,11 @@ class ProcessHostapd(QObject):
         )
 
     def stop(self):
-        print("Thread::[{}] successfully stopped.".format(self.objectName()))
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )
         if hasattr(self, "procHostapd"):
             self.started = False
             self.procHostapd.terminate()

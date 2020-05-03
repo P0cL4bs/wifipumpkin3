@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added
+- added show up pydhcpserver log explanation [mh4x0f]
+- added redirecting HTTPS traffic to captive portal [mh4x0f]
 - added new format table for pretty printing [mh4x0f]
 
 ### Changed
@@ -17,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed better mode to print stop/start threads info [mh4x0f]
 - fixed AttributeError Sniffkin3 object has no attribute help_plugins [mh4x0f]
 - fixed set as default HOSTNAME  key on leases object [mh4x0f]
 - fixed settings default status_ap values that change on #23 [mh4x0f]

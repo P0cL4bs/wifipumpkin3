@@ -1,3 +1,4 @@
+from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.packets.dhcpserver import DHCPThread
 from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 from wifipumpkin3.core.utility.printer import display_messages, setcolor
@@ -23,6 +24,7 @@ from wifipumpkin3.core.utility.printer import display_messages, setcolor
 class PyDHCP(DHCPServers):
     Name = "Python DHCP Server"
     ID = "pydhcp_server"
+    LogFile = C.LOG_PYDHCPSERVER
 
     def __init__(self, parent=0):
         super(PyDHCP, self).__init__(parent)
@@ -54,4 +56,5 @@ class PyDHCP(DHCPServers):
     def boot(self):
         self.reactor = DHCPThread(self.ifaceHostapd, self.DHCPConf)
         self.reactor.DHCPProtocol._request.connect(self.get_DHCPoutPut)
+        self.reactor.send_output.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)
