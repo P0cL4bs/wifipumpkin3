@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed check if hostapd is installed in the system [mh4x0f]
 - fixed better mode to print stop/start threads info [mh4x0f]
 - fixed AttributeError Sniffkin3 object has no attribute help_plugins [mh4x0f]
 - fixed set as default HOSTNAME  key on leases object [mh4x0f]

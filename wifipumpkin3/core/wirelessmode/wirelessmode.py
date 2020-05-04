@@ -5,6 +5,7 @@ from shutil import move
 from wifipumpkin3.core.widgets.default.session_config import *
 from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
 from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
+import sys
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -41,6 +42,7 @@ class Mode(Qt.QObject):
 
         self.SessionConfig = SessionConfig.getInstance()
         self.interfacesLink = Refactor.get_interfaces()
+        self.hostapd_path = self.getHostapdPath
 
     def checkifHostapdBinaryExist(self):
         """ check if hostapd binary file exist"""
@@ -56,15 +58,17 @@ class Mode(Qt.QObject):
         return self.conf.get(self.configApMode, self.subConfig, format=bool)
 
     def get_soft_dependencies(self):
-        """ check if Hostapd, isc-dhcp-server is installed """
-        # TODO:  implement this method for check hostapd
-        pass
-        # if not path.isfile(self.hostapd_path):
-        #     return QtGui.QMessageBox.information(self,'Error Hostapd','hostapd is not installed')
-        # if self.FSettings.get_setting('accesspoint','dhcpd_server',format=bool):
-        #     if not self.SettingsEnable['ProgCheck'][3]:
-        #         return QtGui.QMessageBox.warning(self,'Error dhcpd','isc-dhcp-server (dhcpd) is not installed')
-        # return True
+        """ check if Hostapd is installed """
+        if not self.checkifHostapdBinaryExist():
+            print(
+                display_messages(
+                    "{} is not installed in the system".format(
+                        setcolor("hostapd", color="orange")
+                    ),
+                    error=True,
+                )
+            )
+            sys.exit(1)
 
     def configure_network_AP(self):
         self.parent.configure_network_AP()
@@ -87,6 +91,8 @@ class Mode(Qt.QObject):
         pass
 
     def Start(self):
+        # check if soft deps is tnstalled
+        self.get_soft_dependencies()
         self.Initialize()
         self.boot()
         self.PostStart()
