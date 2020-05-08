@@ -32,7 +32,7 @@ class CaptiveTemplatePlugin(object):
     def getSellectedLanguage(self):
         selected_lang, key = None, "set_{}".format(self.Name)
         for lang in self.config.get_all_childname(key):
-            if self.config.get_setting(key, lang, format=bool):
+            if self.config.get(key, lang, format=bool):
                 selected_lang = lang
         return selected_lang
 

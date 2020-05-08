@@ -40,7 +40,7 @@ class FlaskDemo(CaptiveTemplatePlugin):
 
     def init_language(self, lang):
         if lang.lower() != "default":
-            self.TemplatePath = "templates/Flask/language/{}".format(lang)
+            self.TemplatePath = C.TEMPLATES_FLASK + "templates/Flask/language/{}".format(lang)
             return
         for key, value in self.meta.items():
             self.__dict__[key] = value
