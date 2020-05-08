@@ -145,7 +145,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 ).getPlugins
 
     def do_show(self, args):
-        """ show available modules"""
+        """core: show available modules"""
         headers_table, output_table = ["Name", "Description"], []
         print(display_messages("Available Modules:", info=True, sublime=True))
         for name, module in self.all_modules.items():
@@ -153,7 +153,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         return display_tabulate(headers_table, output_table)
 
     def do_mode(self, args):
-        """ all wireless mode available """
+        """ap: all wireless mode available """
         headers_table, output_table = ["ID", "Activate", "Description"], []
         print(display_messages("Available Wireless Mode:", info=True, sublime=True))
         for id_mode, info in self.wireless_controller.getInfo().items():
@@ -169,7 +169,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         return display_tabulate(headers_table, output_table)
 
     def do_use(self, args):
-        """ select module for modules"""
+        """core: select module for modules"""
         if args in self.all_modules.keys():
             module = module_list()[args].ModPump(self.parse_args, globals())
             module.cmdloop()
@@ -179,7 +179,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.ui_monitor.startThreads()
 
     def do_start(self, args):
-        """ start access point """
+        """ap: start access point service"""
         if len(self.Apthreads["RogueAP"]) > 0:
             print(display_messages("the AP is running at full power.", error=True))
             return
@@ -241,29 +241,29 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         return len(self.threadsAP["RougeAP"])
 
     def do_ignore(self, args):
-        """ the message logger will be ignored """
+        """core: the message logger will be ignored """
         logger = self.logger_manager.get(args)
         if logger != None:
             return logger.setIgnore(True)
         print(display_messages("Logger class not found.", error=True))
 
     def do_restore(self, args):
-        """ the message logger will be restored """
+        """core: the message logger will be restored """
         logger = self.logger_manager.get(args)
         if logger != None:
             return logger.setIgnore(False)
         print(display_messages("Logger class not found.", error=True))
 
     def do_clients(self, args):
-        """ show all clients connected on AP """
+        """ap: show all connected clients on AP """
         self.tableUI.ui_table_mod.start()
 
     def do_stop(self, args):
-        """ stop access point """
+        """ap: stop access point service"""
         self.killThreads()
 
     def do_jobs(self, args):
-        """ show all threads/processes in background """
+        """ap: show all threads/processes in background """
         if len(self.Apthreads["RogueAP"]) > 0:
             process_background = {}
             headers_table, output_table = ["ID", "PID"], []
@@ -283,7 +283,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages("the AccessPoint is not running", info=True))
 
     def do_info(self, args):
-        """ get info from the module/plugin"""
+        """core: get info from the module/plugin"""
         try:
             command = args.split()[0]
             plugins = self.mitm_controller.getInfo().get(command)
@@ -342,7 +342,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             pass
 
     def do_ap(self, args):
-        """ show all variable and status for settings AP """
+        """ap: show all variable and status from AP """
         headers_table, output_table = (
             ["BSSID", "SSID", "Channel", "Interface", "Status", "Security"],
             [],
@@ -383,7 +383,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.show_help_command("help_security_command")
 
     def do_set(self, args):
-        """ set variable proxy,plugin and access point """
+        """core: set variable proxy,plugin and access point """
         try:
             command, value = args.split()[0], args.split()[1]
         except IndexError:
@@ -407,7 +407,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages("unknown command: {} ".format(command), error=True))
 
     def do_proxys(self, args):
-        """ show all proxys available for attack  """
+        """network: show all available proxys"""
         headers_table, output_table = ["Proxy", "Active", "Port", "Description"], []
         plugin_info_activated = None
         config_instance = None
@@ -465,7 +465,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         return display_tabulate(headers_plugins, output_plugins)
 
     def do_plugins(self, args=str):
-        """ show all plugins available for attack """
+        """network: show all available plugins """
         headers_table, output_table = ["Name", "Active", "Description"], []
         headers_plugins, output_plugins = ["Name", "Active"], []
         all_plugins, config_instance = None, None
@@ -582,7 +582,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return list(self.all_modules.keys())
 
     def do_exit(self, args):
-        """ exit program and all threads"""
+        """core: exit program and all threads"""
         self.killThreads()
         print("Exiting...")
         raise SystemExit

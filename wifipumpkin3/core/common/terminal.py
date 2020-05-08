@@ -59,11 +59,11 @@ class ConsoleUI(Cmd):
         self.prompt = "{} > ".format(setcolor("wp3", color="blue", underline=True))
 
     def do_search(self, args):
-        """ search  modules by name"""
+        """core: search modules by name"""
         pass
 
     def do_use(self, args):
-        """ load module on session"""
+        """core: load module on session"""
         pass
 
     ## Override methods in Cmd object ##
@@ -77,39 +77,40 @@ class ConsoleUI(Cmd):
         self._globals = {}
 
     def do_help(self, args):
-        """ show this help """
+        """core: show this help """
         names = self.get_names()
         cmds_doc = []
         names.sort()
-        exeptionsCommands = [
-            "sessions",
-            "listener",
-            "help",
-            "exit",
-            "modules",
-            "use",
-            "search",
-            "back",
-            "set",
-            "unset",
-            "info",
-            "run",
-        ]
-        print(display_messages("Available Commands:", info=True, sublime=True))
+        categorys = {
+            "core": {"Core Commands": []},
+            "ap": {"Ap Commands": []},
+            "network": {"Network Commands": []},
+        }
+        print(display_messages("Available Commands:", sublime=True, info=True))
+
         for name in names:
             if name[:3] == "do_":
                 pname = name
                 cmd = name[3:]
                 if getattr(self, name).__doc__:
-                    cmds_doc.append((cmd, getattr(self, name).__doc__))
-                else:
-                    cmds_doc.append((cmd, ""))
+                    head, doc = str(getattr(self, name).__doc__).split(":")
+                    if head in categorys:
+                        categorys[head][list(categorys[head].keys())[0]].append(
+                            (cmd, doc)
+                        )
 
-        # self.stdout.write('%s\n'%str(self.doc_header))
-        self.stdout.write("    {}	 {}\n".format("Commands", "Description"))
-        self.stdout.write("    {}	 {}\n".format("--------", "-----------"))
-        for command, doc in cmds_doc:
-            self.stdout.write("    {:<10}	{}\n".format(command, doc))
+        for item in categorys:
+            print(
+                display_messages(
+                    "{}:".format(list(categorys[item].keys())[0]),
+                    sublime=True,
+                    header=True,
+                )
+            )
+            print("    {}	 {}".format("Command", "Description"))
+            print("    {}	 {}".format("-------", "-----------"))
+            for command, doc in categorys[item][list(categorys[item].keys())[0]]:
+                print("    {:<10}	{}".format(command, doc))
         print("\n")
 
     def default(self, args=str):

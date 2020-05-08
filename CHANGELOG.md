@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added
+- added category to improvements the help command [mh4x0f]
 - added new module wifideauth for send deauthentication packets [mh4x0f]
 - added show up pydhcpserver log explanation [mh4x0f]
 - added redirecting HTTPS traffic to captive portal [mh4x0f]

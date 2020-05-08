@@ -103,7 +103,13 @@ def display_tabulate(header=[], content=[], tablefmt="presto", newline=True):
 
 
 def display_messages(
-    string, error=False, sucess=False, info=False, sublime=False, without=False
+    string,
+    error=False,
+    sucess=False,
+    info=False,
+    sublime=False,
+    without=False,
+    header=False,
 ):
     if sublime:
         if error:
@@ -126,6 +132,8 @@ def display_messages(
                 string,
                 len(string) * "=",
             )
+        elif header:
+            return "\n{}\n{}\n".format(string, len(string) * "=",)
     else:
         if error:
             return "{}{}[-]{} {}".format(
