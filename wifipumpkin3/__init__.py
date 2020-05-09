@@ -510,16 +510,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(display_messages("Sniffkin3 plugins:", info=True, sublime=True))
         return display_tabulate(headers_plugins, output_plugins)
 
-    def help_plugins(self):
-        print(
-            "\n".join(
-                [
-                    "usage: set plugin [module name ] [(True/False)]",
-                    "wifipumpkin-ng: error: unrecognized arguments",
-                ]
-            )
-        )
-
     def getColorStatusPlugins(self, status):
         if status:
             return setcolor(status, color="green")
@@ -580,6 +570,18 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             ]
         else:
             return list(self.all_modules.keys())
+
+    def help_set(self):
+        self.show_help_command("help_set_command")
+
+    def help_plugins(self):
+        self.show_help_command("help_plugins_command")
+
+    def help_proxys(self):
+        self.show_help_command("help_proxys_command")
+
+    def help_mode(self):
+        self.show_help_command("help_mode_command")
 
     def do_exit(self, args):
         """core: exit program and all threads"""

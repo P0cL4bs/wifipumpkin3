@@ -78,40 +78,55 @@ class ConsoleUI(Cmd):
 
     def do_help(self, args):
         """core: show this help """
-        names = self.get_names()
-        cmds_doc = []
-        names.sort()
-        categorys = {
-            "core": {"Core Commands": []},
-            "ap": {"Ap Commands": []},
-            "network": {"Network Commands": []},
-        }
-        print(display_messages("Available Commands:", sublime=True, info=True))
+        if args:
+            try:
+                func = getattr(self, "help_" + args)
+            except AttributeError:
+                try:
+                    head, doc = str(getattr(self, "do_" + args).__doc__).split(":")
+                    if doc:
+                        self.stdout.write("%s\n" % str(doc))
+                        return
+                except AttributeError:
+                    pass
+                self.stdout.write("%s\n" % str(self.nohelp % (args,)))
+                return
+            func()
+        else:
+            names = self.get_names()
+            cmds_doc = []
+            names.sort()
+            categorys = {
+                "core": {"Core Commands": []},
+                "ap": {"Ap Commands": []},
+                "network": {"Network Commands": []},
+            }
+            print(display_messages("Available Commands:", sublime=True, info=True))
 
-        for name in names:
-            if name[:3] == "do_":
-                pname = name
-                cmd = name[3:]
-                if getattr(self, name).__doc__:
-                    head, doc = str(getattr(self, name).__doc__).split(":")
-                    if head in categorys:
-                        categorys[head][list(categorys[head].keys())[0]].append(
-                            (cmd, doc)
-                        )
+            for name in names:
+                if name[:3] == "do_":
+                    pname = name
+                    cmd = name[3:]
+                    if getattr(self, name).__doc__:
+                        head, doc = str(getattr(self, name).__doc__).split(":")
+                        if head in categorys:
+                            categorys[head][list(categorys[head].keys())[0]].append(
+                                (cmd, doc)
+                            )
 
-        for item in categorys:
-            print(
-                display_messages(
-                    "{}:".format(list(categorys[item].keys())[0]),
-                    sublime=True,
-                    header=True,
+            for item in categorys:
+                print(
+                    display_messages(
+                        "{}:".format(list(categorys[item].keys())[0]),
+                        sublime=True,
+                        header=True,
+                    )
                 )
-            )
-            print("    {}	 {}".format("Command", "Description"))
-            print("    {}	 {}".format("-------", "-----------"))
-            for command, doc in categorys[item][list(categorys[item].keys())[0]]:
-                print("    {:<10}	{}".format(command, doc))
-        print("\n")
+                print("    {}	 {}".format("Command", "Description"))
+                print("    {}	 {}".format("-------", "-----------"))
+                for command, doc in categorys[item][list(categorys[item].keys())[0]]:
+                    print("    {:<10}	{}".format(command, doc))
+            print("\n")
 
     def default(self, args=str):
         for goodArgs in C.SYSTEMCOMMAND:
@@ -292,3 +307,29 @@ class ModuleUI(Cmd):
 
     def do_exit(self, args):
         sys.exit(0)
+
+
+class ExtensionUI(Cmd):
+    """ native extension console UI """
+
+    _name_module = None
+    completions = None
+    options = None
+
+    def __init__(self, parse_args=None, root=None):
+        self.parse_args = parse_args
+        self.root = root
+        self.conf = SettingsINI.getInstance()
+        Cmd.__init__(self)
+
+    @property
+    def name_module(self):
+        return self._name_module
+
+    @name_module.setter
+    def name_module(self, name):
+        self._name_module = name
+
+    def register_command(self, name_func, func):
+        """register a command on super class Pumpkinshell """
+        setattr(self.root.__class__, name_func, staticmethod(func))

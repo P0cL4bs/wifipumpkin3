@@ -1,0 +1,7 @@
+set mode:
+
+ Usage: set mode [mode_id]
+ param mode_id: set id of wireless mode
+
+ Description:
+    all wireless mode available

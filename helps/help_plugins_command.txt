@@ -1,0 +1,11 @@
+set plugins:
+ 
+ Usage: set plugin [plugin_name] [(true/false)]
+ param plugin_name: set name of plugin
+
+ Description:
+    Set status of plugin
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#plugins
+

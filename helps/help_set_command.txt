@@ -1,0 +1,13 @@
+set AP variables:
+ 
+ Usage: set [variable] [value]
+ param variable: set variables accesspoit [ssid, bssid, interface, security, channel]
+
+ Description:
+    Change variables rogue accesspoit attack
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#core-commands
+   https://wifipumpkin3.github.io/docs/getting-started#plugins
+   https://wifipumpkin3.github.io/docs/getting-started#proxys
+
