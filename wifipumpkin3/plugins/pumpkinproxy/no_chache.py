@@ -1,7 +1,4 @@
-from scapy.all import *
-from wifipumpkin3.plugins.analyzers.default import PSniffer
-import sys
-from io import StringIO
+from wifipumpkin3.plugins.pumpkinproxy.base import BasePumpkin
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -21,31 +18,28 @@ from io import StringIO
 # limitations under the License.
 
 
-class Hexdump(PSniffer):
-    """ print dump packets http POST  hex """
-
-    _activated = False
-    _instance = None
+class nocache(BasePumpkin):
     meta = {
-        "Name": "hexdump",
-        "Version": "1.0",
-        "Description": "dump packets http POST  hex ",
-        "Author": "Pumpkin-Dev",
+        "_name": "no-cache",
+        "_version": "1.0",
+        "_description": "disable browser caching, cache-control in HTML",
+        "_author": "mh4x0f",
     }
+
+    @staticmethod
+    def getName():
+        return nocache.meta["_name"]
 
     def __init__(self):
         for key, value in self.meta.items():
             self.__dict__[key] = value
+        self.ConfigParser = False
 
-    @staticmethod
-    def getInstance():
-        if Hexdump._instance is None:
-            Hexdump._instance = Hexdump()
-        return Hexdump._instance
+    def handleHeader(self, request, key, value):
+        if key.decode().lower() == "cache-control":
+            value = "no-cache".encode()
 
-    def filterPackets(self, pkt):
-        if pkt.haslayer(TCP) and pkt.haslayer(Raw) and pkt.haslayer(IP):
-            self.load = pkt[Raw].load
-            if self.load.startswith("POST"):
-                self.hexdumpPackets(pkt)
-                # self.logging.info(self.hexdumpPackets(pkt))
+        if key.decode().lower() == "if-none-match":
+            value = "".encode()
+        if key.decode().lower() == "etag":
+            value = "".encode()

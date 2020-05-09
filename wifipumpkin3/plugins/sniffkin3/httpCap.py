@@ -1,6 +1,6 @@
 from scapy.all import *
 from scapy_http import http
-from wifipumpkin3.plugins.analyzers.default import PSniffer
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 import re
 from wifipumpkin3.core.common.platforms import decoded
 

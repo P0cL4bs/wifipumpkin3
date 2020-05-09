@@ -1,8 +1,6 @@
-from random import randint
 from scapy.all import *
-from wifipumpkin3.plugins.analyzers.default import PSniffer
-from os.path import splitext
-from string import ascii_letters
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
+from dns import resolver
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -22,15 +20,13 @@ from string import ascii_letters
 # limitations under the License.
 
 
-class ImageCap(PSniffer):
-    """ capture image content http"""
-
+class Summary(PSniffer):
     _activated = False
     _instance = None
     meta = {
-        "Name": "imageCap",
+        "Name": "summary",
         "Version": "1.0",
-        "Description": "capture image content http",
+        "Description": "quick look at the packet is layers: ",
         "Author": "Pumpkin-Dev",
     }
 
@@ -40,12 +36,18 @@ class ImageCap(PSniffer):
 
     @staticmethod
     def getInstance():
-        if ImageCap._instance is None:
-            ImageCap._instance = ImageCap()
-        return ImageCap._instance
+        if Summary._instance is None:
+            Summary._instance = Summary()
+        return Summary._instance
 
     def filterPackets(self, pkt):
-        pass
-
-    def random_char(self, y):
-        return "".join(random.choice(ascii_letters) for x in range(y))
+        if (
+            pkt.haslayer(Ether)
+            and pkt.haslayer(Raw)
+            and not pkt.haslayer(IP)
+            and not pkt.haslayer(IPv6)
+        ):
+            return
+        # if pkt.haslayer(DNSQR):
+        #    print ('{} ->() has searched for: {}'.format(pkt[IP].src, pkt[DNS].qd.qname[:len(str(pkt[DNS].qd.qname)) - 1]))
+        # return self.output.emit({'{}'.format(self.meta['Name']): "Packet : %s ==> %s" % (pkt[0][1].src, pkt[0][1].dst)})

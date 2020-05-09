@@ -1,4 +1,4 @@
-from wifipumpkin3.plugins.extension.base import BasePumpkin
+from wifipumpkin3.plugins.pumpkinproxy.base import BasePumpkin
 from os import path
 from bs4 import BeautifulSoup
 

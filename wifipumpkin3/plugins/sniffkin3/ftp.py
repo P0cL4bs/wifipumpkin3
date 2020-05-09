@@ -1,5 +1,5 @@
 from scapy.all import *
-from wifipumpkin3.plugins.analyzers.default import PSniffer
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

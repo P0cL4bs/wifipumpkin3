@@ -1,4 +1,8 @@
-from wifipumpkin3.plugins.extension.base import BasePumpkin
+from random import randint
+from scapy.all import *
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
+from os.path import splitext
+from string import ascii_letters
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -18,28 +22,30 @@ from wifipumpkin3.plugins.extension.base import BasePumpkin
 # limitations under the License.
 
 
-class nocache(BasePumpkin):
-    meta = {
-        "_name": "no-cache",
-        "_version": "1.0",
-        "_description": "disable browser caching, cache-control in HTML",
-        "_author": "mh4x0f",
-    }
+class ImageCap(PSniffer):
+    """ capture image content http"""
 
-    @staticmethod
-    def getName():
-        return nocache.meta["_name"]
+    _activated = False
+    _instance = None
+    meta = {
+        "Name": "imageCap",
+        "Version": "1.0",
+        "Description": "capture image content http",
+        "Author": "Pumpkin-Dev",
+    }
 
     def __init__(self):
         for key, value in self.meta.items():
             self.__dict__[key] = value
-        self.ConfigParser = False
 
-    def handleHeader(self, request, key, value):
-        if key.decode().lower() == "cache-control":
-            value = "no-cache".encode()
+    @staticmethod
+    def getInstance():
+        if ImageCap._instance is None:
+            ImageCap._instance = ImageCap()
+        return ImageCap._instance
 
-        if key.decode().lower() == "if-none-match":
-            value = "".encode()
-        if key.decode().lower() == "etag":
-            value = "".encode()
+    def filterPackets(self, pkt):
+        pass
+
+    def random_char(self, y):
+        return "".join(random.choice(ascii_letters) for x in range(y))

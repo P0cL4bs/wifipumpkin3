@@ -33,7 +33,7 @@ from wifipumpkin3.plugins.external.sslstrip.ResponseTampererFactory import (
 )
 
 from wifipumpkin3.plugins.external.sslstrip.PluginsManager import PluginsManager
-from wifipumpkin3.plugins.extension import *
+from wifipumpkin3.plugins.pumpkinproxy import *
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
 

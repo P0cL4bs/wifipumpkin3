@@ -1,6 +1,6 @@
 import re
 from ast import literal_eval
-from wifipumpkin3.plugins.captivePortal.plugin import CaptiveTemplatePlugin
+from wifipumpkin3.plugins.captiveflask.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -21,15 +21,16 @@ import wifipumpkin3.core.utility.constants as C
 # limitations under the License.
 
 
-class DarkLogin(CaptiveTemplatePlugin):
+class Loginv4(CaptiveTemplatePlugin):
     meta = {
-        "Name": "DarkLogin",
+        "Name": "Login_v4",
         "Version": "1.0",
         "Description": "Example is a simple portal default page",
         "Author": "Pumpkin-Dev",
-        "TemplatePath": C.TEMPLATES_FLASK + "templates/DarkLogin",
-        "StaticPath": C.TEMPLATES_FLASK + "templates/DarkLogin/static",
-        "Preview": "plugins/captivePortal/templates/DarkLogin/preview.png",
+        "Language": "En",
+        "TemplatePath": C.TEMPLATES_FLASK + "templates/Login_v4",
+        "StaticPath": C.TEMPLATES_FLASK + "templates/Login_v4/static",
+        "Preview": "plugins/captivePortal/templates/Login_v4/preview.png",
     }
 
     def __init__(self):

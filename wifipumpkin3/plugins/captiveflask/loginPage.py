@@ -1,6 +1,6 @@
 import re
 from ast import literal_eval
-from wifipumpkin3.plugins.captivePortal.plugin import CaptiveTemplatePlugin
+from wifipumpkin3.plugins.captiveflask.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 
 # This file is part of the wifipumpkin3 Open Source Project.

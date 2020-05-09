@@ -5,7 +5,7 @@ import queue
 from scapy.all import *
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
-from wifipumpkin3.plugins.analyzers import *
+from wifipumpkin3.plugins.sniffkin3 import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.core.servers.mitm.mitmmode import MitmMode
 

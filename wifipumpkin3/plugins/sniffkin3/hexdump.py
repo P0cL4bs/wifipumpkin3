@@ -1,5 +1,7 @@
 from scapy.all import *
-from wifipumpkin3.plugins.analyzers.default import PSniffer
+from wifipumpkin3.plugins.sniffkin3.default import PSniffer
+import sys
+from io import StringIO
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -19,15 +21,15 @@ from wifipumpkin3.plugins.analyzers.default import PSniffer
 # limitations under the License.
 
 
-class Stealing_emails(PSniffer):
-    """ capture POP3,IMAP,SMTP """
+class Hexdump(PSniffer):
+    """ print dump packets http POST  hex """
 
     _activated = False
     _instance = None
     meta = {
-        "Name": "emails",
+        "Name": "hexdump",
         "Version": "1.0",
-        "Description": "capture emails packets POP3,IMAP,SMTP ",
+        "Description": "dump packets http POST  hex ",
         "Author": "Pumpkin-Dev",
     }
 
@@ -37,17 +39,13 @@ class Stealing_emails(PSniffer):
 
     @staticmethod
     def getInstance():
-        if Stealing_emails._instance is None:
-            Stealing_emails._instance = Stealing_emails()
-        return Stealing_emails._instance
+        if Hexdump._instance is None:
+            Hexdump._instance = Hexdump()
+        return Hexdump._instance
 
     def filterPackets(self, pkt):
         if pkt.haslayer(TCP) and pkt.haslayer(Raw) and pkt.haslayer(IP):
-            self.dport = pkt[TCP].dport
-            self.sport = pkt[TCP].sport
-            if self.dport == 110 or self.sport == 25 or self.dport == 143:
-                if ptk[TCP].payload:
-                    email_pkt = str(ptk[TCP].payload)
-                    if "user" in email_pkt.lower() or "pass" in email_pkt.lower():
-                        self.logging.info("[*] Server {}".format(pkt[IP].dst))
-                        self.logging.info("[*] {}".format(pkt[TCP].payload))
+            self.load = pkt[Raw].load
+            if self.load.startswith("POST"):
+                self.hexdumpPackets(pkt)
+                # self.logging.info(self.hexdumpPackets(pkt))

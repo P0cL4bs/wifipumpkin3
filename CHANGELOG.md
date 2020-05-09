@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.x] - 2020-xx-xx
 
-### Added
-- added helps for alll available commands [mh4x0f]
+### Added 
+- added helps for all available commands [mh4x0f]
 - added category to improvements the help command [mh4x0f]
 - added new module wifideauth for send deauthentication packets [mh4x0f]
 - added show up pydhcpserver log explanation [mh4x0f]
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - added new format table for pretty printing [mh4x0f]
 
 ### Changed
+- changed structure of all plugins and proxies [mh4x0f]
 - update requirements files to unlock version [mh4x0f]
 
 ### Deprecated

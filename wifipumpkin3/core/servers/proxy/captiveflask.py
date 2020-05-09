@@ -10,7 +10,7 @@ from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
-from wifipumpkin3.plugins.captivePortal import *
+from wifipumpkin3.plugins.captiveflask import *
 from ast import literal_eval
 
 # This file is part of the wifipumpkin3 Open Source Project.
