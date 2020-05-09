@@ -9,6 +9,7 @@ from wifipumpkin3.core.controllers.proxycontroller import *
 from wifipumpkin3.core.controllers.mitmcontroller import *
 from wifipumpkin3.core.controllers.dnscontroller import *
 from wifipumpkin3.core.controllers.uicontroller import *
+from wifipumpkin3.core.controllers.extensioncontroller import *
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -58,6 +59,7 @@ class DefaultController(Qt.QObject):
         DHCPController(parent)
         DNSController(parent)
         UIController(parent)
+        ExtensionController(parent)
 
     @classmethod
     def getInstance(cls):
