@@ -86,9 +86,16 @@ class DHCPProtocol(QObject):
             self.output_signal.emit("DISCOVER: packet from {}".format(self.ip_client))
             packet.transform_to_dhcp_offer_packet()
             # self._request.emit(packet.)
+            # DHCPOFFER will be send for client
             packet.set_option("yiaddr", self.ip_client)
-            packet.set_option("siaddr", self.dhcp_conf["router"])
-            # self._request.emit(packet.__str__())
+            packet.set_option("subnet_mask", self.dhcp_conf["netmask"])
+            packet.set_option("server_identifier", self.dhcp_conf["router"])
+            packet.set_option(
+                "ip_address_lease_time", int(self.dhcp_conf["leasetimeMax"])
+            )
+            for option_name, option_value in packet._options.items():
+                packet.set_option(option_name, option_value, validate=False)
+
             send = True
         elif packet.is_dhcp_request_packet():
             self.output_signal.emit(
@@ -99,14 +106,20 @@ class DHCPProtocol(QObject):
             # configure packet massage ack
             packet.transform_to_dhcp_ack_packet()
             packet.set_option("yiaddr", self.ip_client)
-            packet.set_option("siaddr", self.dhcp_conf["router"])
-            packet.set_option("router", [self.dhcp_conf["router"]], validate=False)
+            packet.set_option("server_identifier", self.dhcp_conf["router"])
+            packet.set_option("subnet_mask", self.dhcp_conf["netmask"])
+            packet.set_option(
+                "router", [self.dhcp_conf["router"], "8.8.8.8"], validate=False
+            )
             packet.set_option(
                 "domain_name_servers", [self.dhcp_conf["router"]], validate=False
             )
             packet.set_option(
                 "ip_address_lease_time", int(self.dhcp_conf["leasetimeMax"])
             )
+            for option_name, option_value in packet._options.items():
+                packet.set_option(option_name, option_value, validate=False)
+
             # getting hostname is exist on packet
             for key in self.leases.keys():
                 for item in self.leases[key].keys():
