@@ -2,7 +2,6 @@ netifaces==0.10.9
 netaddr==0.7.19
 dhcplib==0.1.1
 scapy_http==1.8.2
-configparser==4.0.2
 tabulate==0.8.5
 beautifultable==0.8.0
 urwid==1.1.2
