@@ -16,6 +16,12 @@ install_env:
 	find . -name '*.pyc' -delete
 	python3.7 setup.py install
 
+
+install_dev:
+	pip3 uninstall wifipumpkin3
+	find . -name '*.pyc' -delete
+	python3.7 setup.py install
+
 clean:
 	rm -rf build dist README MANIFEST *.egg-info
 	python3.7 setup.py clean --all

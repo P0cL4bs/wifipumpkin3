@@ -16,6 +16,7 @@ from shlex import split
 from glob import glob
 import warnings, json
 from uuid import uuid1
+from shutil import which
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -228,6 +229,11 @@ def del_item_folder(directorys):
         for file in files:
             if path.isfile(file) and not ".py" in file:
                 remove(file)
+
+
+def is_tool(name):
+    """ check if tool is installed on S.O"""
+    return which(name) is not None
 
 
 class decoded(object):

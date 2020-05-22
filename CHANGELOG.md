@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added 
+- added command update in core commands [mh4x0f]
 - added new implementation for load native extensions [mh4x0f] 
 - added helps for all available commands [mh4x0f]
 - added category to improvements the help command [mh4x0f]
