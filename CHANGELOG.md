@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
-- fixed plugin responder3 config parser file
+- fixed responder3 object has no attribute logger #39 [mh4x0f]
 - fixed DHCP offer Apple device can’t connect to ap #32 [mh4x0f]
 - fixed get multi language options on captiveflask plugin #30 [mh4x0f]
 - fixed check if hostapd is installed in the system [mh4x0f]
