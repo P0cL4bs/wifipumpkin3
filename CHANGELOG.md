@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added 
+- added plugins folder on config user [mh4x0f] 
 - added command update in core commands [mh4x0f]
 - added new implementation for load native extensions [mh4x0f] 
 - added helps for all available commands [mh4x0f]
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed plugin responder3 config parser file
 - fixed DHCP offer Apple device can’t connect to ap #32 [mh4x0f]
 - fixed get multi language options on captiveflask plugin #30 [mh4x0f]
 - fixed check if hostapd is installed in the system [mh4x0f]

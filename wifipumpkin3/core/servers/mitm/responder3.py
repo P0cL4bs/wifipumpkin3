@@ -3,6 +3,7 @@ from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.core.controls.threads import ProcessThread
+import wifipumpkin3.core.utility.constants as C
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -49,6 +50,7 @@ class Responder3(MitmMode):
     Author = "PumpkinDev"
     Description = "LLMNR, NBT-NS and MDNS poisoner, with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication server "
     LogFile = C.LOG_RESPONDER3
+    Hidden = False
     ConfigMitmPath = None
     _cmd_array = []
     ModSettings = True
@@ -64,7 +66,7 @@ class Responder3(MitmMode):
     @property
     def CMD_ARRAY(self):
         iface = self.conf.get("accesspoint", "interface")
-        config_responder3_path = self.conf.get("mitm_modules", "responder3_config")
+        config_responder3_path = C.user_config_dir + self.conf.get("mitm_modules", "responder3_config")
         self._cmd_array = ["-I", iface, "-4", "-p", config_responder3_path]
         return self._cmd_array
 
