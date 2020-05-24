@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed rules iptables block https comunication captiveflask #37 [mh4x0f]
 
 ### Fixed
 - fixed responder3 object has no attribute logger #39 [mh4x0f]
