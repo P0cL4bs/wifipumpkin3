@@ -101,7 +101,7 @@ def main():
     _codename = setcolor(__codename__, color="ciano")
 
     banner(_codename)
-    print("Made by: {} - P0cL4bs Team | {} dev".format(_author, _version))
+    print("by: {} - P0cL4bs Team | version: {} ".format(_author, _version))
     prompt = PumpkinShell(parse_args)
     prompt.cmdloop("Starting prompt...")
     sys.exit(app.exec_())
