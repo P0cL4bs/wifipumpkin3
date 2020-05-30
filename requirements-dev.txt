@@ -24,4 +24,5 @@ Flask>=1.1.1
 black
 lxml>=4.5.0
 coverage==5.1
+requests>=2.18.4
 

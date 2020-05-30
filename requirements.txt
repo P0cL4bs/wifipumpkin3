@@ -22,4 +22,4 @@ isc_dhcp_leases==0.9.1
 dnspython==1.16.0
 Flask>=1.1.1
 lxml>=4.5.0
-coverage==5.1
+requests>=2.18.4
