@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - removed rules iptables block https comunication captiveflask #37 [mh4x0f]
 
 ### Fixed
+- fixed improves test_coverage makefile [mh4x0f]
 - fixed requests module dependency on requirements.txt [mh4x0f]
 - fixed PyQt5 error on docker image creation #44 [mh4x0f]
 - fixed set a tag version at the base image in Dockerfile #43 [mh4x0f]

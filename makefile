@@ -2,6 +2,9 @@ format:
 	black wifipumpkin3 setup.py
 
 test:
+	python3.7 -m unittest -v
+
+test_coverage:
 	python3.7 -m coverage run -m tests
 	python3.7 -m coverage report
 	python3.7 -m unittest -v
