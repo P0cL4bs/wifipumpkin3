@@ -2,9 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [released]
 
-## [1.0.x] - 2020-xx-xx
+## [1.0.5] - 2020-05-29
 
 ### Added 
 - added new module extra-captiveflask templates [mh4x0f]
