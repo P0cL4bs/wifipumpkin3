@@ -1,0 +1,17 @@
+
+How to apply plugins configuration
+==================================
+
+Now, you need to reinstall the tool, 
+you have to reinstall on version the python installed, 
+let's go:
+# for python3.7
+$ sudo python3.7 setup.py install
+# for python3.8
+$ sudo python3.8 setup.py install
+
+if you running on Kali linux, only need to:
+
+$ sudo python3 setup.py install
+
+have fun! Hack the Planet

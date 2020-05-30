@@ -305,6 +305,10 @@ class ModuleUI(Cmd):
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
 
+    def show_help_command(self, filename):
+        """read content file help command """
+        print(Linux.readFileHelp(filename))
+
     def do_exit(self, args):
         sys.exit(0)
 

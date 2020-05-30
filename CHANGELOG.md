@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.x] - 2020-xx-xx
 
 ### Added 
+- added new module extra-captiveflask templates [mh4x0f]
 - added plugins folder on config user [mh4x0f] 
 - added command update in core commands [mh4x0f]
 - added new implementation for load native extensions [mh4x0f] 

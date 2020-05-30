@@ -102,6 +102,7 @@ CONFIG_INI = user_config_dir + "/.config/wifipumpkin3/config/app/config.ini"
 CONFIG_SK_INI = user_config_dir + "/.config/wifipumpkin3/config/app/sniffkin3.ini"
 CONFIG_PP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/pumpkinproxy.ini"
 CONFIG_CP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/captive-portal.ini"
+CONFIG_CP_INI_ROOT = "config/app/captive-portal.ini"
 
 
 ALL_CONFIGSINI = {
@@ -110,6 +111,10 @@ ALL_CONFIGSINI = {
     "pumpkinproxy": CONFIG_PP_INI,
     "captiveflask": CONFIG_CP_INI,
 }
+
+URL_EXTRA_CAPTIVEFLASK = (
+    "https://github.com/mh4x0f/extra-captiveflask/archive/master.zip"
+)
 
 
 TEMPLATES = "templates/fakeupdate/Windows_Update/Settins_WinUpdate.html"

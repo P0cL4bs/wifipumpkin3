@@ -35,9 +35,8 @@ class TestgetInformationAccessPoint(unittest.TestCase):
     def test_decoded_data(self):
         global parser_raw_data
         p = re.compile(r"\s+(.*):\s+(.*)")
-        
 
-        macaddr =self.getMacAddressFromData(parser_raw_data)
+        macaddr = self.getMacAddressFromData(parser_raw_data)
         data = {macaddr: {}}
 
         all_items = re.findall(p, parser_raw_data)
@@ -45,9 +44,9 @@ class TestgetInformationAccessPoint(unittest.TestCase):
             data[macaddr][item[0]] = item[1]
 
         self.assertEqual(self.getResult, data)
-    
+
     def getMacAddressFromData(self, data):
-        p = re.compile(r'([0-9a-f]{2}(?::[0-9a-f]{2}){5})', re.IGNORECASE)
+        p = re.compile(r"([0-9a-f]{2}(?::[0-9a-f]{2}){5})", re.IGNORECASE)
         return re.findall(p, data)[0]
 
     @property
