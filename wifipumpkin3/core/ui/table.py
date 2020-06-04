@@ -3,7 +3,6 @@ from tabulate import tabulate
 from netaddr import EUI
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
-from beautifultable import BeautifulTable
 import fcntl, termios, struct, os
 from wifipumpkin3.core.common.platforms import hexdump
 from multiprocessing import Process
@@ -39,67 +38,6 @@ palette_color = [
     ("body", "white", "black"),
     ("title", "black", "dark blue"),
 ]
-
-
-class TableWidget(BeautifulTable):
-    def __int__(self):
-        BeautifulTable.__init__(self)
-
-    def createColumn(self):
-        self.column_headers = ["URL", "Method", "Track"]
-        self.column_alignments["URL"] = BeautifulTable.ALIGN_LEFT
-        self.column_alignments["Track"] = BeautifulTable.ALIGN_LEFT
-
-    def setup(self):
-        self.createColumn()
-        self.left_border_char = ""
-        self.right_border_char = ""
-        self.top_border_char = ""
-        self.bottom_border_char = ""
-        self.header_seperator_char = "-"
-        self.row_seperator_char = ""
-        # self.intersection_char = ''
-        self.column_seperator_char = "|"
-
-    def get_sizeobject(self):
-        return self.__len__()
-
-    def get_table_string(self):
-        return self.__str__()
-
-    def upSizeTerminal(self):
-        self._max_table_width = self._getTerminalSize_linux()[0] - 2
-
-    def _getTerminalSize_linux(self):
-        """ getTerminalSize()
-         - get width and height of console
-         - works on linux,os x,windows,cygwin(windows)
-         originally retrieved from:
-         http://stackoverflow.com/questions/566746/how-to-get-console-window-width-in-python
-        """
-
-        def ioctl_GWINSZ(fd):
-            try:
-                cr = struct.unpack("hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234"))
-            except:
-                return None
-            return cr
-
-        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-        if not cr:
-            try:
-                fd = os.open(os.ctermid(), os.O_RDONLY)
-                cr = ioctl_GWINSZ(fd)
-                os.close(fd)
-            except:
-                pass
-        if not cr:
-            try:
-                cr = (env["LINES"], env["COLUMNS"])
-            except:
-                return None
-        return int(cr[1]), int(cr[0])
-
 
 class ui_TableMonitorClient(WidgetBase):
     ConfigRoot = "ui_table_mod"

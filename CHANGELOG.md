@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - added WorkProcess class for execute comand with Qprocess
+- added correctly package beautifulsoup4 into requirements.txt
 
 ### Changed
 
@@ -15,10 +16,11 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - removed folder core/controls from file structure arch 
+- removed bs4==0.0.1 Dummy package for Beautiful Soup
 
 ### Fixed
 - fixed improves method setIptables from wirelessmode default mode 
-
+- fixed clear dependencies not used from requirements files
 
 
 ## [released]

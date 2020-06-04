@@ -1,6 +1,5 @@
 from wifipumpkin3.plugins.pumpkinproxy.base import BasePumpkin
 from os import path
-from bs4 import BeautifulSoup
 from io import StringIO
 
 # This file is part of the wifipumpkin3 Open Source Project.

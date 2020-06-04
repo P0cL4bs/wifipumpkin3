@@ -152,7 +152,7 @@ def main(argv):
 
     config = SettingsINI(C.CONFIG_PP_INI)
 
-    reactor.listenTCP(8080, strippingFactory)
+    reactor.listenTCP(int(listenPort), strippingFactory)
 
     print("\nsslstrip " + gVersion + " by Moxie Marlinspike running...")
 

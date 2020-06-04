@@ -10,7 +10,6 @@ from scapy.all import *
 from PyQt5 import QtCore
 import logging
 import signal
-import configparser
 import wifipumpkin3.core.utility.constants as C
 from shlex import split
 from glob import glob

@@ -44,7 +44,7 @@ class html_inject(BasePumpkin):
 
     def handleResponse(self, request, data):
         if self.isfilePath:
-            html = BeautifulSoup(data, "lxml")
+            html = BeautifulSoup(data, "html.parser")
             """
                 # To Allow CORS
                 if "Content-Security-Policy" in flow.response.headers:
