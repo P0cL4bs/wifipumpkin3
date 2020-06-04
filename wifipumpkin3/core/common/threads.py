@@ -223,3 +223,23 @@ class ProcessHostapd(QObject):
         if hasattr(self, "procHostapd"):
             self.started = False
             self.procHostapd.terminate()
+
+
+class WorkerProcess(QThread):
+    sendOutput = pyqtSignal(str)  
+    def __init__(self, command):
+        super(WorkerProcess, self).__init__()
+        self.process = QProcess(self)
+        self.command = command
+
+    def __del__(self):
+        self.process.terminate()
+        if not self.process.waitForFinished(10000):
+            self.process.kill()
+    
+    def start(self):
+        self.setupProcess()
+
+    def setupProcess(self):
+        self.process.setProcessChannelMode(QProcess.MergedChannels)
+        self.process.start(list(self.command.keys())[0], self.command[list(self.command.keys())[0]])

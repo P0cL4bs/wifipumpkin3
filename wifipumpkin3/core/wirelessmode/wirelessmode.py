@@ -6,6 +6,7 @@ from wifipumpkin3.core.widgets.default.session_config import *
 from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
 from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
 import sys
+from wifipumpkin3.core.common.threads import WorkerProcess
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -110,7 +111,7 @@ class Mode(Qt.QObject):
         self.interfacesLink = Refactor.get_interfaces()
         print(display_messages("sharing internet connection with NAT...", info=True))
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
-
+        self.threads_process = []
         for ech in self.conf.get_all_childname("iptables"):
             try:
                 ech = self.conf.get("iptables", ech)
@@ -120,9 +121,13 @@ class Mode(Qt.QObject):
                     ech = ech.replace("$wlan", self.ifaceHostapd)
 
                 if not "$inet" in ech:
-                    popen(ech)
+                    cmd  = {"iptables" : ech.replace("iptables", "").split()}
+                    self.threads_process.append(WorkerProcess(cmd))
             except Exception as e:
                 print(e)
+
+        for thread in self.threads_process:
+            thread.start()
 
     def Stop(self):
         self.Shutdown()

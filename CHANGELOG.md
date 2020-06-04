@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 
 
+## [Unreleased]
+
+## [1.0.x] - 2020-xx-xx
+
+### Added
+- added WorkProcess class for execute comand with Qprocess
+
+### Changed
+
+### Deprecated
+
+### Removed
+- removed folder core/controls from file structure arch 
+
+### Fixed
+- fixed improves method setIptables from wirelessmode default mode 
+
+
+
 ## [released]
 
 ## [1.0.5] - 2020-05-29

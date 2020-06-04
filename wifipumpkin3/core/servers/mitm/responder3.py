@@ -2,7 +2,7 @@ from wifipumpkin3.core.servers.mitm.mitmmode import MitmMode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
-from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.core.common.threads import ProcessThread
 import wifipumpkin3.core.utility.constants as C
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -44,7 +44,6 @@ class NetCredential(DockableWidget):
 
 
 class Responder3(MitmMode):
-    # TODO: implement a module example to mitmmode
     Name = "Responder 3"
     ID = "responder3"
     Author = "PumpkinDev"

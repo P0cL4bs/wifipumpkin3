@@ -1,4 +1,4 @@
-from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.core.common.threads import ProcessThread
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.core.controllers.wirelessmodecontroller import AccessPointSettings
 from wifipumpkin3.core.common.uimodel import *

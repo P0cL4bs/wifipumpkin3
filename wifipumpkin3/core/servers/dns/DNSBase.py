@@ -2,7 +2,7 @@ import weakref
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
-from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.core.common.threads import ProcessThread
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 
 # This file is part of the wifipumpkin3 Open Source Project.

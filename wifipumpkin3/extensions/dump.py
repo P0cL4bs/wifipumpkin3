@@ -11,7 +11,7 @@ from multiprocessing import Process
 from scapy.all import *
 from wifipumpkin3.core.common.platforms import Linux
 from tabulate import tabulate
-from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.core.common.threads import ProcessThread
 import re
 
 # This file is part of the wifipumpkin3 Open Source Project.

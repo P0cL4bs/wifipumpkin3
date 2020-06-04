@@ -4,7 +4,7 @@ from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from isc_dhcp_leases.iscdhcpleases import IscDhcpLeases
-from wifipumpkin3.core.controls.threads import ProcessThread
+from wifipumpkin3.core.common.threads import ProcessThread
 from wifipumpkin3.exceptions.errors.dhcpException import DHCPServerSettingsError
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 

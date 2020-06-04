@@ -5,11 +5,12 @@ from pwd import getpwnam
 from grp import getgrnam
 from time import asctime
 from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
-from wifipumpkin3.core.controls.threads import ProcessHostapd, ProcessThread
+from wifipumpkin3.core.common.threads import ProcessHostapd, ProcessThread
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.printer import display_messages, setcolor
 from wifipumpkin3.exceptions.errors.networkException import *
+import configparser
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
