@@ -39,6 +39,7 @@ palette_color = [
     ("title", "black", "dark blue"),
 ]
 
+
 class ui_TableMonitorClient(WidgetBase):
     ConfigRoot = "ui_table_mod"
     SubConfig = "ui_table_mod"

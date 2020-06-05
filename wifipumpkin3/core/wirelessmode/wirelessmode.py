@@ -121,7 +121,7 @@ class Mode(Qt.QObject):
                     ech = ech.replace("$wlan", self.ifaceHostapd)
 
                 if not "$inet" in ech:
-                    cmd  = {"iptables" : ech.replace("iptables", "").split()}
+                    cmd = {"iptables": ech.replace("iptables", "").split()}
                     self.threads_process.append(WorkerProcess(cmd))
             except Exception as e:
                 print(e)
