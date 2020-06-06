@@ -93,7 +93,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         }
         self.parser_autcomplete_func = {}
 
-        # hook function (plugins and proxys)
+        # hook function (plugins and proxies)
         self.intialize_hook_func(self.proxy_controller)
         self.intialize_hook_func(self.mitm_controller)
 
@@ -113,7 +113,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "security": "enable_security",
         }
 
-        # get all command plugins and proxys
+        # get all command plugins and proxies
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             if hasattr(ctr_instance, "getInfo"):
                 for plugin_name, plugins_info in ctr_instance.getInfo().items():
@@ -232,7 +232,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         if not len(self.threads["RogueAP"]) > 0:
             return
         self.conf.set("accesspoint", "status_ap", False)
-        # get all command plugins and proxys
+        # get all command plugins and proxies
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             ctr_instance.Stop()
 
@@ -312,8 +312,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         try:
             command = args.split()[0]
             plugins = self.mitm_controller.getInfo().get(command)
-            proxys = self.proxy_controller.getInfo().get(command)
-            if plugins or proxys:
+            proxies = self.proxy_controller.getInfo().get(command)
+            if plugins or proxies:
                 print(
                     display_messages(
                         "Information {}: ".format(command), info=True, sublime=True
@@ -328,8 +328,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                                 setcolor(info, color="yellow"),
                             )
                         )
-            if proxys:
-                for name, info in proxys.items():
+            if proxies:
+                for name, info in proxies.items():
                     if name != "Config":
                         print(
                             " {} : {}".format(
@@ -338,12 +338,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                             )
                         )
 
-                commands = proxys["Config"].get_all_childname("plugins")
+                commands = proxies["Config"].get_all_childname("plugins")
                 list_commands = []
                 headers_table, output_table = ["Plugin", "Value"], []
                 # search plugin of proxy has string "set_"
                 for command in commands:
-                    for sub_plugin in proxys["Config"].get_all_childname(
+                    for sub_plugin in proxies["Config"].get_all_childname(
                         "set_{}".format(command)
                     ):
                         output_table.append(
@@ -351,7 +351,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                                 setcolor(
                                     "{}.{}".format(command, sub_plugin), color="blue"
                                 ),
-                                proxys["Config"].get(
+                                proxies["Config"].get(
                                     "set_{}".format(command), sub_plugin
                                 ),
                             ]
@@ -360,7 +360,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     print(display_messages("Plugins:", info=True, sublime=True))
                     return display_tabulate(headers_table, output_table)
 
-            if plugins or proxys:
+            if plugins or proxies:
                 print("\n")
 
         except IndexError:
@@ -431,8 +431,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         print(display_messages("unknown command: {} ".format(command), error=True))
 
-    def do_proxys(self, args):
-        """network: show all available proxys"""
+    def do_proxies(self, args):
+        """network: show all available proxies"""
         headers_table, output_table = ["Proxy", "Active", "Port", "Description"], []
         plugin_info_activated = None
         config_instance = None
@@ -459,7 +459,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 ]
             )
 
-        print(display_messages("Available Proxys:", info=True, sublime=True))
+        print(display_messages("Available proxies:", info=True, sublime=True))
         display_tabulate(headers_table, output_table)
         # check plugin none
         if not plugin_info_activated:
@@ -602,8 +602,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def help_plugins(self):
         self.show_help_command("help_plugins_command")
 
-    def help_proxys(self):
-        self.show_help_command("help_proxys_command")
+    def help_proxies(self):
+        self.show_help_command("help_proxies_command")
 
     def help_mode(self):
         self.show_help_command("help_mode_command")

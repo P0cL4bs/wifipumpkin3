@@ -1,4 +1,4 @@
-set proxys:
+sets proxies:
  
  Usage: set proxy [proxy_name]
  param proxy_name: set name of proxy
@@ -7,5 +7,5 @@ set proxys:
     Change activate current proxy 
 
 Referencies:
-   https://wifipumpkin3.github.io/docs/getting-started#proxys
+   https://wifipumpkin3.github.io/docs/getting-started#proxies
 

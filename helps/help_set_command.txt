@@ -9,5 +9,5 @@ set AP variables:
 Referencies:
    https://wifipumpkin3.github.io/docs/getting-started#core-commands
    https://wifipumpkin3.github.io/docs/getting-started#plugins
-   https://wifipumpkin3.github.io/docs/getting-started#proxys
+   https://wifipumpkin3.github.io/docs/getting-started#proxies
 
