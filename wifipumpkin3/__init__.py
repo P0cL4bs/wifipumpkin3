@@ -182,7 +182,12 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     )
                 )
             module = module_list()[args].ModPump(self.parse_args, globals())
-            module.cmdloop()
+            return module.cmdloop()
+        print(
+            display_messages(
+                "the module [{}] was not found or failed to import.".format(setcolor(args, color="orange")), error=True
+            )
+        )
 
     def getAccessPointStatus(self, status):
         self.ui_table.startThreads()
