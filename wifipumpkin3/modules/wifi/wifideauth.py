@@ -128,7 +128,10 @@ class ModPump(ModuleUI):
         )
         print(
             display_messages(
-                "the MAC address: {} of the client to be deauthenticated".format(setcolor(client_mac, color="blue")), info=True
+                "the MAC address: {} of the client to be deauthenticated".format(
+                    setcolor(client_mac, color="blue")
+                ),
+                info=True,
             )
         )
         info_target = self.aps.get(target_mac)
@@ -142,11 +145,12 @@ class ModPump(ModuleUI):
                     info=True,
                 )
             )
-        
+
         print(
             display_messages(
                 "Sending DeAuth to station -- STMAC: [{}] ".format(
-                    setcolor(target_mac, color="red")),
+                    setcolor(target_mac, color="red")
+                ),
                 info=True,
             )
         )

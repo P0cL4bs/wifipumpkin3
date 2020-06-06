@@ -185,7 +185,10 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return module.cmdloop()
         print(
             display_messages(
-                "the module [{}] was not found or failed to import.".format(setcolor(args, color="orange")), error=True
+                "the module [{}] was not found or failed to import.".format(
+                    setcolor(args, color="orange")
+                ),
+                error=True,
             )
         )
 
@@ -306,65 +309,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         print(
             display_messages("there are no tasks running in the background", info=True)
         )
-
-    def do_info(self, args):
-        """core: get info from the module/plugin"""
-        try:
-            command = args.split()[0]
-            plugins = self.mitm_controller.getInfo().get(command)
-            proxies = self.proxy_controller.getInfo().get(command)
-            if plugins or proxies:
-                print(
-                    display_messages(
-                        "Information {}: ".format(command), info=True, sublime=True
-                    )
-                )
-            if plugins:
-                for name, info in plugins.items():
-                    if name != "Config":
-                        print(
-                            " {} : {}".format(
-                                setcolor(name, color="blue"),
-                                setcolor(info, color="yellow"),
-                            )
-                        )
-            if proxies:
-                for name, info in proxies.items():
-                    if name != "Config":
-                        print(
-                            " {} : {}".format(
-                                setcolor(name, color="blue"),
-                                setcolor(info, color="yellow"),
-                            )
-                        )
-
-                commands = proxies["Config"].get_all_childname("plugins")
-                list_commands = []
-                headers_table, output_table = ["Plugin", "Value"], []
-                # search plugin of proxy has string "set_"
-                for command in commands:
-                    for sub_plugin in proxies["Config"].get_all_childname(
-                        "set_{}".format(command)
-                    ):
-                        output_table.append(
-                            [
-                                setcolor(
-                                    "{}.{}".format(command, sub_plugin), color="blue"
-                                ),
-                                proxies["Config"].get(
-                                    "set_{}".format(command), sub_plugin
-                                ),
-                            ]
-                        )
-                if output_table != []:
-                    print(display_messages("Plugins:", info=True, sublime=True))
-                    return display_tabulate(headers_table, output_table)
-
-            if plugins or proxies:
-                print("\n")
-
-        except IndexError:
-            pass
 
     def do_ap(self, args):
         """ap: show all variable and status from AP """
@@ -539,16 +483,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         if status:
             return setcolor(status, color="green")
         return setcolor(status, color="red")
-
-    def complete_info(self, text, args, start_index, end_index):
-        if text:
-            return [
-                command
-                for command in list(self.commands.keys())
-                if command.startswith(text)
-            ]
-        else:
-            return list(self.commands.keys())
 
     def complete_ignore(self, text, args, start_index, end_index):
         if text:

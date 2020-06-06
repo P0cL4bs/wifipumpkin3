@@ -373,3 +373,7 @@ class ExtensionUI(Cmd):
     def register_command(self, name_func, func):
         """register a command on super class Pumpkinshell """
         setattr(self.root.__class__, name_func, staticmethod(func))
+
+    def show_help_command(self, filename):
+        """read content file help command """
+        print(Linux.readFileHelp(filename))

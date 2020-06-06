@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - added improves module for running in background
 
 ### Changed
+- moved command info to extensions directory
 
 ### Deprecated
 

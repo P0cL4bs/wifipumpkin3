@@ -1,0 +1,7 @@
+set info:
+
+ Usage: info [name]
+ param name: Nome of plugin/proxy for get settings
+
+ Description:
+    get information about proxy/plugin settings
