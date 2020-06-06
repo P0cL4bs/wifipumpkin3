@@ -119,7 +119,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                 for plugin_name, plugins_info in ctr_instance.getInfo().items():
                     self.commands[plugin_name] = ""
 
-        self.Apthreads = {"RogueAP": []}
+        self.threads = {"RogueAP": [], "Modules": {}}
 
     @property
     def all_modules(self):
@@ -171,6 +171,16 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def do_use(self, args):
         """core: select module for modules"""
         if args in self.all_modules.keys():
+            if module_list()[args].ModPump.getInstance() != None:
+                return (
+                    module_list()[args]
+                    .ModPump.getInstance()
+                    .cmdloop(
+                        "module: {} session has been restored".format(
+                            setcolor(args, color="yellow")
+                        )
+                    )
+                )
             module = module_list()[args].ModPump(self.parse_args, globals())
             module.cmdloop()
 
@@ -180,7 +190,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_start(self, args):
         """ap: start access point service"""
-        if len(self.Apthreads["RogueAP"]) > 0:
+        if len(self.threads["RogueAP"]) > 0:
             print(display_messages("the AP is running at full power.", error=True))
             return
 
@@ -201,30 +211,27 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if ctr_name != "wireless_controller":
                 ctr_instance.Start()
 
-        self.Apthreads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
-        self.Apthreads["RogueAP"].insert(1, self.dhcp_controller.ActiveReactor)
-        self.Apthreads["RogueAP"].insert(2, self.dns_controller.ActiveReactor)
-        self.Apthreads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
-        self.Apthreads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
+        self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
+        self.threads["RogueAP"].insert(1, self.dhcp_controller.ActiveReactor)
+        self.threads["RogueAP"].insert(2, self.dns_controller.ActiveReactor)
+        self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
+        self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
-        for thread in self.Apthreads["RogueAP"]:
+        for thread in self.threads["RogueAP"]:
             if thread is not None:
                 QtCore.QThread.sleep(1)
                 if not (isinstance(thread, list)):
                     thread.start()
 
-    def addThreads(self, service):
-        self.threadsAP.append(service)
-
     def killThreads(self):
-        if not len(self.Apthreads["RogueAP"]) > 0:
+        if not len(self.threads["RogueAP"]) > 0:
             return
         self.conf.set("accesspoint", "status_ap", False)
         # get all command plugins and proxys
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             ctr_instance.Stop()
 
-        for thread in self.Apthreads["RogueAP"]:
+        for thread in self.threads["RogueAP"]:
             if thread is not None:
                 if isinstance(thread, list):
                     for sub_thread in thread:
@@ -235,7 +242,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         for line in self.wireless_controller.Activated.getSettings().SettingsAP["kill"]:
             exec_bash(line)
-        self.Apthreads["RogueAP"] = []
+        self.threads["RogueAP"] = []
 
     def countThreads(self):
         return len(self.threadsAP["RougeAP"])
@@ -264,7 +271,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_jobs(self, args):
         """ap: show all threads/processes in background """
-        if len(self.Apthreads["RogueAP"]) > 0:
+        if len(self.threads["RogueAP"]) > 0:
             process_background = {}
             headers_table, output_table = ["ID", "PID"], []
             for ctr_name, ctr_instance in self.coreui.getController(None).items():
@@ -274,13 +281,26 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             for id_controller, info in process_background.items():
                 output_table.append([info["ID"], info["PID"]])
 
-            print(
-                display_messages(
-                    "Background processes/threads:", info=True, sublime=True
-                )
-            )
+            print(display_messages("AP background:", info=True, sublime=True))
             return display_tabulate(headers_table, output_table)
-        print(display_messages("the AccessPoint is not running", info=True))
+
+        if len(self.threads["Modules"]) > 0:
+            print(display_messages("Modules background:", info=True, sublime=True))
+            headers_table, output_table = ["Name", "Status"], []
+            for module_name, instance in self.threads.get("Modules").items():
+                output_table.append(
+                    [
+                        module_name,
+                        setcolor("is Running", color="green")
+                        if instance._background_mode
+                        else setcolor("not Running", color="red"),
+                    ]
+                )
+            return display_tabulate(headers_table, output_table)
+
+        print(
+            display_messages("there are no tasks running in the background", info=True)
+        )
 
     def do_info(self, args):
         """core: get info from the module/plugin"""

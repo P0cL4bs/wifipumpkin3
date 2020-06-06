@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - added WorkProcess class for execute comand with Qprocess
 - added correctly package beautifulsoup4 into requirements.txt
 - added command banner:  display an awesome wp3 banner 
+- added many improvements into system modules
+- added improves module for running in background
 
 ### Changed
 

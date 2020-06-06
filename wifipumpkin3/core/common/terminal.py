@@ -5,6 +5,7 @@ import wifipumpkin3.core.utility.constants as C
 from os import popen
 import sys
 from wifipumpkin3.core.common.platforms import Linux
+import weakref
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -194,8 +195,15 @@ class ModuleUI(Cmd):
     _name_module = None
     completions = None
     options = None
+    _background_mode = False
+    _instance = None
+
+    @classmethod
+    def getInstance(cls):
+        return cls._instance
 
     def __init__(self, parse_args=None, root=None):
+        self.__class__._instance = weakref.proxy(self)
         self.parse_args = parse_args
         self.root = root
         Cmd.__init__(self)
@@ -208,6 +216,29 @@ class ModuleUI(Cmd):
             self.loadPulpFiles(self.parse_args.pulp)
         elif self.parse_args.xpulp:
             self.onecmd(self.parse_args.xpulp, ";")
+
+    def set_background_mode(self, boolean):
+        self._background_mode = boolean
+
+    def check_is_background_mode(self):
+        if not self._background_mode:
+            return
+        print(
+            display_messages(
+                "module: {} running in background".format(
+                    setcolor(self._name_module, color="yellow")
+                ),
+                info=True,
+            )
+        )
+        print(
+            display_messages(
+                "use {} command displays the status of jobs started".format(
+                    setcolor("jobs", color="red")
+                ),
+                info=True,
+            )
+        )
 
     def set_prompt_modules(self):
         self.prompt = "wp3 : {} > ".format(
@@ -225,6 +256,11 @@ class ModuleUI(Cmd):
     def do_back(self, args):
         """ go back one level"""
         try:
+            self.check_is_background_mode()
+            if self._background_mode:
+                self.root["PumpkinShell"].getInstance().threads["Modules"][
+                    self._name_module
+                ] = self.getInstance()
             self.root["PumpkinShell"].getInstance().cmdloop("Starting prompt...")
         except IndexError as e:
             sys.exit(0)

@@ -41,7 +41,7 @@ class ModPump(ModuleUI):
     name = "wifideauth"
 
     options = {
-        "interface": ["wlxc83a35cef744", "Name network interface wireless "],
+        "interface": ["wlanx", "Name network interface wireless "],
         "target": ["00:00:00:00:00:00", "the device MAC Address from Device to deauth"],
         "client": [
             "ff:ff:ff:ff:ff:ff",
@@ -98,22 +98,19 @@ class ModPump(ModuleUI):
         self.set_monitor_mode()
         print(display_messages("thread sniffing successfully stopped", info=True))
 
-    def do_run(self, args):
+    def do_start(self, args):
         """ execute deauth module attack """
+        if self._background_mode:
+            print(
+                display_messages(
+                    "there are a deauth attack in brackground.", error=True
+                )
+            )
+            return
+
         client_mac = self.options.get("client")[0]
         target_mac = self.options.get("target")[0]
         interface = self.options.get("interface")[0]
-        print(display_messages("Options", info=True, sublime=True))
-        print(
-            display_messages(
-                "client:| {} |".format(setcolor(client_mac, color="blue")), info=True
-            )
-        )
-        print(
-            display_messages(
-                "target:| {} |".format(setcolor(target_mac, color="red")), info=True
-            )
-        )
         if "00:00:00:00:00:00" in self.options.get("target")[0]:
             print(
                 display_messages(
@@ -126,15 +123,44 @@ class ModPump(ModuleUI):
                 "enable interface: {} to monitor mode".format(interface), info=True
             )
         )
+        print(
+            display_messages("Wi-Fi deauthentication attack", info=True, sublime=True)
+        )
+        print(
+            display_messages(
+                "the MAC address: {} of the client to be deauthenticated".format(setcolor(client_mac, color="blue")), info=True
+            )
+        )
+        info_target = self.aps.get(target_mac)
+        if info_target:
+            channel = info_target.get("channel")
+            print(
+                display_messages(
+                    "waiting for beacon frame (BSSID: {}) on channel {} ".format(
+                        setcolor(target_mac, color="orange"), channel
+                    ),
+                    info=True,
+                )
+            )
+        
+        print(
+            display_messages(
+                "Sending DeAuth to station -- STMAC: [{}] ".format(
+                    setcolor(target_mac, color="red")),
+                info=True,
+            )
+        )
         self.set_monitor_mode("monitor")
         self.thread_deauth = ThreadDeauth(target_mac, client_mac, interface)
         self.thread_deauth.setObjectName("wifideauth")
         self.thread_deauth.start()
+        self.set_background_mode(True)
 
     def do_stop(self, args):
         """ stop attack deauth module """
         if hasattr(self, "thread_deauth"):
             self.thread_deauth.stop()
+            self.set_background_mode(False)
 
     def channel_hopper(self, interface):
         while True:
