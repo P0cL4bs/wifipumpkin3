@@ -1,5 +1,9 @@
 from wifipumpkin3.core.common.terminal import ExtensionUI
-from wifipumpkin3.core.utility.printer import setcolor, display_messages, display_tabulate
+from wifipumpkin3.core.utility.printer import (
+    setcolor,
+    display_messages,
+    display_tabulate,
+)
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

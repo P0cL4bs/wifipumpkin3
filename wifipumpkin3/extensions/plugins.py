@@ -1,5 +1,9 @@
 from wifipumpkin3.core.common.terminal import ExtensionUI
-from wifipumpkin3.core.utility.printer import setcolor, display_messages, display_tabulate
+from wifipumpkin3.core.utility.printer import (
+    setcolor,
+    display_messages,
+    display_tabulate,
+)
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -58,7 +62,9 @@ class Plugins(ExtensionUI):
                 self.root.mitm_controller.getInfo()[plugin_name]["Config"] != None
                 and status_plugin
             ):
-                config_instance = self.root.mitm_controller.getInfo()[plugin_name]["Config"]
+                config_instance = self.root.mitm_controller.getInfo()[plugin_name][
+                    "Config"
+                ]
                 all_plugins = self.root.mitm_controller.getInfo()[plugin_name][
                     "Config"
                 ].get_all_childname("plugins")

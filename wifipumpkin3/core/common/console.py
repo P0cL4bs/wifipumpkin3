@@ -237,11 +237,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         for thread in self.threads["RogueAP"]:
             if thread is not None:
-                if isinstance(thread, list):
-                    for sub_thread in thread:
-                        if sub_thread != None:
-                            sub_thread.stop()
-                    continue
                 thread.stop()
 
         for line in self.wireless_controller.Activated.getSettings().SettingsAP["kill"]:
@@ -290,7 +285,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         if len(self.threads["Modules"]) > 0:
             print(display_messages("Modules background:", info=True, sublime=True))
-            headers_table, output_table = ["Name", "Status"], []
+            headers_table, output_table = ["ID", "Status"], []
             for module_name, instance in self.threads.get("Modules").items():
                 output_table.append(
                     [
@@ -303,7 +298,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return display_tabulate(headers_table, output_table)
 
         print(
-            display_messages("there are no tasks running in the background", info=True)
+            display_messages("there are no tasks running in the background", error=True)
         )
 
     def do_set(self, args):

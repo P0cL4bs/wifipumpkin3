@@ -1,5 +1,9 @@
 from wifipumpkin3.core.common.terminal import ExtensionUI
-from wifipumpkin3.core.utility.printer import setcolor, display_messages, display_tabulate
+from wifipumpkin3.core.utility.printer import (
+    setcolor,
+    display_messages,
+    display_tabulate,
+)
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -44,10 +48,15 @@ class Proxies(ExtensionUI):
         headers_plugins, output_plugins = ["Name", "Active"], []
 
         for plugin_name, plugin_info in self.root.proxy_controller.getInfo().items():
-            status_plugin = self.root.conf.get("proxy_plugins", plugin_name, format=bool)
+            status_plugin = self.root.conf.get(
+                "proxy_plugins", plugin_name, format=bool
+            )
             # save plugin activated infor
             if plugin_info["Config"] != None:
-                if self.root.conf.get_name_activated_plugin("proxy_plugins") == plugin_name:
+                if (
+                    self.root.conf.get_name_activated_plugin("proxy_plugins")
+                    == plugin_name
+                ):
                     plugin_info_activated = plugin_info
                     config_instance = plugin_info_activated["Config"]
 

@@ -1,0 +1,7 @@
+set kill:
+
+ Usage: kill [module_name]
+ param module_name: Nome of module for terminate
+
+ Description:
+    terminate a module in background by id

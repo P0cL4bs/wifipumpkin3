@@ -104,8 +104,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         proxies = []
         for act in self.proxies.values():
             if act.isChecked():
-                if act.Name != "No Proxy":
-                    proxies.append(act)
+                proxies.append(act)
         return proxies
 
     @property
@@ -140,10 +139,13 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
 
     def getReactorInfo(self):
         info_reactor = {}
-        info_reactor[self.getReactor.getID()] = {
-            "ID": self.getReactor.getID(),
-            "PID": self.getReactor.getpid(),
-        }
+        try:
+            info_reactor[self.getReactor.getID()] = {
+                "ID": self.getReactor.getID(),
+                "PID": self.getReactor.getpid(),
+            }
+        except AttributeError:
+            pass
         return info_reactor
 
     def Stop(self):
