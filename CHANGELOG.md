@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - moved command info to extensions directory
 - changed more flexible python version into dependencies #36
+- improves the architecture files extensions commands
 
 ### Deprecated
 
