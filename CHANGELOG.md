@@ -30,6 +30,8 @@ All notable changes to this project will be documented in this file.
 - fixed clear dependencies not used from requirements files
 - fixed include message: the module not found or failed to import.
 - fixed typo name proxys to proxies
+- fixed version of dnslib from pydns_server #49
+- restricting version module problems
 
 
 ## [released]
