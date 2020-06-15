@@ -104,7 +104,25 @@ class Info(ExtensionUI):
                             )
                     if output_table != []:
                         print(display_messages("Plugins:", info=True, sublime=True))
-                        return display_tabulate(headers_table, output_table)
+                        display_tabulate(headers_table, output_table)
+
+                    settings = proxies["Config"].get_all_childname("settings")
+                    if not settings:
+                        return
+                    headers_settings, output_settings = ["Setting", "Value"], []
+                    # search extra settings plugin
+
+                    for command in settings:
+                        output_settings.append(
+                            [
+                                setcolor("{}".format(command), color="blue",),
+                                proxies["Config"].get("settings", command),
+                            ]
+                        )
+                    if output_settings != []:
+                        print(display_messages("Settings:", info=True, sublime=True))
+                        return display_tabulate(headers_settings, output_settings)
+
                 except AttributeError:
                     pass
 

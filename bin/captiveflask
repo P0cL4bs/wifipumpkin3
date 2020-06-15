@@ -34,9 +34,12 @@ def login():
                 }
             )
         )
+        global FORCE_REDIRECT
         sys.stdout.flush()
         login_user(request.remote_addr)
-        if "orig_url" in request.args and len(request.args["orig_url"]) > 0:
+        if FORCE_REDIRECT:
+            return render_template("templates/login_successful.html")
+        elif "orig_url" in request.args and len(request.args["orig_url"]) > 0:
             return redirect(unquote(request.args["orig_url"]))
         else:
             return render_template("templates/login_successful.html")
@@ -61,7 +64,18 @@ def catch_all(path):
     )
 
 
-_version = "1.0.1"
+#https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+_version = "1.0.2"
 
 if __name__ == "__main__":
     print("[*] CaptiveFlask v{} - subtool from wifipumpkin3".format(_version))
@@ -81,9 +95,18 @@ if __name__ == "__main__":
         dest="redirect",
         help="IpAddress from gataway captive portal",
     )
+    parser.add_argument(
+        "-f",
+        "--force-login_successful-template",
+        dest="force_redirect",
+        default=False,
+        type=str2bool,
+        help="force redirect to login_successful.html template",
+    )
     parser.add_argument("-v", "--version", dest="version", help="show version the tool")
     args = parser.parse_args()
     REDIRECT = args.redirect
+    FORCE_REDIRECT = args.force_redirect
 
     app.static_url_path = "\{}".format(args.static)
     app.static_folder = "{}".format(args.static)

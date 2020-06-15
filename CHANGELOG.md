@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - added many improvements into system modules
 - added improves module for running in background
 - added command kill: terminate a module in background by id 
+- added option on captiveflask to force redirect sucessful template
 
 ### Changed
 - moved command info to extensions directory

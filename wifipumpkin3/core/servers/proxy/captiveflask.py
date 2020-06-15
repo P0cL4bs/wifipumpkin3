@@ -84,6 +84,8 @@ class CaptivePortal(ProxyMode):
             self.conf.get("dhcp", "router"),
             "-s",
             self.tamplate.StaticPath,
+            "-f",
+            self.config.get("settings", "force_redirect_sucessful_template"),
         ]
         return self._cmd_array
 
@@ -131,6 +133,11 @@ class CaptivePortal(ProxyMode):
             list_commands.append(self.ID + "." + command)
             for sub_plugin in self.config.get_all_childname("set_{}".format(command)):
                 list_commands.append("{}.{}.{}".format(self.ID, command, sub_plugin))
+        # load all settings extra plugin
+        settings = self.config.get_all_childname("settings")
+        for config in settings:
+            list_commands.append("{}.{}".format(self.ID, config))
+
         return list_commands
 
     def LogOutput(self, data):
@@ -166,6 +173,8 @@ class CaptivePortal(ProxyMode):
                 )
                 if key_plugin in self.config.get_all_childname("plugins"):
                     self.setPluginActivated(key_plugin, status)
+                elif key_plugin in self.config.get_all_childname("settings"):
+                    self.config.set("settings", key_plugin, status)
                 else:
                     print(
                         display_messages(
