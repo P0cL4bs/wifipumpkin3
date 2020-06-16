@@ -243,9 +243,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             exec_bash(line)
         self.threads["RogueAP"] = []
 
-    def countThreads(self):
-        return len(self.threadsAP["RougeAP"])
-
     def do_ignore(self, args):
         """core: the message logger will be ignored """
         logger = self.logger_manager.get(args)
