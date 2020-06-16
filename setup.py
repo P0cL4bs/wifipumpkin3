@@ -57,7 +57,7 @@ wifipumpkin3_version = version(VERSION_FILE)
 setup(
     name="wifipumpkin3",
     version=wifipumpkin3_version,
-    description="Framework for Rogue Wi-Fi Access Point Attack",
+    description="Powerful framework for rogue access point attack.",
     author="Marcos Bomfim (mh4x0f) - P0cL4bs Team",
     author_email="mh4root@gmail.com",
     url="https://github.com/P0cL4bs/wifipumpkin3",
@@ -71,7 +71,7 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Development Status :: 5 - Production/Stable",
-        "License :: OSI Approved :: Apache 2.0 License",
+        "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Environment :: Console",
