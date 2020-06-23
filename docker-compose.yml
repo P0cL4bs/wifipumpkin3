@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  wifipumpkin3:
+        build:
+                context: .
+        privileged: true
+        network_mode: "host"
+        volumes:
+                - type: bind
+                  source: ./scripts
+                  target: /root/.config/wifipumpkin3/scripts
+                - type: bind
+                  source: ./logs
+                  target: /root/.config/wifipumpkin3/logs
+                - type: bind
+                  source: ./config
+                  target: /root/.config/wifipumpkin3/config
