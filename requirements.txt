@@ -20,3 +20,4 @@ dnspython==1.16.0
 Flask==1.1.1
 requests>=2.18.4
 beautifulsoup4>=4.9.1
+asn1crypto>=1.0.0
