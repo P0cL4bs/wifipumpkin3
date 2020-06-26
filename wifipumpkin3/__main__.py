@@ -19,13 +19,13 @@ import wifipumpkin3.core.utility.constants as C
 from os import getuid
 
 
-def parser_args_func(parse_args):
+def parser_args_func(parse_args, config):
     if parse_args.nocolors:
         set_nocolors()
 
     if parse_args.wireless_mode:
-        if parse_args.wireless_mode in conf.get_all_childname("ap_mode"):
-            conf.set_one("ap_mode", parse_args.wireless_mode, True)
+        if parse_args.wireless_mode in config.get_all_childname("ap_mode"):
+            config.set_one("ap_mode", parse_args.wireless_mode, True)
             print(
                 display_messages(
                     "Wireless Mode: {}".format(
@@ -39,10 +39,10 @@ def parser_args_func(parse_args):
 def main():
 
     app = QtCore.QCoreApplication(sys.argv)
-    conf = SettingsINI.getInstance()
+    config = SettingsINI.getInstance()
 
     # settings default values that change on
-    conf.set("accesspoint", "status_ap", False)
+    config.set("accesspoint", "status_ap", False)
 
     parser = argparse.ArgumentParser(
         description="WiFi-Pumpkin - pure line-oriented command"
@@ -90,7 +90,7 @@ def main():
     )
 
     parse_args = parser.parse_args()
-    parser_args_func(parse_args)
+    parser_args_func(parse_args, config)
 
     # check is rootuser
     if not getuid() == 0:

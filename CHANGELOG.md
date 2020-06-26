@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - fixed version of dnslib from pydns_server #49
 - restricting version module problems
 - fixed description tool on setup.py file 
+- fixed mode docker parser command line #56
 
 
 ## [released]
