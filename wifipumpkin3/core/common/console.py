@@ -4,8 +4,6 @@ from wifipumpkin3.core.config.globalimport import *
 
 from wifipumpkin3.modules import *
 from wifipumpkin3.modules import module_list, all_modules
-import argparse
-import shlex
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
