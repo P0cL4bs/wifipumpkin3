@@ -4,6 +4,8 @@ from wifipumpkin3.core.config.globalimport import *
 
 from wifipumpkin3.modules import *
 from wifipumpkin3.modules import module_list, all_modules
+import argparse
+import shlex
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -302,6 +304,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """core: set variable proxy,plugin and access point """
         try:
             command, value = args.split()[0], args.split()[1]
+            if "ssid" in command:
+                value = args[len("ssid "):]
         except IndexError:
             return print(
                 display_messages("unknown sintax : {} ".format(args), error=True)
