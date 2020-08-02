@@ -2,9 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [Released]
 
-## [1.0.x] - 2020-xx-xx
+## [1.0.7] - 2020-08-01
 
 ### Added
 - added WorkProcess class for execute comand with Qprocess
