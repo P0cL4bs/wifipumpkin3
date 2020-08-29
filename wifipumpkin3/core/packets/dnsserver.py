@@ -278,7 +278,7 @@ class DNSServerThread(QThread):
         self.tcp_server.start_thread()
 
         try:
-            while self.udp_server.isAlive():
+            while self.udp_server.is_alive():
                 sleep(1)
         except KeyboardInterrupt:
             pass
