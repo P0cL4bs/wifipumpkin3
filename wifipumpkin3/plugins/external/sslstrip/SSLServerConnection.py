@@ -54,7 +54,7 @@ class SSLServerConnection(ServerConnection):
 
     def handleHeader(self, key, value):
         if key.lower() == "set-cookie":
-            value = SSLServerConnection.cookieExpression.sub("\g<1>", value)
+            value = SSLServerConnection.cookieExpression.sub(r"\g<1>", value)
 
         ServerConnection.handleHeader(self, key, value)
 
