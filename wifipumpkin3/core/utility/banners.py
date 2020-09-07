@@ -21,7 +21,7 @@ wp_banner = {}
 
 wp_banner[
     "default"
-] = """
+] = r"""
   _      ___ _____     ___                  __    _      ____
  | | /| / (_) __(_)___/ _ \__ ____ _  ___  / /__ (_)__  |_  /
  | |/ |/ / / _// /___/ ___/ // /  ' \/ _ \/  '_// / _ \_/_ < 
@@ -104,7 +104,7 @@ wp_banner[
 # from https://textart.sh/topic/pumpkin
 wp_banner[
     "textart"
-] = """
+] = r"""
                              Jgy__
                             jWW  `""9Wf
                           _#WWW     IW

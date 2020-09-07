@@ -28,7 +28,7 @@ class URLMonitor:
 
     # Start the arms race, and end up here...
     javascriptTrickery = [
-        re.compile("http://.+\.etrade\.com/javascript/omntr/tc_targeting\.html")
+        re.compile(r"http://.+\.etrade\.com/javascript/omntr/tc_targeting\.html")
     ]
     _instance = None
 

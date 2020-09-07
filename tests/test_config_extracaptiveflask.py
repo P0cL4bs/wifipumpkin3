@@ -49,7 +49,7 @@ class TestDownloadCaptiveFlaskTemplates(unittest.TestCase):
         for plugin in plugins:
             print(plugin)
 
-        self.assertEquals(result["example"], plugins["example"])
+        self.assertEqual(result["example"], plugins["example"])
 
     def test_import_plugins(self):
         pass

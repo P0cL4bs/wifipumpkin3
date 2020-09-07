@@ -16,7 +16,7 @@ def import_submodules(package, recursive=True):
     if isinstance(package, str):
         package = importlib.import_module(package)
     results = {}
-    parser = re.compile("(\s*)wifipumpkin3.modules.(\s*)")
+    parser = re.compile(r"(\s*)wifipumpkin3.modules.(\s*)")
     for loader, name, is_pkg in pkgutil.walk_packages(package.__path__):
         full_name = package.__name__ + "." + name
         short_name = "{}.{}".format(parser.sub("", package.__name__), name)
