@@ -36,6 +36,8 @@ All notable changes to this project will be documented in this file.
 - restricting version module problems
 - fixed description tool on setup.py file 
 - fixed mode docker parser command line #56
+- fixed deprecation warnings due to invalid escape sequences. [tirkarthi]
+
 
 
 ## [released]
