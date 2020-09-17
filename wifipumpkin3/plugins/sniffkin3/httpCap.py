@@ -1,5 +1,5 @@
 from scapy.all import *
-from scapy_http import http
+import scapy.layers.http as http
 from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 import re
 from wifipumpkin3.core.common.platforms import decoded
@@ -42,7 +42,7 @@ class MonitorCreds(PSniffer):
             MonitorCreds._instance = MonitorCreds()
         return MonitorCreds._instance
 
-    def getCredentials_POST(self, payload, url, header, dport, sport, pkt):
+    def getCredentials_POST(self, payload, url, dport, sport, pkt):
         user_regex = (
             "([Ee]mail|%5B[Ee]mail%5D|[Uu]ser|[Uu]sername|"
             "[Nn]ame|[Ll]ogin|[Ll]og|[Ll]ogin[Ii][Dd])=([^&|;]*)"
@@ -101,7 +101,6 @@ class MonitorCreds(PSniffer):
                 self.getCredentials_POST(
                     pkt.getlayer(Raw).load,
                     http_layer.fields["Host"],
-                    http_layer.fields["Headers"],
                     self.dst_ip_port,
                     self.src_ip_port,
                     {"IP": ip_layer.fields, "Headers": http_layer.fields},

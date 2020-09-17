@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - improves the architecture files extensions commands
 
 ### Deprecated
+- deprecated scapy_http and migrate to scapy 2.4.4 has native support for HTTP #35
 
 ### Removed
 - removed folder core/controls from file structure arch 
