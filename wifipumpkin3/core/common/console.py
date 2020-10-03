@@ -302,7 +302,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """core: set variable proxy,plugin and access point """
         try:
             command, value = args.split()[0], args.split()[1]
-            if "ssid" in command:
+            if "bssid" in command:
+                value = args[len("bssid "):]
+            elif "ssid" in command:
                 value = args[len("ssid "):]
         except IndexError:
             return print(
