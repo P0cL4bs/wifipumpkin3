@@ -91,6 +91,12 @@ class Mode(Qt.QObject):
     def Shutdown(self):
         pass
 
+    def addExtraHostapdSettings(self):
+        time_seconds = self.conf.get("accesspoint", "ap_max_inactivity", format=int)
+        settings = ["ap_max_inactivity={}\n".format(time_seconds)]
+        for setting in settings:
+            self.Settings.SettingsAP["hostapd"].append(setting)
+
     def Start(self):
         # check if soft deps is tnstalled
         self.get_soft_dependencies()

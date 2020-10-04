@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 
 
+## [unReleased]
+
+## [1.0.x] - 2020-xx-xx
+
+### Added
+- added inactivity poll default value to 60 min #67
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 ## [Released]
 
 ## [1.0.7] - 2020-08-01

@@ -53,6 +53,8 @@ class Docker(Mode):
         if not (self.Settings.checkNetworkAP()):
             sys.exit(1)
         self.check_Wireless_Security()
+        # add extra hostapd settings
+        self.addExtraHostapdSettings()
 
         ignore = ("interface=", "ssid=", "channel=", "essid=")
         with open(C.DOCKERHOSTAPDCONF_PATH, "w") as apconf:
