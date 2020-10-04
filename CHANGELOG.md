@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed hide error object of type QProcess on WorkProcess class #93
 
 ## [Released]
 

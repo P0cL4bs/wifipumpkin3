@@ -234,9 +234,11 @@ class WorkerProcess(QThread):
         self.command = command
 
     def __del__(self):
-        self.process.terminate()
-        if not self.process.waitForFinished(10000):
+        try:
+            self.process.terminate()
             self.process.kill()
+        except Exception:
+            pass
 
     def start(self):
         self.setupProcess()
