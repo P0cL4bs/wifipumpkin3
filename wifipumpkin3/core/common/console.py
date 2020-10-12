@@ -209,35 +209,43 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             )
             sys.exit(1)
 
-        if self.wireless_controller.Start() != None:
-            return
+        if self.wireless_controller.Start() != None: return
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             if ctr_name != "wireless_controller":
                 ctr_instance.Start()
 
-        self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
+        self.wireless_controller.ActiveReactor.start()
+        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(self.signalHostApdProcessIsRunning)
+
         self.threads["RogueAP"].insert(1, self.dhcp_controller.ActiveReactor)
         self.threads["RogueAP"].insert(2, self.dns_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
-        for thread in self.threads["RogueAP"]:
-            if thread is not None:
-                QtCore.QThread.sleep(1)
-                if not (isinstance(thread, list)):
-                    thread.start()
+    def signalHostApdProcessIsRunning(self, status):
+        if status:
+            print(display_messages("hostapd is {}".format(setcolor("running", color="green")), sucess=True))
+            for thread in self.threads["RogueAP"]:
+                if thread is not None:
+                    QtCore.QThread.sleep(1)
+                    if not (isinstance(thread, list)):
+                        thread.start()
+            self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
 
     def killThreads(self):
         if not len(self.threads["RogueAP"]) > 0:
             return
         self.conf.set("accesspoint", "status_ap", False)
         # get all command plugins and proxies
-        for ctr_name, ctr_instance in self.coreui.getController(None).items():
-            ctr_instance.Stop()
+        try:
+            for ctr_name, ctr_instance in self.coreui.getController(None).items():
+                ctr_instance.Stop()
 
-        for thread in self.threads["RogueAP"]:
-            if thread is not None:
-                thread.stop()
+            for thread in self.threads["RogueAP"]:
+                if thread is not None:
+                    thread.stop()
+        except Exception as e:
+            pass
 
         for line in self.wireless_controller.Activated.getSettings().SettingsAP["kill"]:
             exec_bash(line)

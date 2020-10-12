@@ -158,6 +158,7 @@ class DHCPServerProcess(QThread):
 class ProcessHostapd(QObject):
     statusAP_connected = pyqtSignal(object)
     statusAPError = pyqtSignal(object)
+    signalApIsRuning = pyqtSignal(bool)
 
     def __init__(self, cmd, session):
         QObject.__init__(self)
@@ -171,6 +172,7 @@ class ProcessHostapd(QObject):
         )
         self.msg_inactivity = []
         self.queue = Queue()
+        self.isRunning = False
         self.started = False
 
     def getpid(self):
@@ -199,6 +201,10 @@ class ProcessHostapd(QObject):
         for error in self.errorAPDriver:
             if self.data.find(error) != -1:
                 return self.statusAPError.emit(self.data)
+        # process hostapd is running
+        if (self.started and not self.isRunning):
+            self.signalApIsRuning.emit(True)
+            self.isRunning = True
 
     def start(self):
         self.procHostapd = QProcess(self)
@@ -222,6 +228,7 @@ class ProcessHostapd(QObject):
         )
         if hasattr(self, "procHostapd"):
             self.started = False
+            self.isRunning = False
             self.procHostapd.terminate()
 
 
