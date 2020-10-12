@@ -117,7 +117,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
 class DHCPSettings(CoreSettings):
     Name = "WP DHCP"
     ID = "DHCP"
-    ConfigRoot = "dhcpdefault"
+    ConfigRoot = "dhcp"
     Category = "DHCP"
     instances = []
     confingDHCP = {}

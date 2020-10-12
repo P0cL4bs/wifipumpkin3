@@ -202,13 +202,13 @@ class DockerSettings(CoreSettings):
 
     def getDHCPConfig(self):
         DHCP = {}
-        DHCP["leasetimeDef"] = self.conf.get("dhcpdefault", "leasetimeDef")
-        DHCP["leasetimeMax"] = self.conf.get("dhcpdefault", "leasetimeMax")
-        DHCP["subnet"] = self.conf.get("dhcpdefault", "subnet")
-        DHCP["router"] = self.conf.get("dhcpdefault", "router")
-        DHCP["netmask"] = self.conf.get("dhcpdefault", "netmask")
-        DHCP["broadcast"] = self.conf.get("dhcpdefault", "broadcast")
-        DHCP["range"] = self.conf.get("dhcpdefault", "range")
+        DHCP["leasetimeDef"] = self.conf.get("dhcp", "leasetimeDef")
+        DHCP["leasetimeMax"] = self.conf.get("dhcp", "leasetimeMax")
+        DHCP["subnet"] = self.conf.get("dhcp", "subnet")
+        DHCP["router"] = self.conf.get("dhcp", "router")
+        DHCP["netmask"] = self.conf.get("dhcp", "netmask")
+        DHCP["broadcast"] = self.conf.get("dhcp", "broadcast")
+        DHCP["range"] = self.conf.get("dhcp", "range")
         return DHCP
 
     def Configure(self):
