@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - added inactivity poll default value to 60 min #67
 - added check if process hostapd is running before start threads
+- added settings binary path of iptables editable 
+- added waitforfinish on Qprocess for add rules iptables 
 
 ### Changed
 

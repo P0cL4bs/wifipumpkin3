@@ -55,6 +55,10 @@ class Mode(Qt.QObject):
     def getHostapdPath(self):
         return self.conf.get(self.configRoot, "{}_hostapd_path".format(self.configRoot))
 
+    @property
+    def getIptablesPath(self):
+        return self.conf.get("iptables", "path_binary")
+
     def isChecked(self):
         return self.conf.get(self.configApMode, self.subConfig, format=bool)
 
@@ -127,13 +131,15 @@ class Mode(Qt.QObject):
                     ech = ech.replace("$wlan", self.ifaceHostapd)
 
                 if not "$inet" in ech:
-                    cmd = {"iptables": ech.replace("iptables", "").split()}
+                    cmd = { self.getIptablesPath : ech.split() } 
                     self.threads_process.append(WorkerProcess(cmd))
             except Exception as e:
                 print(e)
 
         for thread in self.threads_process:
             thread.start()
+            thread.process.waitForFinished()
+            del thread
 
     def Stop(self):
         self.Shutdown()

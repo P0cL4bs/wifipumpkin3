@@ -146,6 +146,10 @@ class ProxyMode(Widget, ComponentBlueprint):
         return self.conf.get("proxy_plugins", self.ID, format=bool)
 
     @property
+    def getIptablesPath(self):
+        return self.conf.get("iptables", "path_binary")
+
+    @property
     def iptablesrules(self):
         pass
 
