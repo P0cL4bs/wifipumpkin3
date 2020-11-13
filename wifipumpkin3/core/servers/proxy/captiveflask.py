@@ -110,7 +110,9 @@ class CaptivePortal(ProxyMode):
         )
         print(display_messages("block all other traffic in access point", info=True))
         self.add_default_rules(
-            "{iptables} -A FORWARD -i {iface} -j DROP ".format(iptables=self.getIptablesPath, iface=IFACE)
+            "{iptables} -A FORWARD -i {iface} -j DROP ".format(
+                iptables=self.getIptablesPath, iface=IFACE
+            )
         )
         print(display_messages("redirecting HTTP traffic to captive portal", info=True))
         self.add_default_rules(

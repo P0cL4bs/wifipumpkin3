@@ -202,7 +202,7 @@ class ProcessHostapd(QObject):
             if self.data.find(error) != -1:
                 return self.statusAPError.emit(self.data)
         # process hostapd is running
-        if (self.started and not self.isRunning):
+        if self.started and not self.isRunning:
             self.signalApIsRuning.emit(True)
             self.isRunning = True
 

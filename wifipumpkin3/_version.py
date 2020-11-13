@@ -1,2 +1,3 @@
-__version__ = "1.0.7"
-__codename__ = "AKUANDUBA"
+__version__ = "1.0.x"
+__codename__ = "Developing"
+__branch__ = "draft"

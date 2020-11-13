@@ -73,7 +73,8 @@ class PumpKinProxy(ProxyMode):
     def Initialize(self):
         self.add_default_rules(
             "{} -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}".format(
-                self.getIptablesPath, self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
+                self.getIptablesPath,
+                self.conf.get("proxy_plugins", "pumpkinproxy_config_port"),
             )
         )
         self.runDefaultRules()

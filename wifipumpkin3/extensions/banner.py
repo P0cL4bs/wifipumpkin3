@@ -1,5 +1,5 @@
 from wifipumpkin3.core.common.terminal import ExtensionUI
-from wifipumpkin3._version import __version__, __codename__
+from wifipumpkin3._version import __version__, __codename__, __branch__
 from wifipumpkin3._author import __author__
 from wifipumpkin3.core.utility.printer import banner, setcolor, display_messages
 
@@ -43,8 +43,10 @@ class Banner(ExtensionUI):
         _author = "{}".format(setcolor(__author__, color="yellow"))
         _version = setcolor(__version__, color="yellow")
         _codename = setcolor(__codename__, color="ciano")
+        _branch = setcolor(__branch__, color="purple")
+        
         banner(_codename)
-        print("by: {} - P0cL4bs Team | version: {} ".format(_author, _version))
+        print("by: {} - P0cL4bs Team | version: {} {}".format(_author, _version, _branch))
         print(
             display_messages(
                 "Session id: {} ".format(

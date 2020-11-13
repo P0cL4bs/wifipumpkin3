@@ -2,7 +2,7 @@ from cmd import Cmd
 from wifipumpkin3.core.utility.printer import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
-from os import popen
+from os import popen, path
 import sys
 from wifipumpkin3.core.common.platforms import Linux
 import weakref
@@ -144,7 +144,7 @@ class ConsoleUI(Cmd):
                 "mode: {}".format(setcolor("script", "ciano", True)), info=True
             )
         )
-        if os.path.isfile(file):
+        if path.isfile(file):
             with open(file, "r") as f:
                 data = f.read()
                 f.close()
@@ -311,7 +311,7 @@ class ModuleUI(Cmd):
 
     def loadPulpFiles(self, file, data=None):
         """ load and execute all commands in file pulp separate for \n """
-        if os.path.isfile(file):
+        if path.isfile(file):
             with open(file, "r") as f:
                 data = f.read()
                 f.close()

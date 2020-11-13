@@ -40,7 +40,7 @@ class CoreSettings(Linux):
     def deleteObject(self, obj):
         """ reclaim memory """
         del obj
-    
+
     @property
     def getIptablesPath(self):
         return self.conf.get("iptables", "path_binary")

@@ -209,22 +209,39 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             )
             sys.exit(1)
 
-        if self.wireless_controller.Start() != None: return
+        if self.wireless_controller.Start() != None:
+            return
         for ctr_name, ctr_instance in self.coreui.getController(None).items():
             if ctr_name != "wireless_controller":
                 ctr_instance.Start()
 
-        self.wireless_controller.ActiveReactor.start()
-        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(self.signalHostApdProcessIsRunning)
-
+        self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
         self.threads["RogueAP"].insert(1, self.dhcp_controller.ActiveReactor)
         self.threads["RogueAP"].insert(2, self.dns_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
+        if not self.parse_args.restmode:
+            self.wireless_controller.ActiveReactor.start()
+            self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+                self.signalHostApdProcessIsRunning
+            )
+            return 
+            
+        for thread in self.threads["RogueAP"]:
+            if thread is not None:
+                QtCore.QThread.sleep(1)
+                if not (isinstance(thread, list)):
+                    thread.start()
+
     def signalHostApdProcessIsRunning(self, status):
         if status:
-            print(display_messages("hostapd is {}".format(setcolor("running", color="green")), sucess=True))
+            print(
+                display_messages(
+                    "hostapd is {}".format(setcolor("running", color="green")),
+                    sucess=True,
+                )
+            )
             for thread in self.threads["RogueAP"]:
                 if thread is not None:
                     QtCore.QThread.sleep(1)
@@ -311,9 +328,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         try:
             command, value = args.split()[0], args.split()[1]
             if "bssid" in command:
-                value = args[len("bssid "):]
+                value = args[len("bssid ") :]
             elif "ssid" in command:
-                value = args[len("ssid "):]
+                value = args[len("ssid ") :]
         except IndexError:
             return print(
                 display_messages("unknown sintax : {} ".format(args), error=True)

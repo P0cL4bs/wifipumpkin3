@@ -1,4 +1,5 @@
 import os
+import wifipumpkin3 as wp3
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -20,6 +21,7 @@ import os
 dir_of_executable = os.path.dirname(__file__)
 dir_path = os.getcwd()
 user_config_dir = os.path.expanduser("~")
+wp3_setup_packager_path = wp3.__path__[0]
 
 SYSTEMCOMMAND = [
     "ifconfig",
@@ -34,6 +36,7 @@ SYSTEMCOMMAND = [
 
 HELPFILESPATH = user_config_dir + "/.config/wifipumpkin3/helps/"
 EXCEPTFILESPATH = user_config_dir + "/.config/wifipumpkin3/exceptions/"
+APIRESTPATH = user_config_dir + "/.config/wifipumpkin3/api/"
 
 # DHCP logger connected
 CLIENTS_CONNECTED = (
