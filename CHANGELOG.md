@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - added check if process hostapd is running before start threads
 - added settings binary path of iptables editable 
 - added waitforfinish on Qprocess for add rules iptables 
+- added frist restful api implementation 
 
 ### Changed
 
