@@ -147,12 +147,12 @@ def main():
         version="%(prog)s v{} branch: {}".format(__version__, __branch__),
     )
 
+    parse_args = parser.parse_args()
+    parser_args_func(parse_args, config)
+
     # check is rootuser
     if not getuid() == 0:
         sys.exit("[!] Wp3 must be run as root.")
-
-    parse_args = parser.parse_args()
-    parser_args_func(parse_args, config)
 
     wp3_header()
 
