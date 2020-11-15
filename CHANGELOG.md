@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - fixed hide error object of type QProcess on WorkProcess class #93
 - fixed settings dhcp for allow to change dhcp configuration
 - fixed error when execute from github actions 
+- fixed set restport by default 1337 
 
 ## [Released]
 
