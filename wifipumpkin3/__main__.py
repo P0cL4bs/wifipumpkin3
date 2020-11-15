@@ -53,6 +53,7 @@ def parser_args_func(parse_args, config):
         config.set_one("ap_mode", "restapi", True)
         config.set("rest_api_settings", "PASSWORD", parse_args.password)
         config.set("rest_api_settings", "USERNAME", parse_args.username)
+        config.set("rest_api_settings", "port", parse_args.restport)
         server_restapi = RestControllerAPI("wp3API", config)
         thead = threading.Thread(target=server_restapi.run)
         thead.setDaemon(True)

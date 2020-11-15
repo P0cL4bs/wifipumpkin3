@@ -23,8 +23,9 @@ class RestControllerAPI(object):
     def __init__(self, name, config):
         self.conf = config
         self.app = Flask(name)
+        self.port_rest = self.conf.get("rest_api_settings", "port")
         configuration.init_app(self.app, self.conf)
         configuration.load_extensions(self.app)
 
     def run(self):
-        self.app.run(debug=False)
+        self.app.run(debug=False, port=self.port_rest)
