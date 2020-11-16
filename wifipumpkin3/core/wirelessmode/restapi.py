@@ -12,7 +12,7 @@ from wifipumpkin3.core.utility.printer import display_messages, setcolor
 import sys
 from wifipumpkin3.exceptions.errors.networkException import *
 from wifipumpkin3.exceptions.errors.hostapdException import *
-
+import configparser
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
