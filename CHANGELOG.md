@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - fixed settings dhcp for allow to change dhcp configuration
 - fixed error when execute from github actions 
 - fixed set restport by default 1337 
+- fixed process init hostapd duplicated
 
 ## [Released]
 

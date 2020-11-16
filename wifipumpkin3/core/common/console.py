@@ -215,9 +215,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             if ctr_name != "wireless_controller":
                 ctr_instance.Start()
 
-        self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
-        self.threads["RogueAP"].insert(1, self.dhcp_controller.ActiveReactor)
-        self.threads["RogueAP"].insert(2, self.dns_controller.ActiveReactor)
+        self.threads["RogueAP"].insert(0, self.dhcp_controller.ActiveReactor)
+        self.threads["RogueAP"].insert(1, self.dns_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
