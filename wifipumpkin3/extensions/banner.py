@@ -44,9 +44,11 @@ class Banner(ExtensionUI):
         _version = setcolor(__version__, color="yellow")
         _codename = setcolor(__codename__, color="ciano")
         _branch = setcolor(__branch__, color="purple")
-        
+
         banner(_codename)
-        print("by: {} - P0cL4bs Team | version: {} {}".format(_author, _version, _branch))
+        print(
+            "by: {} - P0cL4bs Team | version: {} {}".format(_author, _version, _branch)
+        )
         print(
             display_messages(
                 "Session id: {} ".format(

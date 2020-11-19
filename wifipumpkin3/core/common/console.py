@@ -225,8 +225,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
                 self.signalHostApdProcessIsRunning
             )
-            return 
-            
+            return
+
         for thread in self.threads["RogueAP"]:
             if thread is not None:
                 QtCore.QThread.sleep(1)

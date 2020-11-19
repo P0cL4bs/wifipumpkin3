@@ -1,12 +1,7 @@
-import logging
-import socket
-from os import kill
-import signal
 from multiprocessing import Process, Queue
 from subprocess import Popen, STDOUT, PIPE
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
-from wifipumpkin3.core.packets.dhcpserver import DHCPProtocol
-from wifipumpkin3.core.utility.printer import display_messages, colors
+from wifipumpkin3.core.utility.printer import display_messages
 from wifipumpkin3.core.common.platforms import Linux as Refactor
 import wifipumpkin3.core.utility.constants as C
 

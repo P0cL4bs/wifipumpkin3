@@ -1,5 +1,4 @@
 from wifipumpkin3.core.config.globalimport import *
-import weakref
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.platforms import Linux

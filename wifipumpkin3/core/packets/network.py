@@ -2,10 +2,8 @@ import Queue
 from os import system
 from scapy.all import *
 from threading import Thread
-from time import sleep
 from PyQt5.QtCore import (
     QThread,
-    SIGNAL,
     QObject,
     QProcess,
     pyqtSlot,

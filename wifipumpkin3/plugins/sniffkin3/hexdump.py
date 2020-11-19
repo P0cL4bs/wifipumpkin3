@@ -1,7 +1,5 @@
 from scapy.all import *
 from wifipumpkin3.plugins.sniffkin3.default import PSniffer
-import sys
-from io import StringIO
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

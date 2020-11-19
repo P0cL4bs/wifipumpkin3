@@ -1,5 +1,4 @@
 from wifipumpkin3.core.config.globalimport import *
-from collections import OrderedDict
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.servers.proxy import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint

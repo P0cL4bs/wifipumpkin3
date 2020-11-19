@@ -1,5 +1,3 @@
-import re
-from ast import literal_eval
 from wifipumpkin3.plugins.captiveflask.plugin import CaptiveTemplatePlugin
 import wifipumpkin3.core.utility.constants as C
 

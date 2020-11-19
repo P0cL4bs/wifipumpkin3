@@ -1,18 +1,8 @@
 from wifipumpkin3.core.common.terminal import ExtensionUI
 from wifipumpkin3.core.config.globalimport import *
-from wifipumpkin3.core.utility.printer import (
-    display_messages,
-    setcolor,
-    display_tabulate,
-)
-from random import randrange
-import time, signal, sys
-from multiprocessing import Process
+from wifipumpkin3.core.utility.printer import display_messages, setcolor
 from scapy.all import *
-from wifipumpkin3.core.common.platforms import Linux
 from wifipumpkin3.core.common.platforms import is_tool
-from tabulate import tabulate
-from wifipumpkin3.core.common.threads import ProcessThread
 import re
 
 # This file is part of the wifipumpkin3 Open Source Project.

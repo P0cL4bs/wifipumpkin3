@@ -1,11 +1,8 @@
 from wifipumpkin3.core.config.globalimport import *
 import weakref
-from os import system, path, getcwd, popen, listdir, mkdir, chown
-from pwd import getpwnam
-from grp import getgrnam
-from time import asctime
-from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
-from wifipumpkin3.core.common.threads import ProcessHostapd, ProcessThread
+from os import path, popen, mkdir
+from subprocess import check_output, STDOUT, CalledProcessError
+from wifipumpkin3.core.common.threads import ProcessHostapd
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.printer import display_messages, setcolor

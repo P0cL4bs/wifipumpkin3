@@ -1,13 +1,8 @@
 from wifipumpkin3.core.config.globalimport import *
 from collections import OrderedDict
-from functools import partial
-from threading import Thread
-import queue
 from scapy.all import *
-import logging, os
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.servers.proxy.proxymode import *
-from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 from wifipumpkin3.plugins.captiveflask import *

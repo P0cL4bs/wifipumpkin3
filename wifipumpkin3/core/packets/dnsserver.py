@@ -1,8 +1,6 @@
-from PyQt5.QtCore import QThread, pyqtSignal, QThread, QObject
+from PyQt5.QtCore import QThread, pyqtSignal, QThread
 import json
-import logging
 import os
-import signal
 from datetime import datetime
 from pathlib import Path
 from textwrap import wrap
@@ -11,7 +9,6 @@ import wifipumpkin3.core.utility.constants as C
 from dnslib import DNSLabel, QTYPE, RR, dns
 from dnslib.proxy import ProxyResolver
 from dnslib.server import DNSServer
-import binascii
 from wifipumpkin3.core.utility.printer import display_messages
 
 # This file is part of the wifipumpkin3 Open Source Project.

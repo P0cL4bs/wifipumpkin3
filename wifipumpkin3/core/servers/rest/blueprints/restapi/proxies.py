@@ -22,6 +22,7 @@ from wifipumpkin3.core.servers.rest.ext.auth import token_required
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ProxysPluginsResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"

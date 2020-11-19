@@ -1,17 +1,12 @@
 from struct import pack
-from time import sleep, asctime
 from random import randint
-from base64 import b64encode
-from os import popen, path, walk, stat, kill, remove
-from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
+from os import popen, path, walk, stat, remove
+from subprocess import check_output, STDOUT
 from re import search, compile, VERBOSE, IGNORECASE
 import netifaces
 from scapy.all import *
 from PyQt5 import QtCore
-import logging
-import signal
 import wifipumpkin3.core.utility.constants as C
-from shlex import split
 from glob import glob
 import warnings, json
 from uuid import uuid1

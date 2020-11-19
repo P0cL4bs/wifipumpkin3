@@ -5,7 +5,6 @@ from wifipumpkin3.core.utility.printer import (
     setcolor,
     display_tabulate,
 )
-from wifipumpkin3.core.common.platforms import Linux
 import tempfile
 import requests
 from os import path

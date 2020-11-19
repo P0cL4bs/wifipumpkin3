@@ -6,11 +6,10 @@ from wifipumpkin3.core.utility.printer import (
     display_tabulate,
 )
 from random import randrange
-import time, signal, sys
+import time, sys
 from multiprocessing import Process
 from scapy.all import *
 from wifipumpkin3.core.common.platforms import Linux
-from tabulate import tabulate
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

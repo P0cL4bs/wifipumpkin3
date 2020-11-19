@@ -1,4 +1,3 @@
-import logging
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 

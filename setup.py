@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-from distutils.util import strtobool
 import os
-import glob
-import shutil
 import re
 from distutils.dir_util import copy_tree
 import sys

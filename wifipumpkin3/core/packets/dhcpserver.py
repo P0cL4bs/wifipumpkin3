@@ -1,9 +1,8 @@
 import socket
 from dhcplib.packet import DHCPPacket, _FORMAT_CONVERSION_DESERIAL, DHCP_OPTIONS_TYPES
-from dhcplib import net, getifaddrslib
 import ipaddress as ip
 from queue import Queue
-from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QProcess, QObject
+from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.utility.printer import display_messages
 

@@ -1,7 +1,5 @@
-from random import randint
 from scapy.all import *
 from wifipumpkin3.plugins.sniffkin3.default import PSniffer
-from os.path import splitext
 from string import ascii_letters
 
 # This file is part of the wifipumpkin3 Open Source Project.

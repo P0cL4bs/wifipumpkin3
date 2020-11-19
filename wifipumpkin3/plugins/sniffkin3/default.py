@@ -1,6 +1,5 @@
 from re import findall
 import logging
-from sys import stdout
 from scapy.all import hexdump
 from wifipumpkin3.core.utility.collection import SettingsINI
 from PyQt5.QtCore import pyqtSignal

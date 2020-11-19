@@ -3,7 +3,6 @@ from wifipumpkin3.core.common.uimodel import *
 import weakref
 from loguru import logger
 import sys
-import json
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

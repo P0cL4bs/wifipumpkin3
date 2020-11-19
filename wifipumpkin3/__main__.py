@@ -67,7 +67,7 @@ def wp3_header():
     _branch = setcolor(__branch__, color="purple")
 
     banner(_codename)
-    print("by: {} - P0cL4bs Team | version: {} {}".format(_author, _version, _branch ))
+    print("by: {} - P0cL4bs Team | version: {} {}".format(_author, _version, _branch))
 
 
 def main():

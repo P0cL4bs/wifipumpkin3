@@ -1,9 +1,5 @@
-import queue
 from scapy.all import *
-from threading import Thread
 from PyQt5.QtCore import QThread
-from netaddr import EUI
-from netaddr.core import NotRegisteredError
 from wifipumpkin3.core.utility.printer import display_messages, setcolor
 
 # This file is part of the wifipumpkin3 Open Source Project.
