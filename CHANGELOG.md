@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - added settings binary path of iptables editable 
 - added waitforfinish on Qprocess for add rules iptables 
 - added frist restful api implementation 
+- added DHCP command to select dhcp server configuration
 
 ### Changed
 

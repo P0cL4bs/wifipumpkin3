@@ -7,6 +7,7 @@ from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.wirelessmode import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
+
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 

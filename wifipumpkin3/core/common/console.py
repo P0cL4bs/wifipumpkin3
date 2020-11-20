@@ -82,7 +82,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.wireless_controller = self.coreui.getController("wireless_controller")
         self.dhcp_controller = self.coreui.getController("dhcp_controller")
         self.dns_controller = self.coreui.getController("dns_controller")
-        self.tableUI = self.coreui.getController("ui_controller")
+        self.uiwid_controller = self.coreui.getController("ui_controller")
 
         self.parser_list_func = {
             # parser_set_proxy is default extend class
@@ -283,7 +283,11 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_clients(self, args):
         """ap: show all connected clients on AP """
-        self.tableUI.ui_table_mod.start()
+        self.uiwid_controller.ui_table_mod.start()
+
+    def do_dhcp(self, args):
+        """ap: choise dhcp server configuration"""
+        self.uiwid_controller.ui_dhcp_config.start()
 
     def do_stop(self, args):
         """ap: stop access point service"""
