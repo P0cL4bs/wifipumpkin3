@@ -249,6 +249,19 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             self.threads["RogueAP"].insert(0, self.wireless_controller.ActiveReactor)
 
     def killThreads(self):
+
+        # kill all modules on background
+        if len(self.threads["Modules"]) > 0:
+            for module_name, instance in self.threads.get("Modules").items():
+                if instance._background_mode:
+                    print(
+                        display_messages(
+                            "job {} successfully stopped".format(module_name),
+                            sucess=True,
+                        )
+                    )
+                    instance.do_stop([])
+
         if not len(self.threads["RogueAP"]) > 0:
             return
         self.conf.set("accesspoint", "status_ap", False)

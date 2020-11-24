@@ -37,10 +37,12 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
         self.parent = parent
         self.conf = SuperSettings.getInstance()
 
-        self.DHCPConf = self.Settings.confingDHCP
-
         self.loggermanager = LoggerManager.getInstance()
         self.configure_logger()
+
+    @property
+    def DHCPConf(self):
+        return self.Settings.updateconf()
 
     def configure_logger(self):
         config_extra = self.loggermanager.getExtraConfig(self.ID)
@@ -143,3 +145,4 @@ class DHCPSettings(CoreSettings):
         self.confingDHCP["netmask"] = self.conf.get(self.ConfigRoot, "netmask")
         self.confingDHCP["broadcast"] = self.conf.get(self.ConfigRoot, "broadcast")
         self.confingDHCP["range"] = self.conf.get(self.ConfigRoot, "range")
+        return self.confingDHCP

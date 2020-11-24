@@ -29,12 +29,16 @@ class ui_DhcpSettingsClass(WidgetBase):
         self.parent = parent
         self.description = u"Using DHCP, the Access Point will provide an IP address to devices that connect, in a private range.\n"
         self.class_headers = {
-            u"10.0.0.20/50": "Class-A-Address", u"172.16.0.100/150" :  "Class-B-Address", u"192.168.0.100/150" : "Class-C-Address"}
+            u"10.0.0.20/50": "Class-A-Address",
+            u"172.16.0.100/150": "Class-B-Address",
+            u"192.168.0.100/150": "Class-C-Address",
+        }
 
     def setup_view(self):
         self.widget_main = urwid.Padding(
-            self.menu(u"Select the DHCP Server Settings", 
-            self.class_headers.keys()), left=2, right=2
+            self.menu(u"Select the DHCP Server Settings", self.class_headers.keys()),
+            left=2,
+            right=2,
         )
         self.top = urwid.Overlay(
             self.widget_main,
@@ -53,7 +57,7 @@ class ui_DhcpSettingsClass(WidgetBase):
             button = urwid.Button(c)
             urwid.connect_signal(button, "click", self.item_chosen, c)
             body.append(urwid.AttrMap(button, None, focus_map="reversed"))
-        
+
         default_config = []
         child_keys = self._conf.get_all_childname("dhcp")
         for config in child_keys:
@@ -62,7 +66,7 @@ class ui_DhcpSettingsClass(WidgetBase):
             )
 
         body.append(urwid.Text([u"\n[Default]\n"] + default_config))
-        
+
         return urwid.ListBox(urwid.SimpleFocusListWalker(body))
 
     def item_chosen(self, button, choice):
@@ -71,7 +75,9 @@ class ui_DhcpSettingsClass(WidgetBase):
         child_keys = self._conf.get_all_childname(self.class_headers.get(choice))
         for config in child_keys:
             data_config.append(
-                u"{} = {}\n".format(config, self._conf.get(self.class_headers.get(choice), config))
+                u"{} = {}\n".format(
+                    config, self._conf.get(self.class_headers.get(choice), config)
+                )
             )
             data_set[config] = self._conf.get(self.class_headers.get(choice), config)
         data_config.append(u"-----------DHCP-----------\n")
