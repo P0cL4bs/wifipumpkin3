@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - added frist restful api implementation 
 - added DHCP command to select dhcp server configuration
 - added stop all modules with the command stop or exit is runnning
+- added new module for perform dns spoof attack with AP enable 
 
 ### Changed
 
