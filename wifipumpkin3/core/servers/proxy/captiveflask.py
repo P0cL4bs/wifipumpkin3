@@ -61,6 +61,7 @@ class CaptivePortal(ProxyMode):
     RunningPort = 80
     ModType = "proxy"
     TypePlugin = 1
+    TypeButton = 1 # 0 for Switch, 1 for Radio
 
     def __init__(self, parent=None, **kwargs):
         super(CaptivePortal, self).__init__(parent)

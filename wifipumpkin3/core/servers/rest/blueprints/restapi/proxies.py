@@ -4,6 +4,7 @@ from wifipumpkin3 import PumpkinShell
 from flask_restful import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
+from wifipumpkin3.core.servers.rest.ext.exceptions import exception
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -33,16 +34,55 @@ class ProxysPluginsResource(Resource):
 
     @token_required
     def get(self):
-        proxy_plugins = self.root.proxy_controller.getInfo()
+        proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
         list_plugins = []
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(
                 self.key_name, proxy_plugins[item]["ID"], format=bool
             )
-            if proxy_plugins[item].get("Config"):
-                del proxy_plugins[item]["Config"]
             list_plugins.append(proxy_plugins[item])
         return jsonify({"proxys": list_plugins})
+
+class ProxiesInfoResource(Resource):
+    config = SettingsINI.getInstance()
+    key_name = "proxy_plugins"
+
+    def __init__(self):
+        self.root = PumpkinShell.getInstance()
+        super(ProxiesInfoResource, self).__init__()
+
+    @token_required
+    def get(self, proxy_name=None):
+        if proxy_name:
+            if not proxy_name in self.config.get_all_childname(self.key_name):
+                return exception(
+                    "Cannot found that attribute {} on {}!".format(
+                        proxy_name, self.key_name
+                    ),
+                    code=400,
+                ) 
+        proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
+        for item in proxy_plugins:
+            proxy_plugins[item]["Activate"] = self.config.get(
+                self.key_name, proxy_plugins[item]["ID"], format=bool
+            )
+        return jsonify(proxy_plugins.get(proxy_name))
+
+class ProxiesAllInfoResource(Resource):
+    config = SettingsINI.getInstance()
+    key_name = "proxy_plugins"
+    def __init__(self):
+        self.root = PumpkinShell.getInstance()
+        super(ProxiesAllInfoResource, self).__init__()
+
+    @token_required
+    def get(self):
+        proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
+        for item in proxy_plugins:
+            proxy_plugins[item]["Activate"] = self.config.get(
+                self.key_name, proxy_plugins[item]["ID"], format=bool
+            )
+        return jsonify({"proxies" : proxy_plugins})
 
 
 class SettingsProxyResource(Resource):
@@ -74,5 +114,6 @@ class SettingsProxyResource(Resource):
                     "Cannot found that attribute {} on {}!".format(key, self.key_name),
                     code=400,
                 )
-            self.config.set(self.key_name, key, value)
+            print(key, value)
+            self.config.set_one(self.key_name, key, value)
         return jsonify(data)

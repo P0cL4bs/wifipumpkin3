@@ -4,6 +4,7 @@ from wifipumpkin3 import PumpkinShell
 from flask_restful import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
+from wifipumpkin3.core.servers.rest.ext.exceptions import exception
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -33,17 +34,38 @@ class MitmPluginsResource(Resource):
 
     @token_required
     def get(self):
-        mitm_plugins = self.root.mitm_controller.getInfo()
-        list_plugins = []
+        mitm_plugins = self.root.mitm_controller.getInfo(excluded=("Config"))
         for item in mitm_plugins:
             mitm_plugins[item]["Activate"] = self.config.get(
                 self.key_name, mitm_plugins[item]["ID"], format=bool
             )
-            if mitm_plugins[item].get("Config"):
-                del mitm_plugins[item]["Config"]
-            list_plugins.append(mitm_plugins[item])
-        return jsonify({"plugins": list_plugins})
+        return jsonify({"plugins": mitm_plugins})
 
+
+class PluginsInfoResource(Resource):
+    config = SettingsINI.getInstance()
+    key_name = "mitm_modules"
+
+    def __init__(self):
+        self.root = PumpkinShell.getInstance()
+        super(PluginsInfoResource, self).__init__()
+
+    @token_required
+    def get(self, plugin_name=None):
+        if plugin_name:
+            if not plugin_name in self.config.get_all_childname(self.key_name):
+                return exception(
+                    "Cannot found that attribute {} on {}!".format(
+                        plugin_name, self.key_name
+                    ),
+                    code=400,
+                ) 
+        proxy_plugins = self.root.mitm_controller.getInfo(excluded=("Config"))
+        for item in proxy_plugins:
+            proxy_plugins[item]["Activate"] = self.config.get(
+                self.key_name, proxy_plugins[item]["ID"], format=bool
+            )
+        return jsonify(proxy_plugins.get(plugin_name))
 
 class SettingsPluginResource(Resource):
     config = SettingsINI.getInstance()

@@ -57,6 +57,7 @@ class MitmController(PluginsUI, ControllerBlueprint):
                 "ConfigPath": k.CONFIGINI_PATH,
                 "Description": k.Description,
                 "Config": k.getConfig,
+                "TypeButton": k.TypeButton,
             }
 
         # set all mitm plugin as child class
@@ -89,8 +90,16 @@ class MitmController(PluginsUI, ControllerBlueprint):
     def get(self):
         return self.mitmhandler
 
-    def getInfo(self):
-        return self.mitm_infor
+    def getInfo(self, excluded=()):
+        if not excluded:
+            return self.mitm_infor
+        result = {}
+        for item in self.mitm_infor:
+            result[item] = {}
+            for subItem in self.mitm_infor[item]:
+                if not subItem in excluded:
+                    result[item][subItem] = self.mitm_infor[item][subItem]
+        return result
 
     @classmethod
     def disable(cls, val=True):

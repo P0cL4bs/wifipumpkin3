@@ -2,7 +2,7 @@ from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.servers.proxy import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
-
+import copy
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
@@ -60,6 +60,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 "ConfigPath": k.CONFIGINI_PATH,
                 "Description": k.Description,
                 "Config": k.getConfig,
+                "TypeButton": k.TypeButton,
             }
 
         # set all proxy plugin as child class
@@ -110,8 +111,17 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     def get(self):
         return self.proxies
 
-    def getInfo(self):
-        return self.proxies_infor
+    def getInfo(self, excluded=()):
+        if not excluded:
+            return self.proxies_infor
+        result = {}
+        for item in self.proxies_infor:
+            result[item] = {}
+            for subItem in self.proxies_infor[item]:
+                if not subItem in excluded:
+                    result[item][subItem] = self.proxies_infor[item][subItem]
+        return result
+        
 
     @classmethod
     def disable(cls, val=True):

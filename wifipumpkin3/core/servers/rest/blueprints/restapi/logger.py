@@ -5,6 +5,7 @@ from flask import jsonify, request
 import os, json
 from itertools import islice
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
+from wifipumpkin3.core.servers.rest.ext.exceptions import exception
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.

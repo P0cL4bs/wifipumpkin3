@@ -52,16 +52,26 @@ def init_app(app):
     api.add_resource(
         res_plugins.SettingsPluginResource, "/plugins", "/plugins/<string:attribute>"
     )
-    api.add_resource(res_plugins.MitmPluginsResource, "/plugins")
+    api.add_resource(res_plugins.MitmPluginsResource, "/plugins/info")
+
+    api.add_resource(
+        res_plugins.PluginsInfoResource, "/plugins", "/plugins/<string:plugin_name>/info"
+    )
 
     api.add_resource(
         res_proxies.SettingsProxyResource, "/proxies", "/proxies/<string:attribute>"
     )
 
-    api.add_resource(res_proxies.ProxysPluginsResource, "/proxies")
+    api.add_resource(
+        res_proxies.ProxiesInfoResource, "/proxies", "/proxies/<string:proxy_name>/info"
+    )
+    api.add_resource(
+        res_proxies.ProxiesAllInfoResource, "/proxies", "/proxies/info"
+    )
 
     api.add_resource(res_plugins.SettingsPluginsResource, "/<string:plugin_id>/plugins")
 
     api.add_resource(res_command.CommandsResource, "/commands/<string:command>")
+    api.add_resource(res_command.CommandsPostResource, "/commands")
 
     app.register_blueprint(bp)

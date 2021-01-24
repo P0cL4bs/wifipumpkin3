@@ -58,6 +58,7 @@ class Sniffkin3(MitmMode):
     _cmd_array = []
     ModSettings = True
     ModType = "server"
+    TypeButton = 0 # 0 for Switch, 1 for Radio
 
     def __init__(self, parent=None, **kwargs):
         super(Sniffkin3, self).__init__(parent)

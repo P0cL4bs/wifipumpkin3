@@ -58,6 +58,7 @@ class MitmMode(Widget):
     sendError = QtCore.pyqtSignal(str)
     sendSingal_disable = QtCore.pyqtSignal(object)
     config = None
+    TypeButton = 1 # 0 for Switch, 1 for Radio
 
     def __init__(self, parent=None):
         super(MitmMode, self).__init__(parent)

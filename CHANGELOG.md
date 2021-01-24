@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 
 
+## [Unreleased]
+
+## [1.0.X] - 2021-XX-XX
+
+
+### Added 
+- added route for get information of plugins and proxies on restAPI 
+- added new attribute on plugins and proxies mode class 
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- fixed cli error when resquest restAPI plugins and proxies
+- fixed restApi error when get exceptions http request
+- fixed wirelesscontroller not started into restAPI mode
+
 ## [Released]
 
 ## [1.0.8] - 2020-11-14

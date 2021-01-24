@@ -58,13 +58,13 @@ class PumpKinProxy(ProxyMode):
     RunningPort = 8080
     ModType = "proxy"
     TypePlugin = 1
+    TypeButton = 0 # 0 for Switch, 1 for Radio
 
     def __init__(self, parent=None, **kwargs):
         super(PumpKinProxy, self).__init__(parent)
         self.setID(self.ID)
         self.parent = parent
         self.setTypePlugin(self.TypePlugin)
-        self.setRunningPort(self.conf.get("proxy_plugins", "pumpkinproxy_config_port"))
 
     def Initialize(self):
         self.add_default_rules(
