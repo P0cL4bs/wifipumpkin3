@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - fixed cli error when resquest restAPI plugins and proxies
 - fixed restApi error when get exceptions http request
 - fixed wirelesscontroller not started into restAPI mode
+- fixed locale error in docker container
 
 ## [Released]
 
