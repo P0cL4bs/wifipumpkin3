@@ -2,7 +2,7 @@ netifaces>=0.10.9
 netaddr>=0.7.19
 dhcplib==0.1.1
 tabulate>=0.8.5
-urwid==2.1.1
+urwid==2.1.2
 termcolor>=1.1.0
 twisted==19.7.0
 PyQt5>=5.14
