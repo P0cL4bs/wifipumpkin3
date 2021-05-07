@@ -15,6 +15,7 @@ RUN apt-get update \
         iptables \
         net-tools \
         rfkill \
+        libpcap-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 # copy all files to app folder
 COPY . /usr/src/app
