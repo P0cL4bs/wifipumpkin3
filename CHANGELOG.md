@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Deprecated
 
 ### Removed
+- removed support to Rest API controller temporally
 
 ### Fixed
 - fixed cli error when resquest restAPI plugins and proxies

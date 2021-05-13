@@ -18,7 +18,8 @@ from wifipumpkin3._author import __author__
 import wifipumpkin3.core.utility.constants as C
 from os import getuid
 
-from wifipumpkin3.core.servers.rest.application import RestControllerAPI
+# disable RestAPI
+# from wifipumpkin3.core.servers.rest.application import RestControllerAPI
 import threading
 
 
@@ -37,27 +38,27 @@ def parser_args_func(parse_args, config):
                     info=True,
                 )
             )
-    if parse_args.restmode:
-        if not (parse_args.password):
-            print(
-                display_messages(
-                    "{} \n rest mode require a valid password.".format(
-                        setcolor("password invalid", color="red")
-                    ),
-                    info=True,
-                )
-            )
-            exit(0)
+    # if parse_args.restmode:
+    #     if not (parse_args.password):
+    #         print(
+    #             display_messages(
+    #                 "{} \n rest mode require a valid password.".format(
+    #                     setcolor("password invalid", color="red")
+    #                 ),
+    #                 info=True,
+    #             )
+    #         )
+    #         exit(0)
 
-        set_nocolors()
-        config.set_one("ap_mode", "restapi", True)
-        config.set("rest_api_settings", "PASSWORD", parse_args.password)
-        config.set("rest_api_settings", "USERNAME", parse_args.username)
-        config.set("rest_api_settings", "port", parse_args.restport)
-        server_restapi = RestControllerAPI("wp3API", config)
-        thead = threading.Thread(target=server_restapi.run)
-        thead.setDaemon(True)
-        thead.start()
+    #     set_nocolors()
+    #     config.set_one("ap_mode", "restapi", True)
+    #     config.set("rest_api_settings", "PASSWORD", parse_args.password)
+    #     config.set("rest_api_settings", "USERNAME", parse_args.username)
+    #     config.set("rest_api_settings", "port", parse_args.restport)
+    #     server_restapi = RestControllerAPI("wp3API", config)
+    #     thead = threading.Thread(target=server_restapi.run)
+    #     thead.setDaemon(True)
+    #     thead.start()
 
 
 def wp3_header():
@@ -115,31 +116,31 @@ def main():
         action="store_true",
         default=False,
     )
-    parser.add_argument(
-        "--rest",
-        dest="restmode",
-        help="Run the Wp3 RESTful API.",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "--restport",
-        dest="restport",
-        help="Port to run the Wp3 RESTful API on. default is 1337",
-        default=1337,
-    )
-    parser.add_argument(
-        "--username",
-        dest="username",
-        help="Start the RESTful API with the specified username instead of pulling from wp3.db",
-        default="wp3admin",
-    )
-    parser.add_argument(
-        "--password",
-        dest="password",
-        help="Start the RESTful API with the specified password instead of pulling from wp3.db",
-        default=None,
-    )
+    # parser.add_argument(
+    #     "--rest",
+    #     dest="restmode",
+    #     help="Run the Wp3 RESTful API.",
+    #     action="store_true",
+    #     default=False,
+    # )
+    # parser.add_argument(
+    #     "--restport",
+    #     dest="restport",
+    #     help="Port to run the Wp3 RESTful API on. default is 1337",
+    #     default=1337,
+    # )
+    # parser.add_argument(
+    #     "--username",
+    #     dest="username",
+    #     help="Start the RESTful API with the specified username instead of pulling from wp3.db",
+    #     default="wp3admin",
+    # )
+    # parser.add_argument(
+    #     "--password",
+    #     dest="password",
+    #     help="Start the RESTful API with the specified password instead of pulling from wp3.db",
+    #     default=None,
+    # )
     parser.add_argument(
         "-v",
         "--version",
