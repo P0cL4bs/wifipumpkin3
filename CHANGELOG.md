@@ -9,7 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added 
 - added route for get information of plugins and proxies on restAPI 
-- added new attribute on plugins and proxies mode class 
+- added new attribute on plugins and proxies mode class
+- added logger resource API 
 
 ### Changed
 

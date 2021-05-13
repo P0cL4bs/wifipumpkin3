@@ -33,6 +33,7 @@ def init_app(app):
 
     api.add_resource(res_auth.LoginResource, "/authenticate/")
     api.add_resource(res_logger.getFileLogResource, "/logger/<string:filename>")
+    api.add_resource(res_logger.getAllFileLogResource, "/loggers")
 
     api.add_resource(
         res_ap.SettingsAccesspointResource,
