@@ -20,3 +20,7 @@ from wifipumpkin3.exceptions.base import ExceptionTemplate
 
 class DHCPServerSettingsError(ExceptionTemplate):
     filename = "dhcp_server_settings_error"
+
+
+class DHCPdServerNotFound(ExceptionTemplate):
+    filename = "dhcp_server_dhcpd_not_found"

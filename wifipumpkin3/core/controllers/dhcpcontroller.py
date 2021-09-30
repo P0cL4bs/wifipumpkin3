@@ -65,3 +65,25 @@ class DHCPController(ControllerBlueprint):
             "PID": self.ActiveReactor.getpid(),
         }
         return info_reactor
+
+    def setDhcpMode(self, id_module_dhcp):
+        if id_module_dhcp in self.mode.keys():
+            if 'dhcpd_server' in id_module_dhcp:
+                self.parent.conf.set("accesspoint", "pydhcp_server", False)
+                self.parent.conf.set("accesspoint", "pydns_server", False)
+                self.parent.conf.set("accesspoint", "dhcpd_server", True)
+                return
+            self.parent.conf.set("accesspoint", "dhcpd_server", False)
+            self.parent.conf.set("accesspoint", "pydns_server", True)
+            self.parent.conf.set("accesspoint", "pydhcp_server", True)
+
+    def getInfo(self, excluded=()):
+        if not excluded:
+            return self.mode
+        result = {}
+        for item in self.mode:
+            result[item] = {}
+            for subItem in self.mode[item]:
+                if not subItem in excluded:
+                    result[item][subItem] = self.mitm_infor[item][subItem]
+        return result

@@ -2,15 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [Released]
 
-## [1.0.X] - 2021-XX-XX
-
+## [1.0.9] - 2021-09-29
 
 ### Added 
 - added route for get information of plugins and proxies on restAPI 
 - added new attribute on plugins and proxies mode class
 - added logger resource API 
+- added new command dhcpmode
+- added option for settings dhcp mode pydhcpserver or dhcpd_server
+- added new support to run isc_dhcp_server for dns/ dhcp
 
 ### Changed
 

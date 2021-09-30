@@ -1,6 +1,5 @@
 from wifipumpkin3.core.config.globalimport import *
 import weakref
-from os import path, popen, mkdir
 from subprocess import check_output, STDOUT, CalledProcessError
 from wifipumpkin3.core.common.threads import ProcessHostapd
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
@@ -9,6 +8,8 @@ from wifipumpkin3.core.utility.printer import display_messages, setcolor
 import sys
 from wifipumpkin3.exceptions.errors.networkException import *
 import configparser
+from os import path, popen, mkdir, remove
+from shutil import move
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -210,13 +211,7 @@ class StaticSettings(CoreSettings):
             exec_bash(line)
         # check if dhcp option is enabled.
         if self.conf.get("accesspoint", "dhcp_server", format=bool):
-            with open(C.DHCPCONF_PATH, "w") as dhcp:
-                for line in self.SettingsAP["dhcp-server"]:
-                    dhcp.write(line)
-                dhcp.close()
-                if not path.isdir("/etc/dhcp/"):
-                    mkdir("/etc/dhcp")
-                move(C.DHCPCONF_PATH, "/etc/dhcp/")
+            self.apply_dhcp_config_leases_config()
 
     def checkNetworkAP(self):
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")

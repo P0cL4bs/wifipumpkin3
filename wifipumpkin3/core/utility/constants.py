@@ -57,7 +57,7 @@ DONATE_TXT = (
 
 # settings DHCP
 DHCPLEASES_PATH = "/var/lib/dhcp/dhcpd.leases"
-DHCPCONF_PATH = "core/config/dhcpd_wp.conf"
+DHCPCONF_PATH = user_config_dir + "/.config/wifipumpkin3/config/dhcpd.conf"
 
 # settings HOSTAPD
 HOSTAPDCONF_PATH = user_config_dir + "/.config/wifipumpkin3/config/hostapd/hostapd.conf"

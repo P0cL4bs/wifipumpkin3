@@ -2,6 +2,8 @@ from wifipumpkin3.core.config.globalimport import *
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.common.platforms import Linux
+from os import path, mkdir, remove
+from shutil import move
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -39,6 +41,16 @@ class CoreSettings(Linux):
     def deleteObject(self, obj):
         """ reclaim memory """
         del obj
+
+    def apply_dhcp_config_leases_config(self):
+        with open(C.DHCPCONF_PATH, "w") as dhcp:
+            for line in self.SettingsAP["dhcp-server"]:
+                dhcp.write(line)
+            dhcp.close()
+            if not path.isdir("/etc/dhcp/"):
+                mkdir("/etc/dhcp")
+            remove("/etc/dhcp/dhcpd.conf")
+            move(C.DHCPCONF_PATH, "/etc/dhcp/")
 
     @property
     def getIptablesPath(self):

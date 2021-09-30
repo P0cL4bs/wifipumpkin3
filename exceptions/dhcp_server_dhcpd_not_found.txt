@@ -1,0 +1,5 @@
+The binary of `dhcpd` or ISC DHCP Server not found.
+
+Please, make a sure that isc-dhcp-server package is
+installed on your system.
+

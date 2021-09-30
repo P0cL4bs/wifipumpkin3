@@ -5,7 +5,7 @@ from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
 from wifipumpkin3.core.common.threads import ProcessThread
-from wifipumpkin3.exceptions.errors.dhcpException import DHCPServerSettingsError
+from wifipumpkin3.exceptions.errors.dhcpException import DHCPServerSettingsError, DHCPdServerNotFound
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -78,6 +78,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
     def Stop(self):
         self.shutdown()
         self.reactor.stop()
+        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, "w")
 
     def Start(self):
         self.prereq()
@@ -103,8 +104,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
         cmdpath = os.popen("which {}".format(self.ExecutableFile)).read().split("\n")[0]
         if cmdpath:
             return cmdpath
-        else:
-            return None
+        raise DHCPdServerNotFound("DHCPServer", "The binary (dhcpd) not found")
 
     def get_mac_vendor(self, mac):
         """ discovery mac vendor by mac address """

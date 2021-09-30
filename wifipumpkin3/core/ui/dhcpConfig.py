@@ -27,16 +27,21 @@ class ui_DhcpSettingsClass(WidgetBase):
 
     def __init__(self, parent):
         self.parent = parent
-        self.description = u"Using DHCP, the Access Point will provide an IP address to devices that connect, in a private range.\n"
+        self.desc_dhcp_server = u"DHCP or Dynamic Host Configuration Protocol is a protocol used in networks through which a system can automatically obtain the network settings, at boot time, required for communicating with other network devices. .\n"
+        self.desc_ip_range = u"Using DHCP, the Access Point will provide an IP address to devices that connect, in a private range.\n"
         self.class_headers = {
             u"10.0.0.20/50": "Class-A-Address",
             u"172.16.0.100/150": "Class-B-Address",
             u"192.168.0.100/150": "Class-C-Address",
         }
+        self.radio_dhcpd_server_status = False
 
     def setup_view(self):
+
+        self.radio_dhcpd_server_status = self._conf.get("accesspoint", "dhcpd_server",format=bool)
+
         self.widget_main = urwid.Padding(
-            self.menu(u"Select the DHCP Server Settings", self.class_headers.keys()),
+            self.menu(u"DHCP Server", self.class_headers.keys()),
             left=2,
             right=2,
         )
@@ -51,8 +56,30 @@ class ui_DhcpSettingsClass(WidgetBase):
             min_height=12,
         )
 
+
+    def on_radioButton_changes(self, w, state, user_data):
+        if "pydhcp_server" == user_data:
+            self.radio_dhcpd_server_status = False
+        else:
+            self.radio_dhcpd_server_status = True
+
     def menu(self, title, choices):
-        body = [urwid.Text(title), urwid.Divider(), urwid.Text(self.description)]
+        body = [urwid.Text(title), urwid.Divider(),urwid.Text(self.desc_dhcp_server) ]
+        
+        bgroup = [] # button group
+        self.radioPyDhcpServer = urwid.RadioButton(bgroup, u"PyDHCPServer", 
+        state=not self.radio_dhcpd_server_status,
+        on_state_change=self.on_radioButton_changes, user_data="pydhcp_server")
+
+        self.radioDhcpdServer = urwid.RadioButton(bgroup, u"ISC DHCPServer", 
+        state=self.radio_dhcpd_server_status,
+        on_state_change=self.on_radioButton_changes, user_data="dhcp_server")
+
+        body.append(self.radioPyDhcpServer)
+        body.append(self.radioDhcpdServer)
+        body.append(urwid.Divider())
+        body.append(urwid.Text(self.desc_ip_range))
+        
         for c in choices:
             button = urwid.Button(c)
             urwid.connect_signal(button, "click", self.item_chosen, c)
@@ -66,6 +93,7 @@ class ui_DhcpSettingsClass(WidgetBase):
             )
 
         body.append(urwid.Text([u"\n[Default]\n"] + default_config))
+        body.append(urwid.Text([u"Press (", ("quit button", u"Q"), u") to quit."]))
 
         return urwid.ListBox(urwid.SimpleFocusListWalker(body))
 
@@ -83,7 +111,16 @@ class ui_DhcpSettingsClass(WidgetBase):
         data_config.append(u"-----------DHCP-----------\n")
 
         for key, value in data_set.items():
-            self._conf.set("dhcp", key, value)
+            self._conf.set("dhcp", key, value)   
+
+        if self.radioDhcpdServer.get_state():
+            self._conf.set("accesspoint", "pydhcp_server", False)
+            self._conf.set("accesspoint", "pydns_server", False)
+            self._conf.set("accesspoint", "dhcpd_server", True)
+        else:
+            self._conf.set("accesspoint", "pydhcp_server", True)
+            self._conf.set("accesspoint", "pydns_server", True)
+            self._conf.set("accesspoint", "dhcpd_server", False)     
 
         response = urwid.Text([u"[DHCP configuration]", u"\n"] + data_config)
         done = urwid.Button(u"Ok")
@@ -97,10 +134,14 @@ class ui_DhcpSettingsClass(WidgetBase):
 
     def main(self):
         self.setup_view()
-        urwid.MainLoop(self.top, palette=[("reversed", "standout", "")]).run()
+        urwid.MainLoop(self.top, palette=[("reversed", "standout", "")], unhandled_input=self.handleWindow).run()
 
     def start(self):
         self.main()
+
+    def handleWindow(self, key):
+        if key == "Q" or key == "q" or key == "esc":
+            raise urwid.ExitMainLoop()
 
     def exit_program(self, button):
         raise urwid.ExitMainLoop()

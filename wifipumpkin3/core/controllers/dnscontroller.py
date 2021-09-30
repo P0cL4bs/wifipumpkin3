@@ -38,11 +38,14 @@ class DNSController(ControllerBlueprint):
             setattr(self, dns.ID, dns)
 
     def Start(self):
-        self.Active.Start()
+        if self.Active != None:
+            self.Active.Start()
 
     @property
     def ActiveReactor(self):
-        return self.Active.reactor
+        if self.Active != None:
+            return self.Active.reactor
+        return None
 
     @property
     def Active(self):

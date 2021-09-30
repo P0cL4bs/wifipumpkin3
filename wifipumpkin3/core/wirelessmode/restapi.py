@@ -9,6 +9,7 @@ from wifipumpkin3.core.utility.printer import display_messages, setcolor
 from wifipumpkin3.exceptions.errors.networkException import *
 from wifipumpkin3.exceptions.errors.hostapdException import *
 import configparser
+from shutil import move
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -222,13 +223,7 @@ class RestApiSettings(CoreSettings):
             exec_bash(line)
         # check if dhcp option is enabled.
         if self.conf.get("accesspoint", "dhcp_server", format=bool):
-            with open(C.DHCPCONF_PATH, "w") as dhcp:
-                for line in self.SettingsAP["dhcp-server"]:
-                    dhcp.write(line)
-                dhcp.close()
-                if not path.isdir("/etc/dhcp/"):
-                    mkdir("/etc/dhcp")
-                move(C.DHCPCONF_PATH, "/etc/dhcp/")
+            self.apply_dhcp_config_leases_config()
 
     def checkNetworkAP(self):
         "this will be checked on web interface "

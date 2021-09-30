@@ -1,9 +1,8 @@
 from wifipumpkin3.core.config.globalimport import *
 from re import *
-from os import system, path, getcwd, popen, listdir, mkdir, chown
+from os import path
 from shutil import move
 from wifipumpkin3.core.widgets.default.session_config import *
-from subprocess import check_output, Popen, PIPE, STDOUT, CalledProcessError, call
 from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
 import sys
 from wifipumpkin3.core.common.threads import WorkerProcess
