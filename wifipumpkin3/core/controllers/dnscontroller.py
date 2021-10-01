@@ -55,8 +55,9 @@ class DNSController(ControllerBlueprint):
 
     def getReactorInfo(self):
         info_reactor = {}
-        info_reactor[self.ActiveReactor.getID()] = {
-            "ID": self.ActiveReactor.getID(),
-            "PID": self.ActiveReactor.getpid(),
-        }
+        if self.ActiveReactor != None:
+            info_reactor[self.ActiveReactor.getID()] = {
+                "ID": self.ActiveReactor.getID(),
+                "PID": self.ActiveReactor.getpid(),
+            }
         return info_reactor

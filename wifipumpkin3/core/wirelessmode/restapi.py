@@ -173,6 +173,7 @@ class RestApiSettings(CoreSettings):
     def Configure(self):
         """ configure interface and dhcpd for mount Access Point """
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
+        self.DHCP = self.getDHCPConfig()
         self.SettingsAP = {
             "interface": [
                 "ifconfig %s up" % (self.ifaceHostapd),
@@ -199,11 +200,10 @@ class RestApiSettings(CoreSettings):
                 "bssid={}\n".format(self.conf.get("accesspoint", "bssid")),
             ],
             "dhcp-server": [
+                "subnet %s netmask %s {\n"% (self.DHCP["subnet"], self.DHCP["netmask"]),
                 "authoritative;\n",
                 "default-lease-time {};\n".format(self.DHCP["leasetimeDef"]),
                 "max-lease-time {};\n".format(self.DHCP["leasetimeMax"]),
-                "subnet %s netmask %s {\n"
-                % (self.DHCP["subnet"], self.DHCP["netmask"]),
                 "option routers {};\n".format(self.DHCP["router"]),
                 "option subnet-mask {};\n".format(self.DHCP["netmask"]),
                 "option broadcast-address {};\n".format(self.DHCP["broadcast"]),
@@ -222,8 +222,8 @@ class RestApiSettings(CoreSettings):
         for line in self.SettingsAP["interface"]:
             exec_bash(line)
         # check if dhcp option is enabled.
-        if self.conf.get("accesspoint", "dhcp_server", format=bool):
-            self.apply_dhcp_config_leases_config()
+        if self.conf.get("accesspoint", "dhcpd_server", format=bool):
+            self.apply_dhcp_config_leases_config(self.SettingsAP)
 
     def checkNetworkAP(self):
         "this will be checked on web interface "

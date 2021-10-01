@@ -42,14 +42,15 @@ class CoreSettings(Linux):
         """ reclaim memory """
         del obj
 
-    def apply_dhcp_config_leases_config(self):
+    def apply_dhcp_config_leases_config(self, settingsAP):
         with open(C.DHCPCONF_PATH, "w") as dhcp:
-            for line in self.SettingsAP["dhcp-server"]:
+            for line in settingsAP["dhcp-server"]:
                 dhcp.write(line)
             dhcp.close()
             if not path.isdir("/etc/dhcp/"):
                 mkdir("/etc/dhcp")
-            remove("/etc/dhcp/dhcpd.conf")
+            if path.isfile("/etc/dhcp/dhcpd.conf"):
+                remove("/etc/dhcp/dhcpd.conf")
             move(C.DHCPCONF_PATH, "/etc/dhcp/")
 
     @property
