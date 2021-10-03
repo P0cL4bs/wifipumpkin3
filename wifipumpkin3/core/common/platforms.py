@@ -192,6 +192,18 @@ class Linux(QtCore.QObject):
         my_id = str(uuid1())
         return my_id
 
+    @staticmethod
+    def getBinaryPath(command: str):
+        binary_path = popen("which {}".format(command)).read()
+        if not binary_path:
+            return ""
+        return binary_path.split("\n")[0]
+    
+    @staticmethod
+    def checkIfIptablesVersion():
+        if "nf_tables" in Linux.getBinaryPath("iptables"):
+            return Linux.getBinaryPath("iptables-legacy")
+        return Linux.getBinaryPath("iptables")
 
 def is_hexadecimal(text):
     try:

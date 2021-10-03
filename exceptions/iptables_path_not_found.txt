@@ -1,0 +1,6 @@
+The wp3 require iptables for share and configure internet conneciton 
+and build somes attack of redirect traffic for plugins work fine.
+
+Please install the iptables v1.6, or install current version of 
+iptables with version legacy installed. The wp3 not support nftables
+by default.

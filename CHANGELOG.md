@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - added new command dhcpmode
 - added option for settings dhcp mode pydhcpserver or dhcpd_server
 - added new support to run isc_dhcp_server for dns/ dhcp
+- added support kali linux iptables nf_tables set iptables_legacy as default #140 
 
 ### Changed
 
