@@ -4,6 +4,7 @@ from wifipumpkin3.core.servers.proxy import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
 import copy
 from wifipumpkin3.exceptions.errors.iptablesException import IptablesPathError
+
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
@@ -72,7 +73,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         self.resolverIPtablesVersion()
 
     def resolverIPtablesVersion(self):
-        iptables_path =  Refactor.checkIfIptablesVersion()
+        iptables_path = Refactor.checkIfIptablesVersion()
         if not iptables_path:
             raise IptablesPathError("[Error] iptables tool not found")
         self.conf.set("iptables", "path_binary", iptables_path)
@@ -130,7 +131,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 if not subItem in excluded:
                     result[item][subItem] = self.proxies_infor[item][subItem]
         return result
-        
 
     @classmethod
     def disable(cls, val=True):

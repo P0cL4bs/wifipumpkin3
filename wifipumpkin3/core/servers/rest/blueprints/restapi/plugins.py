@@ -59,13 +59,14 @@ class PluginsInfoResource(Resource):
                         plugin_name, self.key_name
                     ),
                     code=400,
-                ) 
+                )
         proxy_plugins = self.root.mitm_controller.getInfo(excluded=("Config"))
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(
                 self.key_name, proxy_plugins[item]["ID"], format=bool
             )
         return jsonify(proxy_plugins.get(plugin_name))
+
 
 class SettingsPluginResource(Resource):
     config = SettingsINI.getInstance()

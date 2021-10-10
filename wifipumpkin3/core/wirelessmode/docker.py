@@ -239,7 +239,8 @@ class DockerSettings(CoreSettings):
                 "bssid={}\n".format(self.conf.get("accesspoint", "bssid")),
             ],
             "dhcp-server": [
-                "subnet %s netmask %s {\n"% (self.DHCP["subnet"], self.DHCP["netmask"]),
+                "subnet %s netmask %s {\n"
+                % (self.DHCP["subnet"], self.DHCP["netmask"]),
                 "authoritative;\n",
                 "default-lease-time {};\n".format(self.DHCP["leasetimeDef"]),
                 "max-lease-time {};\n".format(self.DHCP["leasetimeMax"]),

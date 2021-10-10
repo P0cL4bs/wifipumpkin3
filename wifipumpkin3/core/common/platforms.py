@@ -207,13 +207,14 @@ class Linux(QtCore.QObject):
         if not binary_path:
             return ""
         return binary_path.split("\n")[0]
-    
+
     @staticmethod
     def checkIfIptablesVersion():
         """ check if iptables version is nf_tables """
         if "nf_tables" in Linux.getCommandOutput("iptables --version"):
             return Linux.getBinaryPath("iptables-legacy")
         return Linux.getBinaryPath("iptables")
+
 
 def is_hexadecimal(text):
     try:

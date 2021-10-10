@@ -68,7 +68,7 @@ class DHCPController(ControllerBlueprint):
 
     def setDhcpMode(self, id_module_dhcp):
         if id_module_dhcp in self.mode.keys():
-            if 'dhcpd_server' in id_module_dhcp:
+            if "dhcpd_server" in id_module_dhcp:
                 self.parent.conf.set("accesspoint", "pydhcp_server", False)
                 self.parent.conf.set("accesspoint", "pydns_server", False)
                 self.parent.conf.set("accesspoint", "dhcpd_server", True)

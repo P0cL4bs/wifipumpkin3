@@ -56,7 +56,9 @@ def init_app(app):
     api.add_resource(res_plugins.MitmPluginsResource, "/plugins/info")
 
     api.add_resource(
-        res_plugins.PluginsInfoResource, "/plugins", "/plugins/<string:plugin_name>/info"
+        res_plugins.PluginsInfoResource,
+        "/plugins",
+        "/plugins/<string:plugin_name>/info",
     )
 
     api.add_resource(
@@ -66,9 +68,7 @@ def init_app(app):
     api.add_resource(
         res_proxies.ProxiesInfoResource, "/proxies", "/proxies/<string:proxy_name>/info"
     )
-    api.add_resource(
-        res_proxies.ProxiesAllInfoResource, "/proxies", "/proxies/info"
-    )
+    api.add_resource(res_proxies.ProxiesAllInfoResource, "/proxies", "/proxies/info")
 
     api.add_resource(res_plugins.SettingsPluginsResource, "/<string:plugin_id>/plugins")
 

@@ -55,7 +55,8 @@ class LoginResource(Resource):
             token = jwt.encode(
                 {
                     "public_id": admin_public_id,
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=3000),
+                    "exp": datetime.datetime.utcnow()
+                    + datetime.timedelta(minutes=3000),
                 },
                 admin_SECRET_KEY,
             )

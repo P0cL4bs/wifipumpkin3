@@ -31,10 +31,7 @@ def token_required(f):
             token = request.headers["x-access-token"]
 
         if not token:
-            return make_response(
-                jsonify({"message": "Token is invalid!"}),
-                401
-            )
+            return make_response(jsonify({"message": "Token is invalid!"}), 401)
         conf = SettingsINI.getInstance()
 
         try:
@@ -42,15 +39,9 @@ def token_required(f):
             data = jwt.decode(token, app_secret_key)
             app_public_id = conf.get("rest_api_settings", "public_id")
             if app_public_id != data["public_id"]:
-                return make_response(
-                jsonify({"message": "Token is invalid!"}),
-                401
-            )
+                return make_response(jsonify({"message": "Token is invalid!"}), 401)
         except:
-            return make_response(
-                jsonify({"message": "Token is invalid!"}),
-                401
-            )
+            return make_response(jsonify({"message": "Token is invalid!"}), 401)
 
         return f(*args, **kwargs)
 

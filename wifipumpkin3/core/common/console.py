@@ -221,7 +221,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
         self.wireless_controller.ActiveReactor.start()
-        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(self.signalHostApdProcessIsRunning)
+        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+            self.signalHostApdProcessIsRunning
+        )
 
         # if not self.parse_args.restmode:
         #     self.wireless_controller.ActiveReactor.start()
@@ -229,7 +231,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         #         self.signalHostApdProcessIsRunning
         #     )
         #     return
-        
+
         # self.wireless_controller.ActiveReactor.start()
         # for thread in self.threads["RogueAP"]:
         #     if thread is not None:

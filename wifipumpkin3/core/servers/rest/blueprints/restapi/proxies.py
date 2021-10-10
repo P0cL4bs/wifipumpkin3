@@ -43,6 +43,7 @@ class ProxysPluginsResource(Resource):
             list_plugins.append(proxy_plugins[item])
         return jsonify({"proxys": list_plugins})
 
+
 class ProxiesInfoResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"
@@ -60,7 +61,7 @@ class ProxiesInfoResource(Resource):
                         proxy_name, self.key_name
                     ),
                     code=400,
-                ) 
+                )
         proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(
@@ -68,9 +69,11 @@ class ProxiesInfoResource(Resource):
             )
         return jsonify(proxy_plugins.get(proxy_name))
 
+
 class ProxiesAllInfoResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"
+
     def __init__(self):
         self.root = PumpkinShell.getInstance()
         super(ProxiesAllInfoResource, self).__init__()
@@ -82,7 +85,7 @@ class ProxiesAllInfoResource(Resource):
             proxy_plugins[item]["Activate"] = self.config.get(
                 self.key_name, proxy_plugins[item]["ID"], format=bool
             )
-        return jsonify({"proxies" : proxy_plugins})
+        return jsonify({"proxies": proxy_plugins})
 
 
 class SettingsProxyResource(Resource):

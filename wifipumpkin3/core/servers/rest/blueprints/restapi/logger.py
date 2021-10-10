@@ -78,12 +78,18 @@ class getFileLogResource(Resource):
         )
 
 
-
 class getAllFileLogResource(Resource):
     config = SettingsINI.getInstance()
     args = ("page", "session", "excludes")
     exludes_logs = []
-    filenames = ("pumpkin_proxy", "pydns_server", "pydhcp_server", "sniffkin3", "captiveportal", "responder3")
+    filenames = (
+        "pumpkin_proxy",
+        "pydns_server",
+        "pydhcp_server",
+        "sniffkin3",
+        "captiveportal",
+        "responder3",
+    )
     limit_view = 10
     session = None
 
@@ -96,7 +102,11 @@ class getAllFileLogResource(Resource):
         for line in list_data:
             resp_data = {}
             if line["record"]["extra"]["session"] == session:
-                resp_data["time"] = str(datetime.fromtimestamp(line["record"]["time"]["timestamp"]).replace(microsecond=0))
+                resp_data["time"] = str(
+                    datetime.fromtimestamp(line["record"]["time"]["timestamp"]).replace(
+                        microsecond=0
+                    )
+                )
                 resp_data["timestamp"] = line["record"]["time"]["timestamp"]
                 resp_data["message"] = line["record"]["message"]
                 resp_data["text"] = line["text"]
@@ -105,8 +115,7 @@ class getAllFileLogResource(Resource):
                 resp_list.append(resp_data)
 
         return sorted(
-            resp_list,
-            key=lambda x: datetime.strptime(x['time'], "%Y-%m-%d %H:%M:%S")
+            resp_list, key=lambda x: datetime.strptime(x["time"], "%Y-%m-%d %H:%M:%S")
         )
 
     @token_required
@@ -127,11 +136,14 @@ class getAllFileLogResource(Resource):
             self.session = request.args.get("session")
 
         for filename in self.filenames:
-            if os.path.isfile("{}/{}.log".format(C.LOG_BASE, filename)) and filename not in self.exludes_logs:
+            if (
+                os.path.isfile("{}/{}.log".format(C.LOG_BASE, filename))
+                and filename not in self.exludes_logs
+            ):
                 with open("{}/{}.log".format(C.LOG_BASE, filename), "r") as f:
                     for line in f:
                         table.append(json.loads(line))
-        
+
         table = self.parser_data(table, self.session)
         data_splited = list(self.chunk(table, self.limit_view))
 

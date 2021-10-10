@@ -26,7 +26,7 @@ class NoProxy(ProxyMode):
     Author = "Pumpkin-Dev"
     Hidden = True
     TypePlugin = 1
-    TypeButton = 1 # 0 for Switch, 1 for Radio
+    TypeButton = 1  # 0 for Switch, 1 for Radio
 
     def __init__(self, parent, **kwargs):
         super(NoProxy, self).__init__(parent)

@@ -38,12 +38,12 @@ class ui_DhcpSettingsClass(WidgetBase):
 
     def setup_view(self):
 
-        self.radio_dhcpd_server_status = self._conf.get("accesspoint", "dhcpd_server",format=bool)
+        self.radio_dhcpd_server_status = self._conf.get(
+            "accesspoint", "dhcpd_server", format=bool
+        )
 
         self.widget_main = urwid.Padding(
-            self.menu(u"DHCP Server", self.class_headers.keys()),
-            left=2,
-            right=2,
+            self.menu(u"DHCP Server", self.class_headers.keys()), left=2, right=2,
         )
         self.top = urwid.Overlay(
             self.widget_main,
@@ -56,7 +56,6 @@ class ui_DhcpSettingsClass(WidgetBase):
             min_height=12,
         )
 
-
     def on_radioButton_changes(self, w, state, user_data):
         if "pydhcp_server" == user_data:
             self.radio_dhcpd_server_status = False
@@ -64,22 +63,30 @@ class ui_DhcpSettingsClass(WidgetBase):
             self.radio_dhcpd_server_status = True
 
     def menu(self, title, choices):
-        body = [urwid.Text(title), urwid.Divider(),urwid.Text(self.desc_dhcp_server) ]
-        
-        bgroup = [] # button group
-        self.radioPyDhcpServer = urwid.RadioButton(bgroup, u"PyDHCPServer", 
-        state=not self.radio_dhcpd_server_status,
-        on_state_change=self.on_radioButton_changes, user_data="pydhcp_server")
+        body = [urwid.Text(title), urwid.Divider(), urwid.Text(self.desc_dhcp_server)]
 
-        self.radioDhcpdServer = urwid.RadioButton(bgroup, u"ISC DHCPServer", 
-        state=self.radio_dhcpd_server_status,
-        on_state_change=self.on_radioButton_changes, user_data="dhcp_server")
+        bgroup = []  # button group
+        self.radioPyDhcpServer = urwid.RadioButton(
+            bgroup,
+            u"PyDHCPServer",
+            state=not self.radio_dhcpd_server_status,
+            on_state_change=self.on_radioButton_changes,
+            user_data="pydhcp_server",
+        )
+
+        self.radioDhcpdServer = urwid.RadioButton(
+            bgroup,
+            u"ISC DHCPServer",
+            state=self.radio_dhcpd_server_status,
+            on_state_change=self.on_radioButton_changes,
+            user_data="dhcp_server",
+        )
 
         body.append(self.radioPyDhcpServer)
         body.append(self.radioDhcpdServer)
         body.append(urwid.Divider())
         body.append(urwid.Text(self.desc_ip_range))
-        
+
         for c in choices:
             button = urwid.Button(c)
             urwid.connect_signal(button, "click", self.item_chosen, c)
@@ -111,7 +118,7 @@ class ui_DhcpSettingsClass(WidgetBase):
         data_config.append(u"-----------DHCP-----------\n")
 
         for key, value in data_set.items():
-            self._conf.set("dhcp", key, value)   
+            self._conf.set("dhcp", key, value)
 
         if self.radioDhcpdServer.get_state():
             self._conf.set("accesspoint", "pydhcp_server", False)
@@ -120,7 +127,7 @@ class ui_DhcpSettingsClass(WidgetBase):
         else:
             self._conf.set("accesspoint", "pydhcp_server", True)
             self._conf.set("accesspoint", "pydns_server", True)
-            self._conf.set("accesspoint", "dhcpd_server", False)     
+            self._conf.set("accesspoint", "dhcpd_server", False)
 
         response = urwid.Text([u"[DHCP configuration]", u"\n"] + data_config)
         done = urwid.Button(u"Ok")
@@ -134,7 +141,11 @@ class ui_DhcpSettingsClass(WidgetBase):
 
     def main(self):
         self.setup_view()
-        urwid.MainLoop(self.top, palette=[("reversed", "standout", "")], unhandled_input=self.handleWindow).run()
+        urwid.MainLoop(
+            self.top,
+            palette=[("reversed", "standout", "")],
+            unhandled_input=self.handleWindow,
+        ).run()
 
     def start(self):
         self.main()

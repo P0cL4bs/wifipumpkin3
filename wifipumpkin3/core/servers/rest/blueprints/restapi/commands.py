@@ -5,6 +5,7 @@ from io import StringIO
 import sys
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
 from wifipumpkin3.core.servers.rest.ext.exceptions import exception
+
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
@@ -57,10 +58,7 @@ class CommandsPostResource(Resource):
     def post(self, command=None):
         data = request.get_json(force=True)
         if not "commands" in data:
-            return exception(
-                "Cannot found that key commands  on data",
-                code=400,
-            )
+            return exception("Cannot found that key commands  on data", code=400,)
         output = []
         with Capturing(output) as output:
             self.root.onecmd(data.get("commands"))

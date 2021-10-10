@@ -39,12 +39,27 @@ class DhcpMode(ExtensionUI):
         super(DhcpMode, self).__init__(parse_args=self.parse_args, root=self.root)
 
     def help_dhcpmode(self):
-        print(display_messages("use the command `{} dhcp_id` for change the default dhcp implementation.".format(
+        print(
+            display_messages(
+                "use the command `{} dhcp_id` for change the default dhcp implementation.".format(
                     setcolor("dhcpmode", color="orange")
-                    ), info=True))
+                ),
+                info=True,
+            )
+        )
         print(display_messages("Info: ", info=True, sublime=True))
-        print(display_messages("dhcpd_server : use the ISC DHCP for configure the dns/dhcp server.", info=True))
-        print(display_messages("pydhcp_server : use the python implementation for configure the dns/dhcp server.", info=True))
+        print(
+            display_messages(
+                "dhcpd_server : use the ISC DHCP for configure the dns/dhcp server.",
+                info=True,
+            )
+        )
+        print(
+            display_messages(
+                "pydhcp_server : use the python implementation for configure the dns/dhcp server.",
+                info=True,
+            )
+        )
         print("\n")
 
     def complete_dhcpmode(self, text, args, start_index, end_index):
@@ -63,9 +78,14 @@ class DhcpMode(ExtensionUI):
             try:
                 id_dhcp = args.split()[0]
                 if not id_dhcp in self.root.dhcp_controller.getInfo().keys():
-                    print(display_messages("the parameter id {} was not found.".format(
-                    setcolor(args, color="orange")
-                    ), error=True))
+                    print(
+                        display_messages(
+                            "the parameter id {} was not found.".format(
+                                setcolor(args, color="orange")
+                            ),
+                            error=True,
+                        )
+                    )
                     return
                 self.root.dhcp_controller.setDhcpMode(id_dhcp)
                 return
@@ -84,7 +104,7 @@ class DhcpMode(ExtensionUI):
                     setcolor("True", color="green")
                     if instance.isChecked()
                     else setcolor("False", color="red"),
-                    instance.Name
+                    instance.Name,
                 ]
             )
         display_tabulate(headers_table, output_table)
