@@ -193,15 +193,25 @@ class Linux(QtCore.QObject):
         return my_id
 
     @staticmethod
-    def getBinaryPath(command: str):
-        binary_path = popen("which {}".format(command)).read()
+    def getCommandOutput(command: str):
+        """ get the first line of command executed on bash"""
+        binary_path = popen("{}".format(command)).read()
+        if not binary_path:
+            return ""
+        return binary_path.split("\n")[0]
+
+    @staticmethod
+    def getBinaryPath(binary_name: str):
+        """ get the path of binary linux"""
+        binary_path = popen("which {}".format(binary_name)).read()
         if not binary_path:
             return ""
         return binary_path.split("\n")[0]
     
     @staticmethod
     def checkIfIptablesVersion():
-        if "nf_tables" in Linux.getBinaryPath("iptables"):
+        """ check if iptables version is nf_tables """
+        if "nf_tables" in Linux.getCommandOutput("iptables --version"):
             return Linux.getBinaryPath("iptables-legacy")
         return Linux.getBinaryPath("iptables")
 

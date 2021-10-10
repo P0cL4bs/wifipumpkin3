@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - fixed wirelesscontroller not started into restAPI mode
 - fixed locale error in docker container
 - fixed logical error dhcpd server implementation #158
+- fixed logical error when try to get iptables path with nf_tables thanks @cjb900
 
 ## [Released]
 
