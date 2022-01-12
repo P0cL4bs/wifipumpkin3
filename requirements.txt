@@ -9,7 +9,7 @@ PyQt5>=5.14
 PyQt5-sip
 pyOpenSSL==19.0.0
 Responder3>=0.0.1
-dnslib==0.9.14
+dnslib==0.9.17
 loguru>=0.4.0
 scapy>=2.4.4
 isc_dhcp_leases>=0.9.1
