@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+## [1.0.X] 
+
+### Added 
+- added improves wifideauth module for support multi targets 
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 
 ## [Released]
 
