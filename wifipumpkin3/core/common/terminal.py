@@ -1,4 +1,5 @@
 from cmd import Cmd
+from distutils.log import error
 from wifipumpkin3.core.utility.printer import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
@@ -24,15 +25,87 @@ import weakref
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+class ConsoleUIBase(Cmd):
+    """ shell console UI base model """
+    
+    def setOptions(self):
+        if self.parse_args.pulp:
+            self.loadPulpFiles(self.parse_args.pulp)
+        elif self.parse_args.xpulp:
+            self.onecmd(self.parse_args.xpulp, ";")
+            
+    def default(self, args: str):
+        """ run commands system allow by tool """
+        for goodArgs in C.SYSTEMCOMMAND:
+            if args.startswith(goodArgs):
+                output = popen(args).read()
+                if len(output) > 0:
+                    print(output)
+                return
+        command = None
+        try:
+            command = args.split()[0]
+        except IndexError:
+            pass
+        if command not in self.getCommmandsNames and command != None:
+            print(
+                display_messages(
+                    "wp3: command not found: {}".format(setcolor(args, "red", False)),
+                    error=True
+            ))
+            
+    @property
+    def getCommmandsNames(self):
+        names = self.get_names()
+        cmds_do = []
+        names.sort()
+        for name in names:
+            if name[:3] == "do_":
+                cmd = name[3:]
+                cmds_do.append(cmd)
+        return tuple(cmds_do)
 
-class ConsoleUI(Cmd):
+    def emptyline(self):
+        """ Do nothing on empty input line"""
+        pass
+
+    def precmd(self, line):
+        newline = line.strip()
+        is_cmt = newline.startswith("#")
+        if is_cmt:
+            return ""
+        return line
+
+    def postcmd(self, stop, line):
+        return stop
+    
+    def onecmd(self, commands, separator=";"):
+        """ load command separate for ; file or string"""
+        for command in commands.split(separator):
+            Cmd.onecmd(self, command)
+                
+    def show_help_command(self, filename):
+        """read content file help command """
+        print(Linux.readFileHelp(filename))
+    
+    def loadPulpFiles(self, file, data=None):
+        raise NotImplementedError()
+    
+    def set_prompt(self):
+        raise NotImplementedError()
+    
+    def do_help(self, args):
+        raise NotImplementedError()
+
+
+class ConsoleUI(ConsoleUIBase):
     """ shell console UI """
 
     def __init__(self, parse_args=None):
         self.parse_args = parse_args
         Cmd.__init__(self)
         self.conf = SettingsINI.getInstance()
-        self.set_prompt()
+        self.set_prompt() 
         self.initialize_core()
         self.setOptions()
 
@@ -50,11 +123,29 @@ class ConsoleUI(Cmd):
     def initialize_core(self):
         raise NotImplementedError()
 
-    def setOptions(self):
-        if self.parse_args.pulp:
-            self.loadPulpFiles(self.parse_args.pulp)
-        elif self.parse_args.xpulp:
-            self.onecmd(self.parse_args.xpulp, ";")
+    def loadPulpFiles(self, file, data=None):
+        """ load and execute all commands in file pulp separate for \n """
+        print(
+            "\n"
+            + display_messages(
+                "mode: {}".format(setcolor("script", "ciano", True)), info=True
+            )
+        )
+        if path.isfile(file):
+            with open(file, "r") as f:
+                data = f.read()
+                f.close()
+            if data != None:
+                print(
+                    display_messages("plugin: {}".format(file), info=True, sublime=True)
+                )
+                return self.onecmd(data, separator="\n")
+        print(
+            display_messages(
+                "script {} not found! ".format(file), error=True, sublime=True
+            )
+        )
+        sys.exit(1)
 
     def set_prompt(self):
         self.prompt = "{} > ".format(setcolor("wp3", color="blue", underline=True))
@@ -129,67 +220,13 @@ class ConsoleUI(Cmd):
                     print("    {:<10}	{}".format(command, doc))
             print("\n")
 
-    def default(self, args=str):
-        for goodArgs in C.SYSTEMCOMMAND:
-            if args.startswith(goodArgs):
-                output = popen(args).read()
-                if len(output) > 0:
-                    print(output)
-
-    def loadPulpFiles(self, file, data=None):
-        """ load and execute all commands in file pulp separate for \n """
-        print(
-            "\n"
-            + display_messages(
-                "mode: {}".format(setcolor("script", "ciano", True)), info=True
-            )
-        )
-        if path.isfile(file):
-            with open(file, "r") as f:
-                data = f.read()
-                f.close()
-            if data != None:
-                print(
-                    display_messages("plugin: {}".format(file), info=True, sublime=True)
-                )
-                return self.onecmd(data, separator="\n")
-        print(
-            display_messages(
-                "script {} not found! ".format(file), error=True, sublime=True
-            )
-        )
-        sys.exit(1)
-
-    def onecmd(self, commands, separator=";"):
-        """ load command separate for ; file or string"""
-        for command in commands.split(separator):
-            Cmd.onecmd(self, command)
-
-    def show_help_command(self, filename):
-        """read content file help command """
-        print(Linux.readFileHelp(filename))
-
-    def precmd(self, line):
-        newline = line.strip()
-        is_cmt = newline.startswith("#")
-        if is_cmt:
-            return ""
-        return line
-
-    def postcmd(self, stop, line):
-        return stop
-
-    def emptyline(self):
-        """Do nothing on empty input line"""
-        pass
-
     def do_exit(self, args):
         """ exit the program."""
         print("Quitting.")
         raise SystemExit
 
 
-class ModuleUI(Cmd):
+class ModuleUI(ConsoleUIBase):
     """ shell console UI """
 
     _name_module = None
@@ -289,25 +326,40 @@ class ModuleUI(Cmd):
 
     def do_help(self, args):
         """ show this help """
-        names = self.get_names()
-        cmds_doc = []
-        names.sort()
-        print(display_messages("Available Commands:", info=True, sublime=True))
-        for name in names:
-            if name[:3] == "do_":
-                pname = name
-                cmd = name[3:]
-                if getattr(self, name).__doc__:
-                    cmds_doc.append((cmd, getattr(self, name).__doc__))
-                else:
-                    cmds_doc.append((cmd, ""))
+        if args:
+            try:
+                func = getattr(self, "help_" + args)
+            except Exception:
+                try:
+                    head, doc = str(getattr(self, "do_" + args).__doc__).split(":")
+                    if doc:
+                        self.stdout.write("%s\n" % str(doc))
+                        return
+                except Exception:
+                    pass
+                self.stdout.write("%s\n" % str(self.nohelp % (args,)))
+                return
+            func()
+        else:
+            names = self.get_names()
+            cmds_doc = []
+            names.sort()
+            print(display_messages("Available Commands:", info=True, sublime=True))
+            for name in names:
+                if name[:3] == "do_":
+                    pname = name
+                    cmd = name[3:]
+                    if getattr(self, name).__doc__:
+                        cmds_doc.append((cmd, getattr(self, name).__doc__))
+                    else:
+                        cmds_doc.append((cmd, ""))
 
-        self.stdout.write("    {}	 {}\n".format("Commands", "Description"))
-        self.stdout.write("    {}	 {}\n".format("--------", "-----------"))
-        for command, doc in cmds_doc:
-            if len(doc) > 0:
-                self.stdout.write("    {:<10}	{}\n".format(command, doc))
-        print("\n")
+            self.stdout.write("    {}	 {}\n".format("Commands", "Description"))
+            self.stdout.write("    {}	 {}\n".format("--------", "-----------"))
+            for command, doc in cmds_doc:
+                if len(doc) > 0:
+                    self.stdout.write("    {:<10}	{}\n".format(command, doc))
+            print("\n")
 
     def loadPulpFiles(self, file, data=None):
         """ load and execute all commands in file pulp separate for \n """
@@ -319,37 +371,22 @@ class ModuleUI(Cmd):
                 self.onecmd(data, separator="\n")
         sys.exit(1)
 
-    def default(self, args=str):
-        """ run commands system allow by tool """
-        for goodArgs in C.SYSTEMCOMMAND:
-            if args.startswith(goodArgs):
-                output = popen(args).read()
-                if len(output) > 0:
-                    print(output)
-
     def complete_set(self, text, line, begidx, endidx):
         mline = line.partition(" ")[2]
         offs = len(mline) - len(text)
         return [s[offs:] for s in self.completions if s.startswith(mline)]
 
-    def emptyline(self):
-        """ Do nothing on empty input line"""
-        pass
-
     def onecmd(self, commands, separator=";"):
         """ load command separate for ; file or string"""
         for command in commands.split(separator):
-            Cmd.onecmd(self, command)
-
-    def show_help_command(self, filename):
-        """read content file help command """
-        print(Linux.readFileHelp(filename))
+            if not str(command).startswith("use"):
+                Cmd.onecmd(self, command)
 
     def do_exit(self, args):
         sys.exit(0)
 
 
-class ExtensionUI(Cmd):
+class ExtensionUI(ConsoleUIBase):
     """ native extension console UI """
 
     _name_module = None
@@ -373,7 +410,3 @@ class ExtensionUI(Cmd):
     def register_command(self, name_func, func):
         """register a command on super class Pumpkinshell """
         setattr(self.root.__class__, name_func, staticmethod(func))
-
-    def show_help_command(self, filename):
-        """read content file help command """
-        print(Linux.readFileHelp(filename))

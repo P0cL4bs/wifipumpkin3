@@ -130,7 +130,10 @@ class ModPump(ModuleUI):
             ]
         else:
             return list(self.aps.keys())
-
+        
+    def help_add(self):
+        self.show_help_command("help_wifideauth_add_command")
+        
     def do_rm(self, args):
         """ remove target by mac address (bssid) """
         try:
@@ -165,6 +168,9 @@ class ModPump(ModuleUI):
             ]
         else:
             return list(self.aps.keys())
+        
+    def help_rm(self):
+        self.show_help_command("help_wifideauth_rm_command")
 
     def do_scan(self, args):
         """ start scanner wireless networks AP"""

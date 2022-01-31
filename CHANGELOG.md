@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added 
 - added improves wifideauth module for support multi targets 
+- added improves ConsoleUi and added help for command add, rm from wifideauth module 
 
 ### Changed
 
