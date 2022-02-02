@@ -1,7 +1,7 @@
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3 import PumpkinShell
-from flask_restful import Resource
+from flask_restx import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
 from wifipumpkin3.core.servers.rest.ext.exceptions import exception
@@ -28,12 +28,9 @@ class MitmPluginsResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "mitm_modules"
 
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(MitmPluginsResource, self).__init__()
-
     @token_required
     def get(self):
+        self.root = PumpkinShell.getInstance()
         mitm_plugins = self.root.mitm_controller.getInfo(excluded=("Config"))
         for item in mitm_plugins:
             mitm_plugins[item]["Activate"] = self.config.get(
@@ -46,10 +43,6 @@ class PluginsInfoResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "mitm_modules"
 
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(PluginsInfoResource, self).__init__()
-
     @token_required
     def get(self, plugin_name=None):
         if plugin_name:
@@ -60,6 +53,7 @@ class PluginsInfoResource(Resource):
                     ),
                     code=400,
                 )
+        self.root = PumpkinShell.getInstance()
         proxy_plugins = self.root.mitm_controller.getInfo(excluded=("Config"))
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(
@@ -77,7 +71,7 @@ class SettingsPluginResource(Resource):
         if attribute:
             if not attribute in self.config.get_all_childname(self.key_name):
                 return exception(
-                    "Cannot found that attribute {} on {}!".format(key, self.key_name),
+                    "Cannot found that attribute {} on {}!".format(attribute, self.key_name),
                     code=400,
                 )
             return jsonify({attribute: self.config.get(self.key_name, attribute)})

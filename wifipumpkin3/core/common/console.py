@@ -220,24 +220,24 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
-        self.wireless_controller.ActiveReactor.start()
-        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
-            self.signalHostApdProcessIsRunning
-        )
-
-        # if not self.parse_args.restmode:
-        #     self.wireless_controller.ActiveReactor.start()
-        #     self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
-        #         self.signalHostApdProcessIsRunning
-        #     )
-        #     return
-
         # self.wireless_controller.ActiveReactor.start()
-        # for thread in self.threads["RogueAP"]:
-        #     if thread is not None:
-        #         QtCore.QThread.sleep(1)
-        #         if not (isinstance(thread, list)):
-        #             thread.start()
+        # self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+        #     self.signalHostApdProcessIsRunning
+        # )
+
+        if not self.parse_args.restmode:
+            self.wireless_controller.ActiveReactor.start()
+            self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+                self.signalHostApdProcessIsRunning
+            )
+            return
+
+        self.wireless_controller.ActiveReactor.start()
+        for thread in self.threads["RogueAP"]:
+            if thread is not None:
+                QtCore.QThread.sleep(1)
+                if not (isinstance(thread, list)):
+                    thread.start()
 
     def signalHostApdProcessIsRunning(self, status):
         if status:

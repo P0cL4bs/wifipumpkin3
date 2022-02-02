@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_restful import Api
+from flask_restx import Api
 import wifipumpkin3.core.servers.rest.blueprints.restapi.accesspoint as res_ap
 import wifipumpkin3.core.servers.rest.blueprints.restapi.authenticate as res_auth
 import wifipumpkin3.core.servers.rest.blueprints.restapi.logger as res_logger
@@ -47,8 +47,6 @@ def init_app(app):
     api.add_resource(
         res_ap.SettingsAPmodeResource, "/apmode", "/apmode/<string:attribute>"
     )
-
-    api.add_resource(res_ap.ClientsResource, "/clients")
 
     api.add_resource(
         res_plugins.SettingsPluginResource, "/plugins", "/plugins/<string:attribute>"
