@@ -1,7 +1,7 @@
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3 import PumpkinShell
-from flask_restful import Resource
+from flask_restx import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
 from wifipumpkin3.core.servers.rest.ext.exceptions import exception
@@ -28,12 +28,9 @@ class ProxysPluginsResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"
 
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(ProxysPluginsResource, self).__init__()
-
     @token_required
     def get(self):
+        self.root = PumpkinShell.getInstance()
         proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
         list_plugins = []
         for item in proxy_plugins:
@@ -48,10 +45,6 @@ class ProxiesInfoResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"
 
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(ProxiesInfoResource, self).__init__()
-
     @token_required
     def get(self, proxy_name=None):
         if proxy_name:
@@ -62,6 +55,7 @@ class ProxiesInfoResource(Resource):
                     ),
                     code=400,
                 )
+        self.root = PumpkinShell.getInstance()
         proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(
@@ -74,12 +68,9 @@ class ProxiesAllInfoResource(Resource):
     config = SettingsINI.getInstance()
     key_name = "proxy_plugins"
 
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(ProxiesAllInfoResource, self).__init__()
-
     @token_required
     def get(self):
+        self.root = PumpkinShell.getInstance()
         proxy_plugins = self.root.proxy_controller.getInfo(excluded=("Config"))
         for item in proxy_plugins:
             proxy_plugins[item]["Activate"] = self.config.get(

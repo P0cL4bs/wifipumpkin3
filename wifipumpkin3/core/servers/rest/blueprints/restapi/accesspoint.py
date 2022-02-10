@@ -3,7 +3,7 @@ import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3 import PumpkinShell
 from wifipumpkin3.core.common.platforms import Linux as Refactor
 from netaddr import EUI
-from flask_restful import Resource
+from flask_restx import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
 from wifipumpkin3.core.servers.rest.ext.exceptions import exception
@@ -24,34 +24,6 @@ from wifipumpkin3.core.servers.rest.ext.exceptions import exception
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-class ClientsResource(Resource):
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(ClientsResource, self).__init__()
-
-    def get_mac_vendor(self, mac):
-        """ discovery mac vendor by mac address """
-        try:
-            d_vendor = EUI(mac)
-            d_vendor = d_vendor.oui.registration().org
-        except:
-            d_vendor = "unknown vendor"
-        return d_vendor
-
-    @token_required
-    def get(self):
-        proxy_plugins = self.root.proxy_controller.getInfo()
-        connected_clints = Refactor.readFileDataToJson(C.CLIENTS_CONNECTED)
-        list_clients_connted = []
-        for item in connected_clints:
-            connected_clints[item]["VENDOR"] = self.get_mac_vendor(
-                connected_clints[item]["MAC"]
-            )
-            list_clients_connted.append(connected_clints[item])
-        return jsonify({"clients": list_clients_connted})
-
 
 class SettingsAPmodeResource(Resource):
     config = SettingsINI.getInstance()
@@ -95,7 +67,7 @@ class SettingsDHCPResource(Resource):
         if attribute:
             if not attribute in self.config.get_all_childname(self.key_name):
                 return exception(
-                    "Cannot found that attribute {} on {}!".format(key, self.key_name),
+                    "Cannot found that attribute {} on {}!".format(attribute, self.key_name),
                     code=400,
                 )
             return jsonify({attribute: self.config.get(self.key_name, attribute)})

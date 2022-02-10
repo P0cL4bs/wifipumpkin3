@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restx import Resource
 from flask import request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -59,9 +59,10 @@ class LoginResource(Resource):
                     + datetime.timedelta(minutes=3000),
                 },
                 admin_SECRET_KEY,
+                algorithm="HS256",
             )
 
-            return jsonify({"token": token.decode("UTF-8")})
+            return jsonify({"token": token})
 
         return make_response(
             "Could not verify",

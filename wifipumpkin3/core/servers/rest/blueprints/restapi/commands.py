@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from wifipumpkin3 import PumpkinShell
-from flask_restful import Resource
+from flask_restx import Resource
 from io import StringIO
 import sys
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
@@ -37,12 +37,10 @@ class Capturing(list):
 
 
 class CommandsResource(Resource):
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(CommandsResource, self).__init__()
 
     @token_required
     def get(self, command=None):
+        self.root = PumpkinShell.getInstance()
         output = []
         with Capturing(output) as output:
             self.root.onecmd(command)
@@ -50,15 +48,13 @@ class CommandsResource(Resource):
 
 
 class CommandsPostResource(Resource):
-    def __init__(self):
-        self.root = PumpkinShell.getInstance()
-        super(CommandsPostResource, self).__init__()
 
     @token_required
     def post(self, command=None):
         data = request.get_json(force=True)
         if not "commands" in data:
             return exception("Cannot found that key commands  on data", code=400,)
+        self.root = PumpkinShell.getInstance()
         output = []
         with Capturing(output) as output:
             self.root.onecmd(data.get("commands"))

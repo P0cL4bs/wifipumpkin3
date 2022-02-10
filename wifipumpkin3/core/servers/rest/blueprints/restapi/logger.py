@@ -1,6 +1,6 @@
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
-from flask_restful import Resource
+from flask_restx import Resource
 from flask import jsonify, request
 import os, json
 from itertools import islice

@@ -36,11 +36,12 @@ def token_required(f):
 
         try:
             app_secret_key = conf.get("rest_api_settings", "SECRET_KEY")
-            data = jwt.decode(token, app_secret_key)
+            data = jwt.decode(token, app_secret_key, algorithms=["HS256"])
             app_public_id = conf.get("rest_api_settings", "public_id")
             if app_public_id != data["public_id"]:
                 return make_response(jsonify({"message": "Token is invalid!"}), 401)
-        except:
+        except Exception as e:
+            print(e)
             return make_response(jsonify({"message": "Token is invalid!"}), 401)
 
         return f(*args, **kwargs)
