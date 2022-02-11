@@ -4,7 +4,7 @@ dhcplib==0.1.1
 tabulate>=0.8.5
 urwid==2.1.2
 termcolor>=1.1.0
-twisted==19.7.0
+twisted==22.1.0
 PyQt5>=5.14
 PyQt5-sip
 pyOpenSSL==19.0.0
