@@ -33,6 +33,7 @@ class Mode(Qt.QObject):
     Name = "Wireless Mode Generic"
     service = None
     reactor = None
+    ignore_key_hostapd = ("interface", "ssid", "channel", "essid", "ap_max_inactivity")
 
     def __init__(self, parent=None, FSettings=None):
         super(Mode, self).__init__()

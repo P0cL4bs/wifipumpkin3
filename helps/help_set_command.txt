@@ -1,7 +1,7 @@
 set AP variables:
  
  Usage: set [variable] [value]
- param variable: set variables accesspoint [ssid, bssid, interface, security, channel]
+ param variable: set variables accesspoint [ssid, bssid, interface, security, channel, hostapd_config]
 
  Description:
     Change variables rogue accesspoint attack

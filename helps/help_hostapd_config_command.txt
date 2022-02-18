@@ -1,0 +1,16 @@
+help hostapd_config
+===================
+ 
+ Usage: set hostapd_config.[variable] [value]
+
+ param [variable]: The key come from hostapd configuration file (hostapd.conf)
+ param [value]: The value come from hostapd configuration file (hostapd.conf
+
+you can see more options on link bellow:
+ https://w1.fi/cgit/hostap/plain/hostapd/hostapd.conf.
+
+ Description:
+    set variables hostapd configuration file 
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#core-commands

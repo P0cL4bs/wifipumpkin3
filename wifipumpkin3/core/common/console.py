@@ -90,6 +90,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_plugin": self.mitm_controller.sniffkin3,
             "parser_set_mode": self.wireless_controller.Settings,
             "parser_set_security": self.wireless_controller.Settings,
+            "parser_set_hostapd_config": self.wireless_controller.Settings,
         }
         self.parser_autcomplete_func = {}
 
@@ -100,7 +101,10 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         # register autocomplete set security command
         self.parser_autcomplete_func[
             "parser_set_security"
-        ] = self.wireless_controller.Settings.getCommands
+        ] = self.wireless_controller.Settings.getCommandsSecurity
+        self.parser_autcomplete_func[
+            "parser_set_hostapd_config"
+        ] = self.wireless_controller.Settings.getCommandsHostapd
 
         self.commands = {
             "interface": "interface",
@@ -111,6 +115,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "plugin": None,  # only for settings plugin
             "mode": None,  # only for settings mdoe
             "security": "enable_security",
+            "hostapd_config": "enable_hostapd_config",
         }
 
         # get all command plugins and proxies
@@ -364,14 +369,29 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return
 
         for func in self.parser_list_func:
-            if command in func:
+            if command in func or command.split(".")[0] in func:
                 return getattr(self.parser_list_func[func], func)(value, args)
+            
         # hook function configure plugin
         for plugin in self.parser_autcomplete_func:
             if command in self.parser_autcomplete_func[plugin]:
                 return getattr(self.parser_list_func[plugin], plugin)(value, command)
 
         print(display_messages("unknown command: {} ".format(command), error=True))
+
+    def do_unset(self, args):
+        """core: unset variable commnd hostapd_config"""
+        try:
+            group_name, key = args.split()[0].split('.')[0], args.split()[0].split('.')[1]
+            if key in self.conf.get_all_childname(group_name):
+                return self.conf.unset(group_name, key)
+            print(
+                display_messages("unknown key : {} for hostapd_config".format(key), error=True)
+            )
+        except IndexError:
+            return print(
+                display_messages("unknown sintax : {} ".format(args), error=True)
+            )
 
     def complete_ignore(self, text, args, start_index, end_index):
         if text:
@@ -392,6 +412,18 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             ]
         else:
             return list(self.logger_manager.all())
+
+    def complete_unset(self, text, args, start_index, end_index):
+        if text:
+            command_list = []
+            for func in self.parser_autcomplete_func:
+                if text.startswith(func.split("_set_")[1]):
+                    for command in self.parser_autcomplete_func[func]:
+                        if command.startswith(text):
+                            command_list.append(command)
+            return command_list
+        else:
+            return ["hostapd_config"]
 
     def complete_set(self, text, args, start_index, end_index):
         if text:
@@ -421,6 +453,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def help_set(self):
         self.show_help_command("help_set_command")
+    
+    def help_unset(self):
+        self.show_help_command("help_unset_command")
 
     def help_mode(self):
         self.show_help_command("help_mode_command")

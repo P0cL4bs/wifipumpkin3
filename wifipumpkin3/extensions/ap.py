@@ -43,7 +43,7 @@ class Ap(ExtensionUI):
     def do_ap(self, args):
         """ap: show all variable and status from AP """
         headers_table, output_table = (
-            ["BSSID", "SSID", "Channel", "Interface", "Status", "Security"],
+            ["bssid", "ssid", "channel", "interface", "status", "security", "hostapd_config"],
             [],
         )
         print(display_messages("Settings AccessPoint:", info=True, sublime=True))
@@ -58,11 +58,15 @@ class Ap(ExtensionUI):
                 if status_ap
                 else setcolor("not Running", color="red"),
                 self.root.conf.get("accesspoint", self.root.commands["security"]),
+                self.root.conf.get("accesspoint", self.root.commands["hostapd_config"]),
             ]
         )
         display_tabulate(headers_table, output_table)
         enable_security = self.root.conf.get(
             "accesspoint", self.root.commands["security"], format=bool
+        )
+        enable_hostapd_config = self.root.conf.get(
+            "accesspoint", self.root.commands["hostapd_config"], format=bool
         )
 
         if enable_security:
@@ -80,3 +84,11 @@ class Ap(ExtensionUI):
             print(display_messages("Settings Security:", info=True, sublime=True))
             display_tabulate(headers_sec, output_sec)
             self.show_help_command("help_security_command")
+        
+        if enable_hostapd_config:
+            print(display_messages("Settings Hostapd:", info=True, sublime=True))
+            for key in self.conf.get_all_childname("hostapd_config"):
+                print("  {}={}".format(key, self.root.conf.get("hostapd_config", key)))
+            print('\n')
+            self.show_help_command("help_hostapd_config_command")
+        
