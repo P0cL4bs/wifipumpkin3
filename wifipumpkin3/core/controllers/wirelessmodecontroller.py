@@ -147,19 +147,37 @@ class AccessPointSettings(CoreSettings):
             list_commands.append("hostapd_config" + "." + command)
         return list_commands
 
+    @property
+    def getCommandsDhcpConf(self):
+        commands_host = self.conf.get_all_childname("dhcp")
+        list_commands = []
+        for command in commands_host:
+            list_commands.append("dhcpconf" + "." + command)
+        return list_commands
+
     def parser_set_security(self, value, settings):
         try:
-            # key = security.wpa_sharedkey
-            name, key = settings.split(".")[0], settings.split(".")[1]
+            # settings = security.wpa_algorithms TKI
+            name, key = settings.split(".")[0], settings.split(".")[1].split()[0]
             if key in self.conf.get_all_childname("accesspoint"):
                 return self.conf.set("accesspoint", key, value)
+            print(display_messages("unknown flag: {}".format(key), error=True))
+        except IndexError:
+            print(display_messages("unknown sintax command", error=True))
+            
+    def parser_set_dhcpconf(self, value, settings):
+        try:
+            # settings = settings.netmask 255.0.0.0
+            name, key = settings.split(".")[0], settings.split(".")[1].split()[0]
+            if key in self.conf.get_all_childname("dhcp"):
+                return self.conf.set("dhcp", key, value)
             print(display_messages("unknown flag: {}".format(key), error=True))
         except IndexError:
             print(display_messages("unknown sintax command", error=True))
 
     def parser_set_hostapd_config(self, value, settings):
         try:
-            # key = hostapd_extra.logger_syslog 1
+            # settings = hostapd_extra.logger_syslog 1 
             name, key = settings.split(".")[0], settings.split(".")[1].split()[0]
             return self.conf.set("hostapd_config", key, value)
         except IndexError:

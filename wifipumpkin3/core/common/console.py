@@ -91,6 +91,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_mode": self.wireless_controller.Settings,
             "parser_set_security": self.wireless_controller.Settings,
             "parser_set_hostapd_config": self.wireless_controller.Settings,
+            "parser_set_dhcpconf": self.wireless_controller.Settings,
         }
         self.parser_autcomplete_func = {}
 
@@ -105,6 +106,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.parser_autcomplete_func[
             "parser_set_hostapd_config"
         ] = self.wireless_controller.Settings.getCommandsHostapd
+        self.parser_autcomplete_func[
+            "parser_set_dhcpconf"
+        ] = self.wireless_controller.Settings.getCommandsDhcpConf
 
         self.commands = {
             "interface": "interface",
@@ -114,6 +118,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "proxy": None,  # only for settings proxy
             "plugin": None,  # only for settings plugin
             "mode": None,  # only for settings mdoe
+            "dhcpconf": None,  # only for settings dhcpconf
             "security": "enable_security",
             "hostapd_config": "enable_hostapd_config",
         }
@@ -308,10 +313,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def do_clients(self, args):
         """ap: show all connected clients on AP """
         self.uiwid_controller.ui_table_mod.start()
-
-    def do_dhcp(self, args):
-        """ap: choise dhcp server configuration"""
-        self.uiwid_controller.ui_dhcp_config.start()
 
     def do_stop(self, args):
         """ap: stop access point service"""

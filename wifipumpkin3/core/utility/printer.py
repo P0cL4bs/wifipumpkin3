@@ -96,8 +96,8 @@ def setcolor(text, color="", underline=False):
     return strcolored[color]
 
 
-def display_tabulate(header=[], content=[], tablefmt="presto", newline=True):
-    print(tabulate(content, header, tablefmt=tablefmt))
+def display_tabulate(header=[], content=[], tablefmt="presto", newline=True, **kwargs):
+    print(tabulate(content, header, tablefmt=tablefmt, **kwargs))
     if newline:
         print("\n")
 

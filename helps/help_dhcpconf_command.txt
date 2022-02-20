@@ -1,0 +1,8 @@
+set dhcpconf:
+
+ Usage: dhcpconf [id]
+ param id: ID of DHCP configuration option 
+ you can get the list using only `dhcpconf` command
+
+ Description:
+    select a config for configure DHCP Server

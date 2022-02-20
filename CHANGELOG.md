@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - added improves wifideauth module for support multi targets 
 - added improves ConsoleUi and added help for command add, rm from wifideauth module 
 - added hostapd configuration file from wifipumpkin3 console
+- added new command `dhcp conf` for configure more easily than dhcp server
 
 ### Changed
 
@@ -17,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Fixed
+- fixed set command for settings sniffkin3, pumpkinproxy, security
 
 
 ## [Released]

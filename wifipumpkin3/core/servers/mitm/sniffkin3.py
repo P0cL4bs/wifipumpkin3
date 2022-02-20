@@ -138,25 +138,19 @@ class Sniffkin3(MitmMode):
 
     def parser_set_sniffkin3(self, status, plugin_name):
         try:
-            # plugin_name = pumpkinproxy.no-cache
+            # plugin_name = sniffkin3.no-cache true
             name_plugin, key_plugin = (
                 plugin_name.split(".")[0],
-                plugin_name.split(".")[1],
+                plugin_name.split(".")[1].split()[0],
             )
             if key_plugin in self.config.get_all_childname("plugins"):
-                self.config.set("plugins", key_plugin, status)
-                print(
-                    display_messages(
-                        "sniffkin3: {} status: {}".format(key_plugin, status),
-                        sucess=True,
-                    )
+                return self.config.set("plugins", key_plugin, status)
+            
+            print(
+                display_messages(
+                    "unknown plugin: {}".format(key_plugin), error=True
                 )
-            else:
-                print(
-                    display_messages(
-                        "unknown plugin: {}".format(key_plugin), error=True
-                    )
-                )
+            )
         except IndexError:
             print(display_messages("unknown sintax command", error=True))
 

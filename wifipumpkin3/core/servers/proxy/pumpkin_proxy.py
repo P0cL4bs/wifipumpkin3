@@ -104,10 +104,10 @@ class PumpKinProxy(ProxyMode):
     def parser_set_pumpkinproxy(self, status, plugin_name):
         if len(plugin_name.split(".")) == 2:
             try:
-                # plugin_name = pumpkinproxy.no-cache
+                # plugin_name = pumpkinproxy.beef true
                 name_plugin, key_plugin = (
                     plugin_name.split(".")[0],
-                    plugin_name.split(".")[1],
+                    plugin_name.split(".")[1].split()[0],
                 )
                 if key_plugin in self.config.get_all_childname("plugins"):
                     self.config.set("plugins", key_plugin, status)
@@ -121,10 +121,10 @@ class PumpKinProxy(ProxyMode):
                 print(display_messages("unknown sintax command", error=True))
         elif len(plugin_name.split(".")) == 3:
             try:
-                # plugin_name = pumpkinproxy.beef.url_hook
+                # plugin_name = pumpkinproxy.beef.url_hook URL
                 name_plugin, key_plugin = (
                     plugin_name.split(".")[1],
-                    plugin_name.split(".")[2],
+                    plugin_name.split(".")[2].split()[0],
                 )
                 if key_plugin in self.config.get_all_childname(
                     "set_{}".format(name_plugin)
