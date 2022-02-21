@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - fixed set command for settings sniffkin3, pumpkinproxy, security
 - fixed ImportError: cannot import name 'json' from 'itsdangerous' 
+- fixed markupsafe==2.0.1 tos solve deprecated the JSON API.
 
 
 ## [Released]

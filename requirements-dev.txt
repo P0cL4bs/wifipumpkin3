@@ -15,11 +15,12 @@ loguru>=0.4.0
 scapy==2.4.3
 isc_dhcp_leases==0.9.1
 dnspython==1.16.0
-Flask==1.1.1
+Flask==1.1.4
 requests>=2.18.4
 beautifulsoup4>=4.9.1
 black
 coverage==5.1
 PyJWT==2.1.0
 flask-restx>=0.5.1
+markupsafe==2.0.1
 
