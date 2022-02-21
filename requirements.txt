@@ -21,3 +21,4 @@ asn1crypto>=1.0.0
 PyJWT==2.1.0
 flask-restx>=0.5.1
 markupsafe==2.0.1
+Werkzeug<2.0,>=0.15
