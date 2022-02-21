@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - added new command `dhcp conf` for configure more easily than dhcp server
 
 ### Changed
+- downgrade version flask 1.1.3 to 1.1.1
 
 ### Deprecated
 
