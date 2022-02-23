@@ -5,7 +5,6 @@ from grp import getgrnam
 from PyQt5 import QtCore, Qt
 from logging import getLogger, ERROR
 import wifipumpkin3.core.utility.constants as C
-from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3.core.utility.collection import SettingsINI as SuperSettings
 from collections import OrderedDict
 from functools import partial
@@ -69,6 +68,9 @@ __all__ = [
     "deleteObject",
     "os",
     "sys",
+    "display_messages",
+    "display_tabulate",
+    "setcolor",
     "exec_bash",
     "LoggerManager",
     "StandardLog",

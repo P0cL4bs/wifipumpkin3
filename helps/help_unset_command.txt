@@ -1,0 +1,11 @@
+unset hostapd_config variables:
+ 
+ Usage: unset hostapd_config.[variable]
+ param variable: unset variables for hostapd configuration file
+
+ Description:
+    Unset variables for hostapd.conf
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#core-commands
+

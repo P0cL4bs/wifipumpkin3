@@ -42,7 +42,6 @@ class ModPump(ModuleUI):
 
     options = {
         "interface": ["wlanx", "Name network interface wireless "],
-        "target": ["00:00:00:00:00:00", "the device MAC Address from Device to deauth"],
         "client": [
             "ff:ff:ff:ff:ff:ff",
             "the device MAC Address from client to desconnect",
@@ -55,8 +54,10 @@ class ModPump(ModuleUI):
         self.parse_args = parse_args
         self.root = root
         self.name_module = self.name
-        self.whitelist = ["00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff"]
         self.aps = {}
+        self._mac_blacklist = set()
+        self._mac_whitelist = set(["00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff"])
+        self.is_running = False
         self.clients = {}
         self.table_headers_wifi = [
             "CH",
@@ -68,6 +69,108 @@ class ModPump(ModuleUI):
         self.table_headers_STA = ["BSSID", "STATION", "PWR", "Frames", "Probe"]
         self.table_output = []
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
+
+    def do_show_scan(self, args):
+        """ show result scanner wireless network """
+        if not self.aps:
+            print(
+                display_messages(
+                    "Scanner result not found", error=True
+                )
+            )  
+            return
+        self.showDataOutputScanNetworks()
+        
+    def do_targets(self, args):
+        """ show device targets to Deauth Atack """
+        if not self._mac_blacklist:
+            print(display_messages("required: no targets found", error=True))
+            return
+        print(display_messages("Targets:", info=True, sublime=True))
+        table_targets = []
+        table_headers_targets = [ 
+            "BSSID"
+        ]
+        for bssid in self._mac_blacklist:
+                table_targets.append(
+                    [setcolor(bssid, color="red")]
+                )
+        display_tabulate(table_headers_targets, table_targets)
+        print("\n")
+        
+    def do_add(self, args):
+        """ add target by mac address (bssid) """
+        try:
+            mac_address =  args.split()[0]
+        except IndexError:
+            print(display_messages("required: no arguments found", error=True))
+            return
+        
+        if "." in mac_address:
+            for target in self.aps.keys():
+                if Linux.check_is_mac(target):
+                    self._mac_blacklist.add(target)
+            return
+
+        if not Linux.check_is_mac(mac_address):
+            print(
+                display_messages("No valid mac address".format(mac_address), error=True)
+            )
+            return
+        
+        
+        self._mac_blacklist.add(mac_address)
+        
+    def complete_add(self, text, args, start_index, end_index):
+        if text:
+            return [
+                command
+                for command in list(self.aps.keys())
+                if command.startswith(text)
+            ]
+        else:
+            return list(self.aps.keys())
+        
+    def help_add(self):
+        self.show_help_command("help_wifideauth_add_command")
+        
+    def do_rm(self, args):
+        """ remove target by mac address (bssid) """
+        try:
+            mac_address =  args.split()[0]
+        except IndexError:
+            print(display_messages("required: no arguments found:", error=True))
+            return
+        if "." in mac_address:
+            self._mac_blacklist.clear()
+            return
+        
+        if not Linux.check_is_mac(mac_address):
+            print(
+                display_messages("No valid mac address".format(mac_address), error=True)
+            )
+            return
+        if mac_address not in self._mac_blacklist:
+            print(
+                display_messages("Target MAC address not found".format(mac_address), error=True)
+            )
+            return
+
+
+        self._mac_blacklist.remove(mac_address)
+
+    def complete_rm(self, text, args, start_index, end_index):
+        if text:
+            return [
+                command
+                for command in list(self.aps.keys())
+                if command.startswith(text)
+            ]
+        else:
+            return list(self.aps.keys())
+        
+    def help_rm(self):
+        self.show_help_command("help_wifideauth_rm_command")
 
     def do_scan(self, args):
         """ start scanner wireless networks AP"""
@@ -109,23 +212,25 @@ class ModPump(ModuleUI):
             return
 
         client_mac = self.options.get("client")[0]
-        target_mac = self.options.get("target")[0]
         interface = self.options.get("interface")[0]
-        if "00:00:00:00:00:00" in self.options.get("target")[0]:
+        if not self._mac_blacklist:
             print(
                 display_messages(
                     "please, select a target to deauth attack ", error=True
                 )
             )
             return
+        
         print(
             display_messages(
                 "enable interface: {} to monitor mode".format(interface), info=True
             )
         )
+        
         print(
             display_messages("Wi-Fi deauthentication attack", info=True, sublime=True)
         )
+        
         print(
             display_messages(
                 "the MAC address: {} of the client to be deauthenticated".format(
@@ -134,37 +239,42 @@ class ModPump(ModuleUI):
                 info=True,
             )
         )
-        info_target = self.aps.get(target_mac)
-        if info_target:
-            channel = info_target.get("channel")
+        
+        for target_mac in self._mac_blacklist:
+            info_target = self.aps.get(target_mac)
+            if info_target:
+                channel = info_target.get("channel")
+                print(
+                    display_messages(
+                        "waiting for beacon frame (BSSID: {}) on channel {} ".format(
+                            setcolor(target_mac, color="orange"), channel
+                        ),
+                        info=True,
+                    )
+                )
+
             print(
                 display_messages(
-                    "waiting for beacon frame (BSSID: {}) on channel {} ".format(
-                        setcolor(target_mac, color="orange"), channel
+                    "Sending DeAuth to station -- STMAC: [{}] ".format(
+                        setcolor(target_mac, color="red")
                     ),
                     info=True,
                 )
             )
-
-        print(
-            display_messages(
-                "Sending DeAuth to station -- STMAC: [{}] ".format(
-                    setcolor(target_mac, color="red")
-                ),
-                info=True,
-            )
-        )
+            
         self.set_monitor_mode("monitor")
-        self.thread_deauth = ThreadDeauth(target_mac, client_mac, interface)
+        self.thread_deauth = ThreadDeauth(self._mac_blacklist, client_mac, interface)
         self.thread_deauth.setObjectName("wifideauth")
         self.thread_deauth.start()
+        self.is_running = True
         self.set_background_mode(True)
 
     def do_stop(self, args):
         """ stop attack deauth module """
-        if hasattr(self, "thread_deauth"):
+        if self.is_running:
             self.thread_deauth.stop()
             self.set_background_mode(False)
+            self.is_running = False
 
     def channel_hopper(self, interface):
         while True:
@@ -185,7 +295,7 @@ class ModPump(ModuleUI):
             essid = "Hidden SSID"
         client = pkt[Dot11].addr2
 
-        if client in self.whitelist or essid in self.whitelist:
+        if client in self._mac_whitelist or essid in self._mac_whitelist:
             return
 
         if client not in self.clients:
@@ -227,7 +337,7 @@ class ModPump(ModuleUI):
             receiver = pkt.getlayer(Dot11).addr1
             if sender in self.aps.keys():
                 if Linux.check_is_mac(receiver):
-                    if not receiver in self.whitelist:
+                    if not receiver in self._mac_whitelist:
                         self.aps[sender]["STA"] = {
                             "Frames": 1,
                             "BSSID": sender,
@@ -241,7 +351,7 @@ class ModPump(ModuleUI):
 
             elif receiver in self.aps.keys():
                 if Linux.check_is_mac(sender):
-                    if not sender in self.whitelist:
+                    if not sender in self._mac_whitelist:
                         self.aps[receiver]["STA"] = {
                             "Frames": 1,
                             "BSSID": receiver,
@@ -267,9 +377,9 @@ class ModPump(ModuleUI):
         bssid = pkt[Dot11].addr3
         client = pkt[Dot11].addr2
         if (
-            client in self.whitelist
-            or essid in self.whitelist
-            or bssid in self.whitelist
+            client in self._mac_whitelist
+            or essid in self._mac_whitelist
+            or bssid in self._mac_whitelist
         ):
             return
 
@@ -309,8 +419,7 @@ class ModPump(ModuleUI):
             "rssi": rssi,
         }
 
-    def showDataOutputScan(self):
-        os.system("clear")
+    def showDataOutputScanNetworks(self):
         self.table_output = []
         self.table_station = []
         for bssid, info in self.aps.items():
@@ -333,8 +442,7 @@ class ModPump(ModuleUI):
                 )
         if len(self.table_station) > 0:
             display_tabulate(self.table_headers_STA, self.table_station)
-
-        print(display_messages("press CTRL+C to stop scanning", info=True))
+            
 
     def sniffAp(self, pkt):
         self.getStationTrackFrame(pkt)
@@ -350,7 +458,9 @@ class ModPump(ModuleUI):
             if pkt.haslayer(Dot11Beacon) or pkt.haslayer(Dot11ProbeResp):
                 self.handle_beacon(pkt)
 
-            self.showDataOutputScan()
+            os.system("clear")
+            self.showDataOutputScanNetworks()
+            print(display_messages("press CTRL+C to stop scanning", info=True))
 
     def set_monitor_mode(self, mode="manager"):
         if not self.options.get("interface")[0] in Linux.get_interfaces().get("all"):

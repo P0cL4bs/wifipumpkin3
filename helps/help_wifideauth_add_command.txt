@@ -1,0 +1,11 @@
+Command add:
+
+ Usage: add [macaddress]
+ param macaddress: The MAC address or (BSSID) of target access point
+  is listed on the command `scan`.
+
+ param .: The param dot will be add all MAC address (BSSID) of target access point
+  is listed on the command `scan`.
+
+ Description:
+    add to list of target for deauth attack.

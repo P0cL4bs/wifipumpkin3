@@ -48,6 +48,11 @@ class SettingsINI(object):
         self.psettings.setValue(key, value)
         self.closeGroup()
 
+    def unset(self, name_group, key):
+        self.psettings.beginGroup(name_group)
+        self.psettings.remove(key)
+        self.closeGroup()
+
     def set_one(self, name_group, key, value):
         """ Sets the value of setting key to value """
         self.set(name_group, key, value)

@@ -1,6 +1,29 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Released]
+
+## [1.1.2] 
+
+### Added 
+- added improves wifideauth module for support multi targets 
+- added improves ConsoleUi and added help for command add, rm from wifideauth module 
+- added hostapd configuration file from wifipumpkin3 console
+- added new command `dhcp conf` for configure more easily than dhcp server
+
+### Changed
+- downgrade version flask 1.1.3 to 1.1.1
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- fixed set command for settings sniffkin3, pumpkinproxy, security
+- fixed ImportError: cannot import name 'json' from 'itsdangerous' 
+- fixed markupsafe==2.0.1 tos solve deprecated the JSON API.
+- fixed Werkzeug<2.0,>=0.15 is required by {'Flask'}
+
 
 ## [Released]
 

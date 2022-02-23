@@ -55,7 +55,14 @@ class RestAPI(Mode):
         # add extra hostapd settings
         self.addExtraHostapdSettings()
 
-        ignore = ("interface=", "ssid=", "channel=", "essid=")
+
+        if self.conf.get("accesspoint", "enable_hostapd_config", format=bool):
+            for key in self.conf.get_all_childname("hostapd_config"):
+                if key not in self.ignore_key_hostapd:
+                    self.Settings. \
+                    SettingsAP["hostapd"]. \
+                    append("{}={}\n".format(key, self.conf.get("hostapd_config", key)))
+                    
         with open(C.HOSTAPDCONF_PATH, "w") as apconf:
             for i in self.Settings.SettingsAP["hostapd"]:
                 apconf.write(i)

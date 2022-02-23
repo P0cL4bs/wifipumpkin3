@@ -1,0 +1,11 @@
+Command rm:
+
+ Usage: rm [macaddress] or [.]
+ param macaddress: The MAC address or (BSSID) of target access point
+  is listed on the command `scan`.
+
+ param .: The param dot will be remove all MAC address (BSSID) of target access point
+  is listed on the command `scan`.
+
+ Description:
+    remove from list of target for deauth attack.

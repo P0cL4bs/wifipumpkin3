@@ -90,6 +90,8 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_plugin": self.mitm_controller.sniffkin3,
             "parser_set_mode": self.wireless_controller.Settings,
             "parser_set_security": self.wireless_controller.Settings,
+            "parser_set_hostapd_config": self.wireless_controller.Settings,
+            "parser_set_dhcpconf": self.wireless_controller.Settings,
         }
         self.parser_autcomplete_func = {}
 
@@ -100,7 +102,13 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         # register autocomplete set security command
         self.parser_autcomplete_func[
             "parser_set_security"
-        ] = self.wireless_controller.Settings.getCommands
+        ] = self.wireless_controller.Settings.getCommandsSecurity
+        self.parser_autcomplete_func[
+            "parser_set_hostapd_config"
+        ] = self.wireless_controller.Settings.getCommandsHostapd
+        self.parser_autcomplete_func[
+            "parser_set_dhcpconf"
+        ] = self.wireless_controller.Settings.getCommandsDhcpConf
 
         self.commands = {
             "interface": "interface",
@@ -110,7 +118,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "proxy": None,  # only for settings proxy
             "plugin": None,  # only for settings plugin
             "mode": None,  # only for settings mdoe
+            "dhcpconf": None,  # only for settings dhcpconf
             "security": "enable_security",
+            "hostapd_config": "enable_hostapd_config",
         }
 
         # get all command plugins and proxies
@@ -220,24 +230,24 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.threads["RogueAP"].extend(self.proxy_controller.ActiveReactor)
         self.threads["RogueAP"].extend(self.mitm_controller.ActiveReactor)
 
-        self.wireless_controller.ActiveReactor.start()
-        self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
-            self.signalHostApdProcessIsRunning
-        )
-
-        # if not self.parse_args.restmode:
-        #     self.wireless_controller.ActiveReactor.start()
-        #     self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
-        #         self.signalHostApdProcessIsRunning
-        #     )
-        #     return
-
         # self.wireless_controller.ActiveReactor.start()
-        # for thread in self.threads["RogueAP"]:
-        #     if thread is not None:
-        #         QtCore.QThread.sleep(1)
-        #         if not (isinstance(thread, list)):
-        #             thread.start()
+        # self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+        #     self.signalHostApdProcessIsRunning
+        # )
+
+        if not self.parse_args.restmode:
+            self.wireless_controller.ActiveReactor.start()
+            self.wireless_controller.ActiveReactor.signalApIsRuning.connect(
+                self.signalHostApdProcessIsRunning
+            )
+            return
+
+        self.wireless_controller.ActiveReactor.start()
+        for thread in self.threads["RogueAP"]:
+            if thread is not None:
+                QtCore.QThread.sleep(1)
+                if not (isinstance(thread, list)):
+                    thread.start()
 
     def signalHostApdProcessIsRunning(self, status):
         if status:
@@ -304,10 +314,6 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """ap: show all connected clients on AP """
         self.uiwid_controller.ui_table_mod.start()
 
-    def do_dhcp(self, args):
-        """ap: choise dhcp server configuration"""
-        self.uiwid_controller.ui_dhcp_config.start()
-
     def do_stop(self, args):
         """ap: stop access point service"""
         self.killThreads()
@@ -364,14 +370,29 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             return
 
         for func in self.parser_list_func:
-            if command in func:
+            if command in func or command.split(".")[0] in func:
                 return getattr(self.parser_list_func[func], func)(value, args)
+            
         # hook function configure plugin
         for plugin in self.parser_autcomplete_func:
             if command in self.parser_autcomplete_func[plugin]:
                 return getattr(self.parser_list_func[plugin], plugin)(value, command)
 
         print(display_messages("unknown command: {} ".format(command), error=True))
+
+    def do_unset(self, args):
+        """core: unset variable commnd hostapd_config"""
+        try:
+            group_name, key = args.split()[0].split('.')[0], args.split()[0].split('.')[1]
+            if key in self.conf.get_all_childname(group_name):
+                return self.conf.unset(group_name, key)
+            print(
+                display_messages("unknown key : {} for hostapd_config".format(key), error=True)
+            )
+        except IndexError:
+            return print(
+                display_messages("unknown sintax : {} ".format(args), error=True)
+            )
 
     def complete_ignore(self, text, args, start_index, end_index):
         if text:
@@ -392,6 +413,18 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             ]
         else:
             return list(self.logger_manager.all())
+
+    def complete_unset(self, text, args, start_index, end_index):
+        if text:
+            command_list = []
+            for func in self.parser_autcomplete_func:
+                if text.startswith(func.split("_set_")[1]):
+                    for command in self.parser_autcomplete_func[func]:
+                        if command.startswith(text):
+                            command_list.append(command)
+            return command_list
+        else:
+            return ["hostapd_config"]
 
     def complete_set(self, text, args, start_index, end_index):
         if text:
@@ -421,6 +454,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def help_set(self):
         self.show_help_command("help_set_command")
+    
+    def help_unset(self):
+        self.show_help_command("help_unset_command")
 
     def help_mode(self):
         self.show_help_command("help_mode_command")

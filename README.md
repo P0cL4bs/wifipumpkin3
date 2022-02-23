@@ -28,7 +28,7 @@
 - Credentials harvesting
 - Transparent Proxies
 - LLMNR, NBT-NS and MDNS poisoner ([Responder3](https://github.com/skelsec/Responder3)) 
-- RestFulAPI (disabled)
+- RestFulAPI (new) 
 - and **more**!
 
 ### Donation
