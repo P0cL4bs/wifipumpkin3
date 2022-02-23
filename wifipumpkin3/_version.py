@@ -1,3 +1,3 @@
-__version__ = "1.0.9"
-__codename__ = "Guaraci"
+__version__ = "1.1.2"
+__codename__ = "Yorixiriamori"
 __branch__ = "dev"
