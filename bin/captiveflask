@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode, unquote
 import os, sys

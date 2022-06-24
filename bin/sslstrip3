@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """sslstrip is a MITM tool that implements Moxie Marlinspike's SSL stripping attacks."""
 
 __author__ = "Moxie Marlinspike"
@@ -37,7 +38,7 @@ from wifipumpkin3.plugins.pumpkinproxy import *
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
 
-import sys, getopt, logging, traceback, string, os
+import sys, getopt, logging
 
 gVersion = "0.9"
 
