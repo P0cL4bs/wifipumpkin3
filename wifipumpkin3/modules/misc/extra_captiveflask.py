@@ -40,7 +40,7 @@ class ModPump(ModuleUI):
     save_path = tempfile.gettempdir() + "/master.zip"
     extracted_filepath = tempfile.gettempdir() + "/extra-captiveflask-master"
     config_file_ini = tempfile.gettempdir() + "/extra-captiveflask-master/config.ini"
-    captiveflask_path = "wifipumpkin3/plugins/captiveflask"
+    captiveflask_path =  C.wp3_setup_packager_path + "/plugins/captiveflask"
 
     config_default = SettingsINI(C.CONFIG_CP_INI_ROOT)
 
@@ -148,11 +148,11 @@ class ModPump(ModuleUI):
         print(display_messages("copy content file to {}".format(dest), info=True))
 
         folder_plugin = "{}/templates/{}".format(self.extracted_filepath, plugin_name)
-        copy_tree(folder_plugin, "config/templates/{}".format(plugin_name))
+        copy_tree(folder_plugin, C.config_dir + "/config/templates/{}".format(plugin_name))
         print(
             display_messages(
                 "copy content directory to {}".format(
-                    "config/templates/{}".format(plugin_name)
+                    "{}/config/templates/{}".format( C.config_dir,plugin_name)
                 ),
                 info=True,
             )
