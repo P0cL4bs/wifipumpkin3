@@ -35,9 +35,9 @@ with open("requirements.txt") as fp:
 
 folders = ["config", "logs", "helps", "scripts", "exceptions"]
 
-
+config_dir = "/usr/share/wifipumpkin3"
 def create_user_dir_config():
-    user_config_dir = os.path.expanduser("~") + "/.config/wifipumpkin3"
+    user_config_dir = config_dir
     if not os.path.isdir(user_config_dir):
         os.makedirs(user_config_dir, exist_ok=True)
     # force copy all files `config` to user_config_dir
