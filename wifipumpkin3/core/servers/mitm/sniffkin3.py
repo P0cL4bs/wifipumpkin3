@@ -37,7 +37,7 @@ class TCPProxyDock(DockableWidget):
         self.THeaders = OrderedDict([("Plugin", []), ("Logging", [])])
 
     def writeModeData(self, data):
-        """ get data output and add on QtableWidgets """
+        """get data output and add on QtableWidgets"""
         self.THeaders["Plugin"].append(data.keys()[0])
         self.THeaders["Logging"].append(data[data.keys()[0]])
         Headers = []
@@ -69,7 +69,7 @@ class Sniffkin3(MitmMode):
         self.check_PluginDict = {}
 
     def setPluginOption(self, name, status):
-        """ get each plugins status"""
+        """get each plugins status"""
         # enable realtime disable and enable plugin
         if self.conf.get("accesspoint", "status_ap", format=bool):
             self.reactor.disablePlugin(name, status)
@@ -82,8 +82,8 @@ class Sniffkin3(MitmMode):
         self.reactor.setObjectName(self.ID)
         self.reactor._ProcssOutput.connect(self.LogOutput)
 
-    def setDataColor(self, data=dict):
-        """ set color in data log keys"""
+    def setDataColor(self, data: dict):
+        """set color in data log keys"""
         if list(dict(data).keys())[0] == "urlsCap":
             data["urlsCap"]["Headers"]["Method"] = setcolor(
                 data["urlsCap"]["Headers"]["Method"], color="orange_bg"
@@ -145,12 +145,8 @@ class Sniffkin3(MitmMode):
             )
             if key_plugin in self.config.get_all_childname("plugins"):
                 return self.config.set("plugins", key_plugin, status)
-            
-            print(
-                display_messages(
-                    "unknown plugin: {}".format(key_plugin), error=True
-                )
-            )
+
+            print(display_messages("unknown plugin: {}".format(key_plugin), error=True))
         except IndexError:
             print(display_messages("unknown sintax command", error=True))
 
@@ -295,11 +291,11 @@ class Sniffkin3Core(QtCore.QThread):
         return dict_head, None
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return "thread"
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def stop(self):

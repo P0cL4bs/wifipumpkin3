@@ -37,7 +37,6 @@ class Capturing(list):
 
 
 class CommandsResource(Resource):
-
     @token_required
     def get(self, command=None):
         self.root = PumpkinShell.getInstance()
@@ -48,12 +47,14 @@ class CommandsResource(Resource):
 
 
 class CommandsPostResource(Resource):
-
     @token_required
     def post(self, command=None):
         data = request.get_json(force=True)
         if not "commands" in data:
-            return exception("Cannot found that key commands  on data", code=400,)
+            return exception(
+                "Cannot found that key commands  on data",
+                code=400,
+            )
         self.root = PumpkinShell.getInstance()
         output = []
         with Capturing(output) as output:

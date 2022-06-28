@@ -24,7 +24,7 @@ from wifipumpkin3.core.utility.printer import (
 
 
 class Ap(ExtensionUI):
-    """ show all variable and status from AP """
+    """show all variable and status from AP"""
 
     Name = "ap"
 
@@ -41,9 +41,17 @@ class Ap(ExtensionUI):
         print(self.__doc__)
 
     def do_ap(self, args):
-        """ap: show all variable and status from AP """
+        """ap: show all variable and status from AP"""
         headers_table, output_table = (
-            ["bssid", "ssid", "channel", "interface", "status", "security", "hostapd_config"],
+            [
+                "bssid",
+                "ssid",
+                "channel",
+                "interface",
+                "status",
+                "security",
+                "hostapd_config",
+            ],
             [],
         )
         print(display_messages("Settings AccessPoint:", info=True, sublime=True))
@@ -84,11 +92,10 @@ class Ap(ExtensionUI):
             print(display_messages("Settings Security:", info=True, sublime=True))
             display_tabulate(headers_sec, output_sec)
             self.show_help_command("help_security_command")
-        
+
         if enable_hostapd_config:
             print(display_messages("Settings Hostapd:", info=True, sublime=True))
             for key in self.conf.get_all_childname("hostapd_config"):
                 print("  {}={}".format(key, self.root.conf.get("hostapd_config", key)))
-            print('\n')
+            print("\n")
             self.show_help_command("help_hostapd_config_command")
-        

@@ -48,11 +48,11 @@ class DHCPServerProcess(QThread):
             self._ProcssOutput.emit(self.queue.get())
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procDHCP.pid
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def stop(self):
@@ -82,11 +82,11 @@ class ProcessThread(QThread):
             pass
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procThread.pid()
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def start(self):
@@ -171,11 +171,11 @@ class ProcessHostapd(QObject):
         self.started = False
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procHostapd.pid()
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def removeInactivityClient(self, client_mac):

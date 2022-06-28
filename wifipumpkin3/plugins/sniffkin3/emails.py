@@ -20,7 +20,7 @@ from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 
 
 class Stealing_emails(PSniffer):
-    """ capture POP3,IMAP,SMTP """
+    """capture POP3,IMAP,SMTP"""
 
     _activated = False
     _instance = None

@@ -69,7 +69,7 @@ class DhcpdServer(DHCPServers):
         )
 
     def logOutputDhcpServer(self, data):
-        """ filter: data info sended DHCPD request """
+        """filter: data info sended DHCPD request"""
         raw_data = data
         data = data.split()
         if self.conf.get("accesspoint", "status_ap", format=bool):

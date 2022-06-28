@@ -35,7 +35,7 @@ class TCPProxyDock(DockableWidget):
         self.THeaders = OrderedDict([("Plugin", []), ("Logging", [])])
 
     def writeModeData(self, data):
-        """ get data output and add on QtableWidgets """
+        """get data output and add on QtableWidgets"""
         self.THeaders["Plugin"].append(data.keys()[0])
         self.THeaders["Logging"].append(data[data.keys()[0]])
         Headers = []

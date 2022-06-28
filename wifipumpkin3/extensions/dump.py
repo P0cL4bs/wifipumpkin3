@@ -23,7 +23,7 @@ import re
 
 
 class Dump(ExtensionUI):
-    """ get informations from clients connected on AccessPoint"""
+    """get informations from clients connected on AccessPoint"""
 
     Name = "dump"
 
@@ -105,7 +105,7 @@ class Dump(ExtensionUI):
             return list(self.root.all_modules.keys())
 
     def do_dump(self, args):
-        """ap: dump informations from client connected on AP """
+        """ap: dump informations from client connected on AP"""
         self.options["target"][0] = None
         if len(args.split()) > 0:
             mac_addr = args.split()[0]

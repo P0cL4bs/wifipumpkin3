@@ -24,7 +24,7 @@ from wifipumpkin3.core.utility.printer import (
 
 
 class Info(ExtensionUI):
-    """ get information about proxy/plugin settings """
+    """get information about proxy/plugin settings"""
 
     Name = "info"
 
@@ -115,7 +115,10 @@ class Info(ExtensionUI):
                     for command in settings:
                         output_settings.append(
                             [
-                                setcolor("{}".format(command), color="blue",),
+                                setcolor(
+                                    "{}".format(command),
+                                    color="blue",
+                                ),
                                 proxies["Config"].get("settings", command),
                             ]
                         )

@@ -71,7 +71,9 @@ class SettingsPluginResource(Resource):
         if attribute:
             if not attribute in self.config.get_all_childname(self.key_name):
                 return exception(
-                    "Cannot found that attribute {} on {}!".format(attribute, self.key_name),
+                    "Cannot found that attribute {} on {}!".format(
+                        attribute, self.key_name
+                    ),
                     code=400,
                 )
             return jsonify({attribute: self.config.get(self.key_name, attribute)})

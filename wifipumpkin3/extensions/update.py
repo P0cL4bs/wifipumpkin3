@@ -24,7 +24,7 @@ import re
 
 
 class Update(ExtensionUI):
-    """ pulling updates from remote git repository """
+    """pulling updates from remote git repository"""
 
     Name = "update"
 
@@ -69,7 +69,7 @@ class Update(ExtensionUI):
             return self.completions
 
     def do_update(self, args):
-        """core: pulling updates from remote git repository """
+        """core: pulling updates from remote git repository"""
         if not self.check_deps_pip():
             print(display_messages("pip3: command not found", error=True))
             print(
@@ -98,7 +98,8 @@ class Update(ExtensionUI):
         print(display_messages("pulling updates from remote git repository", info=True))
         print(
             display_messages(
-                "from branch: {}".format(setcolor(branch, color="green")), info=True,
+                "from branch: {}".format(setcolor(branch, color="green")),
+                info=True,
             )
         )
 

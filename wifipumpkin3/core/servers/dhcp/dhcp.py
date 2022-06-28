@@ -110,7 +110,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
         raise DHCPdServerNotFound("DHCPServer", "The binary (dhcpd) not found")
 
     def get_mac_vendor(self, mac):
-        """ discovery mac vendor by mac address """
+        """discovery mac vendor by mac address"""
         try:
             d_vendor = EUI(mac)
             d_vendor = d_vendor.oui.registration().org

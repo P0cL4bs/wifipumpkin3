@@ -22,7 +22,7 @@ from wifipumpkin3.core.utility.printer import banner, setcolor, display_messages
 
 
 class Banner(ExtensionUI):
-    """ display an awesome wp3 banner """
+    """display an awesome wp3 banner"""
 
     Name = "banner"
 
@@ -39,7 +39,7 @@ class Banner(ExtensionUI):
         print(self.__doc__)
 
     def do_banner(self, args):
-        """core: display an awesome wp3 banner """
+        """core: display an awesome wp3 banner"""
         _author = "{}".format(setcolor(__author__, color="yellow"))
         _version = setcolor(__version__, color="yellow")
         _codename = setcolor(__codename__, color="ciano")

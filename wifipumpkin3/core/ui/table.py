@@ -66,7 +66,7 @@ class ui_TableMonitorClient(WidgetBase):
 
     def setup_view(self):
         self.header_wid = urwid.AttrWrap(urwid.Text(self.header_text), "title")
-        self.menu = urwid.Text([u"Press (", ("quit button", u"Q"), u") to quit."])
+        self.menu = urwid.Text(["Press (", ("quit button", "Q"), ") to quit."])
         self.lwDevices = urwid.SimpleListWalker([])
         self.body = urwid.ListBox(self.lwDevices)
         self.main_box = urwid.LineBox(self.body)
@@ -101,7 +101,7 @@ class ui_TableMonitorClient(WidgetBase):
             self.lwDevices.append(urwid.Text(("", self.up_Clients())))
 
     def get_mac_vendor(self, mac):
-        """ discovery mac vendor by mac address """
+        """discovery mac vendor by mac address"""
         try:
             d_vendor = EUI(mac)
             d_vendor = d_vendor.oui.registration().org
@@ -110,7 +110,7 @@ class ui_TableMonitorClient(WidgetBase):
         return d_vendor
 
     def add_Clients(self, data_dict):
-        """ add client on table list() """
+        """add client on table list()"""
         self.table_clients = []
         for data in data_dict:
             self.table_clients.append(

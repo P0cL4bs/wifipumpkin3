@@ -21,7 +21,7 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class SettingsINI(object):
-    """ settings INI file implemented for Wifi-Pumpkin"""
+    """settings INI file implemented for Wifi-Pumpkin"""
 
     _instance = None
 
@@ -36,14 +36,14 @@ class SettingsINI(object):
         return SettingsINI._instance
 
     def get(self, name_group, key, format=str):
-        """ Get the value for setting key """
+        """Get the value for setting key"""
         self.psettings.beginGroup(name_group)
         value = self.psettings.value(key, type=format)
         self.closeGroup()
         return value
 
     def set(self, name_group, key, value):
-        """ Sets the value of setting key to value """
+        """Sets the value of setting key to value"""
         self.psettings.beginGroup(name_group)
         self.psettings.setValue(key, value)
         self.closeGroup()
@@ -54,22 +54,22 @@ class SettingsINI(object):
         self.closeGroup()
 
     def set_one(self, name_group, key, value):
-        """ Sets the value of setting key to value """
+        """Sets the value of setting key to value"""
         self.set(name_group, key, value)
         for item in self.get_all_childname(name_group):
             if item != key:
                 self.set(name_group, item, False)
 
     def get_by_index_key(self, index, key=str):
-        """ get specific key value by index type(list) """
+        """get specific key value by index type(list)"""
         return str(self.get(key, self.get_all_childname(key)[index]))
 
     def get_all_childname(self, key):
-        """ get list all childskeys on file config.ini """
+        """get list all childskeys on file config.ini"""
         return [x.split("/")[1] for x in self.get_all_keys() if x.split("/")[0] == key]
 
     def get_name_activated_plugin(self, key):
-        """ get status by plugin name """
+        """get status by plugin name"""
         plugins = self.get_all_childname(key)
         for plugin in plugins:
             if self.get(key, plugin, format=bool):
@@ -77,9 +77,9 @@ class SettingsINI(object):
         return None
 
     def get_all_keys(self):
-        """ get all keys on settings"""
+        """get all keys on settings"""
         return self.psettings.allKeys()
 
     def closeGroup(self):
-        """ close group settings"""
+        """close group settings"""
         self.psettings.endGroup()

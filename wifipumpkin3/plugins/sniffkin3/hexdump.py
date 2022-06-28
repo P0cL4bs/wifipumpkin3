@@ -20,7 +20,7 @@ from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 
 
 class Hexdump(PSniffer):
-    """ print dump packets http POST  hex """
+    """print dump packets http POST  hex"""
 
     _activated = False
     _instance = None

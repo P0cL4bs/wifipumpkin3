@@ -39,9 +39,7 @@ EXCEPTFILESPATH = config_dir + "/exceptions/"
 APIRESTPATH = config_dir + "/api/"
 
 # DHCP logger connected
-CLIENTS_CONNECTED = (
-    config_dir + "/config/session/connected.json"
-)
+CLIENTS_CONNECTED = config_dir + "/config/session/connected.json"
 
 DHCPSERVERBINARY = "core/packets/binary/dhcpserver"
 
@@ -61,9 +59,7 @@ DHCPCONF_PATH = config_dir + "/config/dhcpd.conf"
 
 # settings HOSTAPD
 HOSTAPDCONF_PATH = config_dir + "/config/hostapd/hostapd.conf"
-HOSTAPDCONF_PATH2 = (
-    config_dir + "/config/hostapd/hostapd+.conf"
-)
+HOSTAPDCONF_PATH2 = config_dir + "/config/hostapd/hostapd+.conf"
 ALGORITMS = ("TKIP", "CCMP", "TKIP + CCMP")
 
 # system configs
@@ -80,7 +76,7 @@ LOG_PYDNSSERVER = config_dir + "/logs/ap/pydns_server.log"
 LOG_PYDHCPSERVER = config_dir + "/logs/ap/pydhcp_server.log"
 LOG_SNIFFKIN3 = config_dir + "/logs/ap/sniffkin3.log"
 LOG_CAPTIVEPO = config_dir + "/logs/ap/captiveportal.log"
-LOG_RESPONDER3 = config_dir + "/logs/ap/responder3.log"
+LOG_RESPONDER = config_dir + "/logs/ap/responder.log"
 LOG_HOSTAPD = config_dir + "/logs/ap/hostapd.log"
 LOG_ALL = config_dir + "/logs/everything.log"
 
@@ -95,7 +91,7 @@ ALL_LOGSPATH = (
     LOG_SNIFFKIN3,
     LOG_SNIFFKIN3,
     LOG_CAPTIVEPO,
-    LOG_RESPONDER3,
+    LOG_RESPONDER,
     LOG_HOSTAPD,
     LOG_ALL,
 )

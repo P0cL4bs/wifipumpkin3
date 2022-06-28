@@ -21,7 +21,7 @@ from string import ascii_letters
 
 
 class ImageCap(PSniffer):
-    """ capture image content http"""
+    """capture image content http"""
 
     _activated = False
     _instance = None

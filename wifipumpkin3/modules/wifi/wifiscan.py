@@ -34,7 +34,7 @@ DOT11_REQUEST_SUBTYPE = 2
 
 
 class ModPump(ModuleUI):
-    """ Scan WiFi networks and detect devices"""
+    """Scan WiFi networks and detect devices"""
 
     name = "wifiscan"
 
@@ -63,7 +63,7 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
 
     def do_run(self, args):
-        """ execute module """
+        """execute module"""
         print(
             display_messages(
                 "setting interface: {} monitor momde".format(

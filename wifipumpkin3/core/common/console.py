@@ -40,7 +40,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     @property
     def getDefault(self):
-        """ return DefaultWidget instance for load controllers """
+        """return DefaultWidget instance for load controllers"""
         return DefaultController.getInstance()
 
     def __init__(self, parse_args):
@@ -62,7 +62,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         super(PumpkinShell, self).__init__(parse_args=self.parse_args)
 
     def initialize_core(self):
-        """ this method is called in __init__ """
+        """this method is called in __init__"""
         # set current session unique id
         self.conf.set("accesspoint", "current_session", self.currentSessionID)
         if self.parse_args.interface:
@@ -163,7 +163,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         return display_tabulate(headers_table, output_table)
 
     def do_mode(self, args):
-        """ap: all wireless mode available """
+        """ap: all wireless mode available"""
         headers_table, output_table = ["ID", "Activate", "Description"], []
         print(display_messages("Available Wireless Mode:", info=True, sublime=True))
         for id_mode, info in self.wireless_controller.getInfo().items():
@@ -297,21 +297,21 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.threads["RogueAP"] = []
 
     def do_ignore(self, args):
-        """core: the message logger will be ignored """
+        """core: the message logger will be ignored"""
         logger = self.logger_manager.get(args)
         if logger != None:
             return logger.setIgnore(True)
         print(display_messages("Logger class not found.", error=True))
 
     def do_restore(self, args):
-        """core: the message logger will be restored """
+        """core: the message logger will be restored"""
         logger = self.logger_manager.get(args)
         if logger != None:
             return logger.setIgnore(False)
         print(display_messages("Logger class not found.", error=True))
 
     def do_clients(self, args):
-        """ap: show all connected clients on AP """
+        """ap: show all connected clients on AP"""
         self.uiwid_controller.ui_table_mod.start()
 
     def do_stop(self, args):
@@ -319,7 +319,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.killThreads()
 
     def do_jobs(self, args):
-        """ap: show all threads/processes in background """
+        """ap: show all threads/processes in background"""
         if len(self.threads["RogueAP"]) > 0:
             process_background = {}
             headers_table, output_table = ["ID", "PID"], []
@@ -352,7 +352,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         )
 
     def do_set(self, args):
-        """core: set variable proxy,plugin and access point """
+        """core: set variable proxy,plugin and access point"""
         try:
             command, value = args.split()[0], args.split()[1]
             if "bssid" in command:
@@ -372,7 +372,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         for func in self.parser_list_func:
             if command in func or command.split(".")[0] in func:
                 return getattr(self.parser_list_func[func], func)(value, args)
-            
+
         # hook function configure plugin
         for plugin in self.parser_autcomplete_func:
             if command in self.parser_autcomplete_func[plugin]:
@@ -383,11 +383,16 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
     def do_unset(self, args):
         """core: unset variable commnd hostapd_config"""
         try:
-            group_name, key = args.split()[0].split('.')[0], args.split()[0].split('.')[1]
+            group_name, key = (
+                args.split()[0].split(".")[0],
+                args.split()[0].split(".")[1],
+            )
             if key in self.conf.get_all_childname(group_name):
                 return self.conf.unset(group_name, key)
             print(
-                display_messages("unknown key : {} for hostapd_config".format(key), error=True)
+                display_messages(
+                    "unknown key : {} for hostapd_config".format(key), error=True
+                )
             )
         except IndexError:
             return print(
@@ -454,7 +459,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def help_set(self):
         self.show_help_command("help_set_command")
-    
+
     def help_unset(self):
         self.show_help_command("help_unset_command")
 
