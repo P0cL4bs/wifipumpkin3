@@ -33,14 +33,14 @@ from shutil import copyfile
 
 
 class ModPump(ModuleUI):
-    """ Extra customs captiveflask templates """
+    """Extra customs captiveflask templates"""
 
     name = "extra_captiveflask"
 
     save_path = tempfile.gettempdir() + "/master.zip"
     extracted_filepath = tempfile.gettempdir() + "/extra-captiveflask-master"
     config_file_ini = tempfile.gettempdir() + "/extra-captiveflask-master/config.ini"
-    captiveflask_path =  C.wp3_setup_packager_path + "/plugins/captiveflask"
+    captiveflask_path = C.wp3_setup_packager_path + "/plugins/captiveflask"
 
     config_default = SettingsINI(C.CONFIG_CP_INI_ROOT)
 
@@ -54,7 +54,7 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
 
     def do_list(self, args):
-        """ show all avaliable templates from github """
+        """show all avaliable templates from github"""
         if not path.isfile(self.save_path):
             print(
                 display_messages(
@@ -100,7 +100,7 @@ class ModPump(ModuleUI):
             display_tabulate(self.table_headers, self.table_output)
 
     def do_download(self, args):
-        """ download all avaliable templates"""
+        """download all avaliable templates"""
         url = C.URL_EXTRA_CAPTIVEFLASK
         chunk_size = 128
         print(
@@ -148,11 +148,13 @@ class ModPump(ModuleUI):
         print(display_messages("copy content file to {}".format(dest), info=True))
 
         folder_plugin = "{}/templates/{}".format(self.extracted_filepath, plugin_name)
-        copy_tree(folder_plugin, C.config_dir + "/config/templates/{}".format(plugin_name))
+        copy_tree(
+            folder_plugin, C.config_dir + "/config/templates/{}".format(plugin_name)
+        )
         print(
             display_messages(
                 "copy content directory to {}".format(
-                    "{}/config/templates/{}".format( C.config_dir,plugin_name)
+                    "{}/config/templates/{}".format(C.config_dir, plugin_name)
                 ),
                 info=True,
             )
@@ -173,7 +175,7 @@ class ModPump(ModuleUI):
         )
 
     def do_install(self, args):
-        """ install custom captiveflask portals """
+        """install custom captiveflask portals"""
         if not path.isdir(self.captiveflask_path):
             print(
                 display_messages(
@@ -204,7 +206,7 @@ class ModPump(ModuleUI):
         return self.show_help_command("help_extra_captiveflask")
 
     def do_info(self, args):
-        """ get info custom captiveflask portals """
+        """get info custom captiveflask portals"""
         if args:
             plugin_name = args.split()[0]
             if not plugin_name in self.plugins_remote:

@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """sslstrip is a MITM tool that implements Moxie Marlinspike's SSL stripping attacks."""
 
 __author__ = "Moxie Marlinspike"
@@ -134,7 +133,7 @@ def parseOptions(argv):
         sys.exit(2)
 
 
-def main(argv):
+def init(argv):
     (
         logFile,
         logLevel,
@@ -167,5 +166,5 @@ def main(argv):
     reactor.run()
 
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
+def main():
+    init(sys.argv[1:])
