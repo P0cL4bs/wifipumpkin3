@@ -19,4 +19,4 @@ beautifulsoup4>=4.9.1
 PyJWT==2.1.0
 flask-restx>=0.5.1
 markupsafe==2.0.1
-Werkzeug<2.0,>=0.15
+Werkzeug
