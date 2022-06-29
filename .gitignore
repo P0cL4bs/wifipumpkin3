@@ -6,6 +6,8 @@ __pycache__/
 *.so
 #*.log
 
+venv/
+
 #exclude vscode
 .vscode/
 .ideia/
