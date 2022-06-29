@@ -18,7 +18,6 @@ class DhcpdServer(DHCPServers):
     def __init__(self, parent=0):
         super(DhcpdServer, self).__init__(parent)
         self._isRunning = False
-        self._connected = {}
         self.leases = {}
 
     def setIsRunning(self, value):
@@ -27,7 +26,7 @@ class DhcpdServer(DHCPServers):
     @property
     def getStatusReactor(self):
         return self._isRunning
-
+    
     def Initialize(self):
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
         leases = C.DHCPLEASES_PATH
@@ -60,13 +59,13 @@ class DhcpdServer(DHCPServers):
         )
         print(
             display_messages(
-                "{} client join the AP IpAddr::[{}]".format(
-                    setcolor(mac, color="green"),
-                    setcolor(user_info["IP"], color="green"),
+                "{} client join the AP".format(
+                    setcolor(mac, color="green")
                 ),
                 info=True,
             )
         )
+        self._connected[mac] = user_info
 
     def logOutputDhcpServer(self, data):
         """filter: data info sended DHCPD request"""
@@ -124,7 +123,6 @@ class DhcpdServer(DHCPServers):
                         self.add_DHCP_Requests_clients(data[4], self.leases[data[4]])
 
             self.logger.info(raw_data)
-            Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, self.leases, "w")
 
     @property
     def commandargs(self):

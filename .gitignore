@@ -8,6 +8,13 @@ __pycache__/
 
 venv/
 
+
+# debian package
+debian/wifipumpkin3/
+debian/wifipumpkin3.prerm.debhelper
+debian/wifipumpkin3.postinst.debhelper
+debian/wifipumpkin3.debhelper.log
+debian/.debhelper/
 #exclude vscode
 .vscode/
 .ideia/

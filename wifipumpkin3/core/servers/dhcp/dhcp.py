@@ -39,7 +39,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
         super(DHCPServers, self).__init__()
         self.parent = parent
         self.conf = SuperSettings.getInstance()
-
+        self._connected = {}
         self.loggermanager = LoggerManager.getInstance()
         self.configure_logger()
 
@@ -81,7 +81,7 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
     def Stop(self):
         self.shutdown()
         self.reactor.stop()
-        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, {}, "w")
+        self._connected = dict()
 
     def Start(self):
         self.prereq()
@@ -118,6 +118,13 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
             d_vendor = "unknown mac"
         return d_vendor
 
+    def removeInactivityClient(self, mac: str):
+        if mac in self._connected:
+            self._connected.pop(mac)
+
+    @property
+    def getStaClients(self):
+        return self._connected
 
 class DHCPSettings(CoreSettings):
     Name = "WP DHCP"

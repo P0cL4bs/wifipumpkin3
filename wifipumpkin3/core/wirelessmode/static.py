@@ -2,6 +2,7 @@ from wifipumpkin3.core.config.globalimport import *
 import weakref
 from subprocess import check_output, STDOUT, CalledProcessError
 from wifipumpkin3.core.common.threads import ProcessHostapd
+from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 from wifipumpkin3.core.wirelessmode.wirelessmode import Mode
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.printer import display_messages, setcolor
@@ -38,6 +39,7 @@ class Static(Mode):
     def __init__(self, parent=0):
         super(Static, self).__init__(parent)
         self.confgSecurity = []
+        self.parent = parent
 
     @property
     def Settings(self):
@@ -83,6 +85,7 @@ class Static(Mode):
                     info=True,
                 )
             )
+            self.getDHCPMode.removeInactivityClient(data)
 
     def setNetworkManager(self, interface=str, Remove=False):
         """mac address of interface to exclude"""

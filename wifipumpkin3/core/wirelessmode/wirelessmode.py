@@ -2,6 +2,7 @@ from wifipumpkin3.core.config.globalimport import *
 from re import *
 from os import path
 from shutil import move
+from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 from wifipumpkin3.core.widgets.default.session_config import *
 from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
 import sys
@@ -184,3 +185,7 @@ class Mode(Qt.QObject):
     def LogOutput(self, data):
         """get inactivity client from hostapd response"""
         pass
+    
+    @property
+    def getDHCPMode(self) -> DHCPServers:
+        return self.parent.getDefault.getController("dhcp_controller").Active
