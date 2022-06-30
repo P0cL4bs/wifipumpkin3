@@ -6,7 +6,7 @@
 [![build status](https://github.com/mh4x0f/wifipumpkin3/workflows/Build/badge.svg)](https://github.com/mh4x0f/wifipumpkin3/actions)
 [![license](https://img.shields.io/badge/license-apache%202-orange)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/LICENSE.md)
 [![changelog](https://img.shields.io/badge/change-log-yellow)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/CHANGELOG.md)
-[![changelog](https://img.shields.io/badge/version-1.0.9-blue)](https://github.com/mh4x0f/wifipumpkin3/)
+[![changelog](https://img.shields.io/badge/version-1.1.3-blue)](https://github.com/mh4x0f/wifipumpkin3/)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 ![AKUANDUBA](/docs/screenshot.png)
@@ -27,7 +27,6 @@
 - **DNS** monitoring service
 - Credentials harvesting
 - Transparent Proxies
-- LLMNR, NBT-NS and MDNS poisoner ([Responder3](https://github.com/skelsec/Responder3)) 
 - RestFulAPI (new) 
 - and **more**!
 
