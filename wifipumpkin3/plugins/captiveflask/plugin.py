@@ -1,3 +1,4 @@
+from typing import Optional
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 
@@ -20,20 +21,38 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class CaptiveTemplatePlugin(object):
-    Name = "plugin template captive-portal"
-    version = "1.0"
-    config = SettingsINI(C.CONFIG_CP_INI)
-    loggers = {}
+    Name: str = "CaptiveTemplatePlugin"
+    Version: str = "1.1"
+    Description: str = "Example is a simple portal default page"
+    Author: str = "Pumpkin-Dev"
+    TemplatePath: str  = None
+    StaticPath: str = None
+    Preview: str = None
+    Languages: Optional[list] = []
+    config: SettingsINI = SettingsINI(C.CONFIG_CP_INI)
+    
+    def __init__(self) -> None:
+        if self.Languages:
+            key = "set_{}".format(self.Name)
+            if not self.config.get_all_childname(key):
+                for lang in self.Languages:
+                    self.config.set(key, lang, False)
+                self.config.set(key, self.Languages[0], True)
+        if not self.Name in self.config.get_all_childname("plugins"):
+            self.config.set("plugins", self.Name, False)
 
-    def init_language(self, lang):
-        pass
+    def init_language(self, lang: Optional[str]):
+        if lang:
+            self.TemplatePath = (
+                C.TEMPLATES_FLASK + "templates/{}/templates/{}".format(self.Name, lang)
+            )
 
-    def getSellectedLanguage(self):
-        selected_lang, key = None, "set_{}".format(self.Name)
+    def getActivatedLanguage(self) -> Optional[str]:
+        key = "set_{}".format(self.Name)
         for lang in self.config.get_all_childname(key):
             if self.config.get(key, lang, format=bool):
-                selected_lang = lang
-        return selected_lang
+                return lang
+        return None
 
     def initialize(self):
-        self.init_language(self.getSellectedLanguage())
+        self.init_language(self.getActivatedLanguage())

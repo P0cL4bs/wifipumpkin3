@@ -4,7 +4,7 @@ import wifipumpkin3.core.utility.constants as C
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
 
-# Copyright 2020 P0cL4bs Team - Marcos Bomfim (mh4x0f)
+# Copyright 2022 P0cL4bs Team - Marcos Bomfim (mh4x0f)
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,19 +20,10 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class LoginPage(CaptiveTemplatePlugin):
-    meta = {
-        "Name": "loginPage",
-        "Version": "1.0",
-        "Description": "Example is a simple portal default page",
-        "Author": "Pumpkin-Dev",
-        "Language": "En",
-        "TemplatePath": C.TEMPLATES_FLASK + "templates/loginPage",
-        "StaticPath": C.TEMPLATES_FLASK + "templates/loginPage/static",
-        "Preview": "plugins/captivePortal/templates/loginPage/preview.png",
-    }
-
-    def __init__(self):
-        for key, value in self.meta.items():
-            self.__dict__[key] = value
-        self.dict_domain = {}
-        self.ConfigParser = False
+    Name = "loginPage"
+    Version = "1.0"
+    Description = "Example is a simple portal default page"
+    Author = "Pumpkin-Dev"
+    TemplatePath = C.TEMPLATES_FLASK + "templates/loginPage"
+    StaticPath = C.TEMPLATES_FLASK + "templates/loginPage/static"
+    Preview = C.TEMPLATES_FLASK + "templates/loginPage/preview.png"
