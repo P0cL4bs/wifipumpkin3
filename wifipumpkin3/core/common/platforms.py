@@ -33,7 +33,7 @@ from shutil import which
 class Linux(QtCore.QObject):
     @staticmethod
     def set_ip_forward(value):
-        """set forward to redirect packets """
+        """set forward to redirect packets"""
         with open(C.IPFORWARD, "w") as file:
             file.write(str(value))
             file.close()
@@ -44,20 +44,20 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def getHwAddr(ifname):
-        """ another functions for get mac adreess """
+        """another functions for get mac adreess"""
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         info = ioctl(s.fileno(), 0x8927, pack("256s", ifname[:15]))
         return ":".join(["%02x" % ord(char) for char in info[18:24]])
 
     @staticmethod
     def kill_procInterfaceBusy():
-        """ kill network processes are keeping the interface busy """
+        """kill network processes are keeping the interface busy"""
         willkill = ("wpa_supplicant", "dhclient")  # for ethernet conntion
         pass
 
     @staticmethod
     def get_interfaces():
-        """ get interfaces and check status connection """
+        """get interfaces and check status connection"""
         interfaces = {
             "activated": [None, None],
             "all": [],
@@ -91,14 +91,14 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def get_Ipaddr(card):
-        """ get ipadress by interface name"""
+        """get ipadress by interface name"""
         if card == None:
             return get_if_addr("{}".format(Linux.get_interfaces()["activated"][0]))
         return get_if_addr("{}".format(card))
 
     @staticmethod
     def get_mac(host):
-        """ return mac by ipadress local network """
+        """return mac by ipadress local network"""
         fields = popen('grep "%s " /proc/net/arp' % host).read().split()
         if len(fields) == 6 and fields[3] != "00:00:00:00:00:00":
             return fields[3]
@@ -107,7 +107,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def get_interface_mac(device):
-        """ get mac from interface local system """
+        """get mac from interface local system"""
         result = check_output(
             ["ifconfig", device], stderr=STDOUT, universal_newlines=True
         )
@@ -121,14 +121,14 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def randomMacAddress(prefix):
-        """generate random mac for prefix """
+        """generate random mac for prefix"""
         for ount in range(6 - len(prefix)):
             prefix.append(randint(0x00, 0x7F))
         return ":".join(map(lambda x: "%02x" % x, prefix))
 
     @staticmethod
     def check_is_mac(value):
-        """check if mac is mac type """
+        """check if mac is mac type"""
         checked = compile(
             r"""(
          ^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$
@@ -143,14 +143,14 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def find(name, paths):
-        """ find all files in directory """
+        """find all files in directory"""
         for root, dirs, files in walk(paths):
             if name in files:
                 return path.join(root, name)
 
     @staticmethod
     def getSize(filename):
-        """ return files size by pathnme """
+        """return files size by pathnme"""
         st = stat(filename)
         return st.st_size
 
@@ -170,7 +170,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def readFileHelp(filename, mode="r"):
-        """ return content the help files """
+        """return content the help files"""
         content = ""
         with open("{}{}.txt".format(C.HELPFILESPATH, filename), mode) as f:
             content = f.read()
@@ -179,7 +179,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def readFileExceptions(filename, mode="r"):
-        """ return content the any files .txt"""
+        """return content the any files .txt"""
         content = ""
         with open("{}{}.txt".format(C.EXCEPTFILESPATH, filename), mode) as f:
             content = f.read()
@@ -188,13 +188,13 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def generate_session_id():
-        """ return str session id """
+        """return str session id"""
         my_id = str(uuid1())
         return my_id
 
     @staticmethod
     def getCommandOutput(command: str):
-        """ get the first line of command executed on bash"""
+        """get the first line of command executed on bash"""
         binary_path = popen("{}".format(command)).read()
         if not binary_path:
             return ""
@@ -202,7 +202,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def getBinaryPath(binary_name: str):
-        """ get the path of binary linux"""
+        """get the path of binary linux"""
         binary_path = popen("which {}".format(binary_name)).read()
         if not binary_path:
             return ""
@@ -210,7 +210,7 @@ class Linux(QtCore.QObject):
 
     @staticmethod
     def checkIfIptablesVersion():
-        """ check if iptables version is nf_tables """
+        """check if iptables version is nf_tables"""
         if "nf_tables" in Linux.getCommandOutput("iptables --version"):
             return Linux.getBinaryPath("iptables-legacy")
         return Linux.getBinaryPath("iptables")
@@ -235,12 +235,12 @@ def is_ascii(text):
 
 
 def exec_bash(command):
-    """ run command on background hide output"""
+    """run command on background hide output"""
     popen(command + " > /dev/null")
 
 
 def del_item_folder(directorys):
-    """ delete all items in folder """
+    """delete all items in folder"""
     for folder in directorys:
         files = glob(folder)
         for file in files:
@@ -249,7 +249,7 @@ def del_item_folder(directorys):
 
 
 def is_tool(name):
-    """ check if tool is installed on S.O"""
+    """check if tool is installed on S.O"""
     return which(name) is not None
 
 
@@ -288,13 +288,13 @@ class decoded(object):
 
 def hexdump(src, length=16, sep="."):
     """
-	https://gist.github.com/ImmortalPC/c340564823f283fe530b
-	@brief Return {src} in hex dump.
-	@param[in] length	{Int} Nb Bytes by row.
-	@param[in] sep		{Char} For the text part, {sep} will be used for non ASCII char.
-	@return {Str} The hexdump
-	@note Full support for python2 and python3 !
-	"""
+    https://gist.github.com/ImmortalPC/c340564823f283fe530b
+    @brief Return {src} in hex dump.
+    @param[in] length	{Int} Nb Bytes by row.
+    @param[in] sep		{Char} For the text part, {sep} will be used for non ASCII char.
+    @return {Str} The hexdump
+    @note Full support for python2 and python3 !
+    """
     result = []
 
     # Python3 support

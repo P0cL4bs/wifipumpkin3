@@ -33,7 +33,7 @@ import gzip, inspect, io
 
 class ServerConnection(HTTPClient):
 
-    """ The server connection is where we do the bulk of the stripping.  Everything that
+    """The server connection is where we do the bulk of the stripping.  Everything that
     comes back is examined.  The headers we dont like are removed, and the links are stripped
     from HTTPS to HTTP.
     """

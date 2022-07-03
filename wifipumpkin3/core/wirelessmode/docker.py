@@ -57,10 +57,10 @@ class Docker(Mode):
         if self.conf.get("accesspoint", "enable_hostapd_config", format=bool):
             for key in self.conf.get_all_childname("hostapd_config"):
                 if key not in self.ignore_key_hostapd:
-                    self.Settings. \
-                    SettingsAP["hostapd"]. \
-                    append("{}={}\n".format(key, self.conf.get("hostapd_config", key)))
-                    
+                    self.Settings.SettingsAP["hostapd"].append(
+                        "{}={}\n".format(key, self.conf.get("hostapd_config", key))
+                    )
+
         with open(C.DOCKERHOSTAPDCONF_PATH, "w") as apconf:
             for i in self.Settings.SettingsAP["hostapd"]:
                 apconf.write(i)
@@ -136,7 +136,7 @@ class Docker(Mode):
             )
 
     def setNetworkManager(self, interface=str, Remove=False):
-        """ mac address of interface to exclude """
+        """mac address of interface to exclude"""
         networkmanager = C.NETWORKMANAGER
         config = configparser.RawConfigParser()
         MAC = Linux.get_interface_mac(interface)
@@ -216,7 +216,7 @@ class DockerSettings(CoreSettings):
         return DHCP
 
     def Configure(self):
-        """ configure interface and dhcpd for mount Access Point """
+        """configure interface and dhcpd for mount Access Point"""
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
         self.DHCP = self.getDHCPConfig()
         self.SettingsAP = {
@@ -289,7 +289,7 @@ class DockerSettings(CoreSettings):
         return True
 
     def get_supported_interface(self, dev):
-        """ get all support mode from interface wireless  """
+        """get all support mode from interface wireless"""
         _iface = {"info": {}, "Supported": []}
         try:
             output = check_output(

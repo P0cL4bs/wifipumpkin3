@@ -22,7 +22,7 @@ from wifipumpkin3.core.common.threads import ProcessThread
 
 
 class ModPump(ModuleUI):
-    """ Perform a dns spoof with accesspoint attack """
+    """Perform a dns spoof with accesspoint attack"""
 
     name = "dns_spoof"
 
@@ -70,7 +70,7 @@ class ModPump(ModuleUI):
         self.options["redirectTo"][0] = self.conf.get("dhcp", "router")
 
     def do_add(self, args):
-        """ add domain for perform attack dns spoof """
+        """add domain for perform attack dns spoof"""
         if not self.options.get("domains")[0]:
             self.options["domains"][0] = ",".join([args])
             return
@@ -80,7 +80,7 @@ class ModPump(ModuleUI):
         self.options["domains"][0] = ",".join(targets)
 
     def do_rm(self, args):
-        """ remove a domain from list dns spoof """
+        """remove a domain from list dns spoof"""
         if not self.options.get("domains")[0]:
             return print(display_messages("the list of domains is empty", error=True))
 
@@ -99,7 +99,7 @@ class ModPump(ModuleUI):
             )
 
     def do_start(self, args):
-        """ start update dns zones file """
+        """start update dns zones file"""
         if self._background_mode:
             print(
                 display_messages(
@@ -129,7 +129,8 @@ class ModPump(ModuleUI):
         for target in self.options.get("domains")[0].split(","):
             print(
                 display_messages(
-                    "-> [{}] ".format(setcolor(target, color="red")), info=True,
+                    "-> [{}] ".format(setcolor(target, color="red")),
+                    info=True,
                 )
             )
 
@@ -143,7 +144,7 @@ class ModPump(ModuleUI):
         self.set_background_mode(True)
 
     def do_stop(self, args):
-        """ stop or restore the default dns zone file """
+        """stop or restore the default dns zone file"""
         self.handler_dnshosts = open(self.filepath_dns_hosts, "w")
         for line in self.default_hosts:
             self.handler_dnshosts.write(line + "\n")

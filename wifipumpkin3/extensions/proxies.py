@@ -24,7 +24,7 @@ from wifipumpkin3.core.utility.printer import (
 
 
 class Proxies(ExtensionUI):
-    """ show all available proxies """
+    """show all available proxies"""
 
     Name = "proxies"
 

@@ -24,7 +24,7 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class PSniffer(object):
-    """ plugins data sniffers"""
+    """plugins data sniffers"""
 
     name = "plugin sniffkin3 master"
     version = "1.0"
@@ -34,11 +34,11 @@ class PSniffer(object):
     session = None
 
     def filterPackets(self, pkt):
-        """ intercept packetes data """
+        """intercept packetes data"""
         raise NotImplementedError
 
     def get_http_headers(self, http_payload):
-        """ get header dict http request"""
+        """get header dict http request"""
         try:
             headers_raw = http_payload[: http_payload.index("\r\n\r\n") + 2]
             headers = dict(findall(r"(?P<name>.*?):(?P<value>.*?)\r\n", headers_raw))
@@ -64,5 +64,5 @@ class PSniffer(object):
         return logger
 
     def hexdumpPackets(self, pkt):
-        """ show packets hexdump """
+        """show packets hexdump"""
         return hexdump(pkt)

@@ -27,12 +27,12 @@ class ui_DhcpSettingsClass(WidgetBase):
 
     def __init__(self, parent):
         self.parent = parent
-        self.desc_dhcp_server = u"DHCP or Dynamic Host Configuration Protocol is a protocol used in networks through which a system can automatically obtain the network settings, at boot time, required for communicating with other network devices. .\n"
-        self.desc_ip_range = u"Using DHCP, the Access Point will provide an IP address to devices that connect, in a private range.\n"
+        self.desc_dhcp_server = "DHCP or Dynamic Host Configuration Protocol is a protocol used in networks through which a system can automatically obtain the network settings, at boot time, required for communicating with other network devices. .\n"
+        self.desc_ip_range = "Using DHCP, the Access Point will provide an IP address to devices that connect, in a private range.\n"
         self.class_headers = {
-            u"10.0.0.20/50": "Class-A-Address",
-            u"172.16.0.100/150": "Class-B-Address",
-            u"192.168.0.100/150": "Class-C-Address",
+            "10.0.0.20/50": "Class-A-Address",
+            "172.16.0.100/150": "Class-B-Address",
+            "192.168.0.100/150": "Class-C-Address",
         }
         self.radio_dhcpd_server_status = False
 
@@ -43,11 +43,13 @@ class ui_DhcpSettingsClass(WidgetBase):
         )
 
         self.widget_main = urwid.Padding(
-            self.menu(u"DHCP Server", self.class_headers.keys()), left=2, right=2,
+            self.menu("DHCP Server", self.class_headers.keys()),
+            left=2,
+            right=2,
         )
         self.top = urwid.Overlay(
             self.widget_main,
-            urwid.SolidFill(u"\N{MEDIUM SHADE}"),
+            urwid.SolidFill("\N{MEDIUM SHADE}"),
             align="center",
             width=("relative", 60),
             valign="middle",
@@ -68,7 +70,7 @@ class ui_DhcpSettingsClass(WidgetBase):
         bgroup = []  # button group
         self.radioPyDhcpServer = urwid.RadioButton(
             bgroup,
-            u"PyDHCPServer",
+            "PyDHCPServer",
             state=not self.radio_dhcpd_server_status,
             on_state_change=self.on_radioButton_changes,
             user_data="pydhcp_server",
@@ -76,7 +78,7 @@ class ui_DhcpSettingsClass(WidgetBase):
 
         self.radioDhcpdServer = urwid.RadioButton(
             bgroup,
-            u"ISC DHCPServer",
+            "ISC DHCPServer",
             state=self.radio_dhcpd_server_status,
             on_state_change=self.on_radioButton_changes,
             user_data="dhcp_server",
@@ -96,26 +98,26 @@ class ui_DhcpSettingsClass(WidgetBase):
         child_keys = self._conf.get_all_childname("dhcp")
         for config in child_keys:
             default_config.append(
-                u"{} = {}\n".format(config, self._conf.get("dhcp", config))
+                "{} = {}\n".format(config, self._conf.get("dhcp", config))
             )
 
-        body.append(urwid.Text([u"\n[Default]\n"] + default_config))
-        body.append(urwid.Text([u"Press (", ("quit button", u"Q"), u") to quit."]))
+        body.append(urwid.Text(["\n[Default]\n"] + default_config))
+        body.append(urwid.Text(["Press (", ("quit button", "Q"), ") to quit."]))
 
         return urwid.ListBox(urwid.SimpleFocusListWalker(body))
 
     def item_chosen(self, button, choice):
-        data_config = [u"-----------DHCP-----------\n"]
+        data_config = ["-----------DHCP-----------\n"]
         data_set = {}
         child_keys = self._conf.get_all_childname(self.class_headers.get(choice))
         for config in child_keys:
             data_config.append(
-                u"{} = {}\n".format(
+                "{} = {}\n".format(
                     config, self._conf.get(self.class_headers.get(choice), config)
                 )
             )
             data_set[config] = self._conf.get(self.class_headers.get(choice), config)
-        data_config.append(u"-----------DHCP-----------\n")
+        data_config.append("-----------DHCP-----------\n")
 
         for key, value in data_set.items():
             self._conf.set("dhcp", key, value)
@@ -129,8 +131,8 @@ class ui_DhcpSettingsClass(WidgetBase):
             self._conf.set("accesspoint", "pydns_server", True)
             self._conf.set("accesspoint", "dhcpd_server", False)
 
-        response = urwid.Text([u"[DHCP configuration]", u"\n"] + data_config)
-        done = urwid.Button(u"Ok")
+        response = urwid.Text(["[DHCP configuration]", "\n"] + data_config)
+        done = urwid.Button("Ok")
         urwid.connect_signal(done, "click", self.exit_program)
         self.widget_main.original_widget = urwid.Filler(
             urwid.Pile([response, urwid.AttrMap(done, None, focus_map="reversed")])

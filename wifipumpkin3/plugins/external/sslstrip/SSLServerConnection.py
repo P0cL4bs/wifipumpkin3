@@ -23,7 +23,7 @@ from wifipumpkin3.plugins.external.sslstrip.ServerConnection import ServerConnec
 
 class SSLServerConnection(ServerConnection):
 
-    """ 
+    """
     For SSL connections to a server, we need to do some additional stripping.  First we need
     to make note of any relative links, as the server will be expecting those to be requested
     via SSL as well.  We also want to slip our favicon in here and kill the secure bit on cookies.

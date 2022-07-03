@@ -1,0 +1,38 @@
+Source: wifipumpkin3
+Maintainer: Marcos Bomfim (mh4x0f) - P0cL4bs Team <mh4root@gmail.com>
+Section: network
+Priority: optional
+Build-Depends: python3-setuptools, debhelper (>= 9),
+               dh-python,
+               python3 (>=3.7), python3-venv,
+               python3-dnslib,
+               python3-flask,
+               python3-isc-dhcp-leases,
+               python3-jwt,
+               python3-netaddr,
+               python3-netifaces,
+               python3-pyqt5,
+               python3-requests,
+               python3-scapy,
+               python3-tabulate,
+               python3-urwid
+Standards-Version: 3.9.1
+Homepage: https://github.com/P0cL4bs/wifipumpkin3
+
+Package: wifipumpkin3
+Architecture: all
+Depends: hostapd,
+         iptables,
+         iw,
+         libssl-dev,
+         libffi-dev,
+         build-essential,
+         net-tools,
+         wireless-tools,
+         ${misc:Depends},
+         ${python3:Depends}
+Description: Powerful framework for rogue access point attack
+ This package contains a powerful framework for rogue access point attack,
+ written in Python, that allow and offer to security researchers, red teamers
+ and reverse engineers to mount a wireless network to conduct a
+ man-in-the-middle attack.

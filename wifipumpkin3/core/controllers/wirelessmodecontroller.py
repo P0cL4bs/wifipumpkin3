@@ -65,7 +65,7 @@ class WirelessModeController(ControllerBlueprint):
         return AccessPointSettings.instances[0]
 
     def Start(self):
-        """ start Access Point and settings plugins  """
+        """start Access Point and settings plugins"""
         # if not type(self.Activated.get_soft_dependencies()) is bool: return
 
         self.Activated.Start()
@@ -97,7 +97,7 @@ class AccessPointSettings(CoreSettings):
 
     @property
     def getActiveMode(self):
-        """ get mode activated from settings file """
+        """get mode activated from settings file"""
         for mode in self.__modelist:
             if mode.isChecked():
                 return mode
@@ -138,7 +138,7 @@ class AccessPointSettings(CoreSettings):
         for command in commands:
             list_commands.append("security" + "." + command)
         return list_commands
-    
+
     @property
     def getCommandsHostapd(self):
         commands_host = self.conf.get_all_childname("hostapd_config")
@@ -164,7 +164,7 @@ class AccessPointSettings(CoreSettings):
             print(display_messages("unknown flag: {}".format(key), error=True))
         except IndexError:
             print(display_messages("unknown sintax command", error=True))
-            
+
     def parser_set_dhcpconf(self, value, settings):
         try:
             # settings = settings.netmask 255.0.0.0
@@ -177,14 +177,14 @@ class AccessPointSettings(CoreSettings):
 
     def parser_set_hostapd_config(self, value, settings):
         try:
-            # settings = hostapd_extra.logger_syslog 1 
+            # settings = hostapd_extra.logger_syslog 1
             name, key = settings.split(".")[0], settings.split(".")[1].split()[0]
             return self.conf.set("hostapd_config", key, value)
         except IndexError:
             print(display_messages("unknown sintax command", error=True))
 
     def configure_network_AP(self):
-        """ configure interface and dhcpd for mount Access Point """
+        """configure interface and dhcpd for mount Access Point"""
         self.DHCP = self.Settings.DHCP.conf
         self.SettingsEnable["PortRedirect"] = self.settings.get_setting(
             "settings", "redirect_port"

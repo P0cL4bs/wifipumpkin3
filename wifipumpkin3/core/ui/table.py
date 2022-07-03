@@ -1,11 +1,7 @@
-import urwid, time, threading
 from tabulate import tabulate
 from netaddr import EUI
-from wifipumpkin3.core.utility.collection import SettingsINI
+from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 import wifipumpkin3.core.utility.constants as C
-import fcntl, termios, struct, os
-from wifipumpkin3.core.common.platforms import hexdump
-from multiprocessing import Process
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.ui.uimode import WidgetBase
 
@@ -49,8 +45,6 @@ class ui_TableMonitorClient(WidgetBase):
     def __init__(self, parent):
         self.parent = parent
         self.table_clients = []
-        self.__threadServices = []
-        self.__threadStatus = False
         self.header_text = [
             ("titlebar", ""),
             "Clients: ",
@@ -58,7 +52,7 @@ class ui_TableMonitorClient(WidgetBase):
             ",",
             ("title", "DOWN"),
             ":scroll",
-            "     Monitor DHCP Requests",
+            "      DHCP Information",
         ]
 
     def getClientsCount(self):
@@ -66,7 +60,7 @@ class ui_TableMonitorClient(WidgetBase):
 
     def setup_view(self):
         self.header_wid = urwid.AttrWrap(urwid.Text(self.header_text), "title")
-        self.menu = urwid.Text([u"Press (", ("quit button", u"Q"), u") to quit."])
+        self.menu = urwid.Text(["Press (", ("quit button", "Q"), ") to quit."])
         self.lwDevices = urwid.SimpleListWalker([])
         self.body = urwid.ListBox(self.lwDevices)
         self.main_box = urwid.LineBox(self.body)
@@ -74,7 +68,8 @@ class ui_TableMonitorClient(WidgetBase):
         self.layout = urwid.Frame(
             header=self.header_wid, body=self.main_box, footer=self.menu
         )
-        self.add_Clients(Refactor.readFileDataToJson(C.CLIENTS_CONNECTED))
+        dhcp_mode: DHCPServers = self.parent.getDefault.getController("dhcp_controller").Active
+        self.add_Clients(dhcp_mode.getStaClients)
 
     def render_view(self):
         return self.layout
@@ -96,12 +91,10 @@ class ui_TableMonitorClient(WidgetBase):
         self.main()
 
     def stop(self):
-        if len(self.__threadServices) > 0:
-            self.table_clients = []
-            self.lwDevices.append(urwid.Text(("", self.up_Clients())))
+        pass
 
     def get_mac_vendor(self, mac):
-        """ discovery mac vendor by mac address """
+        """discovery mac vendor by mac address"""
         try:
             d_vendor = EUI(mac)
             d_vendor = d_vendor.oui.registration().org
@@ -110,7 +103,7 @@ class ui_TableMonitorClient(WidgetBase):
         return d_vendor
 
     def add_Clients(self, data_dict):
-        """ add client on table list() """
+        """add client on table list()"""
         self.table_clients = []
         for data in data_dict:
             self.table_clients.append(

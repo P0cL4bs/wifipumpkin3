@@ -2,9 +2,8 @@ name: Build
 on:
   push:
     branches:
+      - main
       - dev
-      - beta
-      - master
       - tmp-*
     tags:
       - v*

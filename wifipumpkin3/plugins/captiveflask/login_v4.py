@@ -20,19 +20,10 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class Loginv4(CaptiveTemplatePlugin):
-    meta = {
-        "Name": "Login_v4",
-        "Version": "1.0",
-        "Description": "Example is a simple portal default page",
-        "Author": "Pumpkin-Dev",
-        "Language": "En",
-        "TemplatePath": C.TEMPLATES_FLASK + "templates/Login_v4",
-        "StaticPath": C.TEMPLATES_FLASK + "templates/Login_v4/static",
-        "Preview": "plugins/captivePortal/templates/Login_v4/preview.png",
-    }
-
-    def __init__(self):
-        for key, value in self.meta.items():
-            self.__dict__[key] = value
-        self.dict_domain = {}
-        self.ConfigParser = False
+    Name = "Login_v4"
+    Version = "1.0"
+    Description = "Example is a simple portal default page"
+    Author = "Pumpkin-Dev"
+    TemplatePath = C.TEMPLATES_FLASK + "templates/Login_v4"
+    StaticPath = C.TEMPLATES_FLASK + "templates/Login_v4/static"
+    Preview = C.TEMPLATES_FLASK + "templates/Login_v4/preview.png"

@@ -2,6 +2,7 @@ from wifipumpkin3.core.config.globalimport import *
 from re import *
 from os import path
 from shutil import move
+from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 from wifipumpkin3.core.widgets.default.session_config import *
 from wifipumpkin3.exceptions.errors.hostapdException import HostapdInitializeError
 import sys
@@ -46,7 +47,7 @@ class Mode(Qt.QObject):
         self.hostapd_path = self.getHostapdPath
 
     def checkifHostapdBinaryExist(self):
-        """ check if hostapd binary file exist"""
+        """check if hostapd binary file exist"""
         if path.isfile(self.hostapd_path):
             return True
         return False
@@ -63,7 +64,7 @@ class Mode(Qt.QObject):
         return self.conf.get(self.configApMode, self.subConfig, format=bool)
 
     def get_soft_dependencies(self):
-        """ check if Hostapd is installed """
+        """check if Hostapd is installed"""
         if not self.checkifHostapdBinaryExist():
             print(
                 display_messages(
@@ -145,7 +146,7 @@ class Mode(Qt.QObject):
         self.Shutdown()
 
     def get_error_hostapdServices(self, data):
-        """check error hostapd on mount AP """
+        """check error hostapd on mount AP"""
         if self.conf.get("accesspoint", "status_ap", format=bool):
             self.Shutdown()
             raise HostapdInitializeError(
@@ -182,5 +183,9 @@ class Mode(Qt.QObject):
                 self.Settings.SettingsAP["hostapd"].append(config)
 
     def LogOutput(self, data):
-        """ get inactivity client from hostapd response"""
+        """get inactivity client from hostapd response"""
         pass
+    
+    @property
+    def getDHCPMode(self) -> DHCPServers:
+        return self.parent.getDefault.getController("dhcp_controller").Active

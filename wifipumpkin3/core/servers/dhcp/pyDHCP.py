@@ -29,7 +29,6 @@ class PyDHCP(DHCPServers):
     def __init__(self, parent=0):
         super(PyDHCP, self).__init__(parent)
         self._isRunning = False
-        self._connected = {}
 
     def Initialize(self):
         self.ifaceHostapd = self.conf.get("accesspoint", "interface")
@@ -41,7 +40,7 @@ class PyDHCP(DHCPServers):
     def getStatusReactor(self):
         return self._isRunning
 
-    def get_DHCPoutPut(self, data):
+    def observerDHCPLeasesClient(self, data):
         self._connected[data["MAC"]] = data
         if self.conf.get("accesspoint", "status_ap", format=bool):
             print(
@@ -55,6 +54,6 @@ class PyDHCP(DHCPServers):
 
     def boot(self):
         self.reactor = DHCPThread(self.ifaceHostapd, self.DHCPConf)
-        self.reactor.DHCPProtocol._request.connect(self.get_DHCPoutPut)
+        self.reactor.DHCPProtocol._request.connect(self.observerDHCPLeasesClient)
         self.reactor.send_output.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)

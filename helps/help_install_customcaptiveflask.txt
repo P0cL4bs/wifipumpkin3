@@ -1,0 +1,13 @@
+install new template on captiveflask:
+ 
+ Usage: install plugin_name file_complete_path.zip
+ param plugin_name: the plugin_name name is the same [plugin_name].py
+ file_complete_path.zip: complete file path with .zip 
+
+ Description:
+    Install a custom captiveflask templates from command line
+    require restart the wifipumpkin3 for load all plugins
+
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#creating-captive-portal-template

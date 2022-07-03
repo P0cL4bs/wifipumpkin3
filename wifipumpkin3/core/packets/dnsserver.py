@@ -73,7 +73,10 @@ class Record:
             ttl = 300
 
         self.rr = RR(
-            rname=self._rname, rtype=self._rtype, rdata=rd_cls(*args), ttl=ttl,
+            rname=self._rname,
+            rtype=self._rtype,
+            rdata=rd_cls(*args),
+            ttl=ttl,
         )
 
     def match(self, q):
@@ -167,19 +170,19 @@ class Resolver(ProxyResolver):
 class LocalDNSLogger(object):
 
     """
-        The class provides a default set of logging functions for the various
-        stages of the request handled by a DNSServer instance which are
-        enabled/disabled by flags in the 'log' class variable.
-        To customise logging create an object which implements the LocalDNSLogger
-        interface and pass instance to DNSServer.
-        The methods which the logger instance must implement are:
-            log_recv          - Raw packet received
-            log_send          - Raw packet sent
-            log_request       - DNS Request
-            log_reply         - DNS Response
-            log_truncated     - Truncated
-            log_error         - Decoding error
-            log_data          - Dump full request/response
+    The class provides a default set of logging functions for the various
+    stages of the request handled by a DNSServer instance which are
+    enabled/disabled by flags in the 'log' class variable.
+    To customise logging create an object which implements the LocalDNSLogger
+    interface and pass instance to DNSServer.
+    The methods which the logger instance must implement are:
+        log_recv          - Raw packet received
+        log_send          - Raw packet sent
+        log_request       - DNS Request
+        log_reply         - DNS Response
+        log_truncated     - Truncated
+        log_error         - Decoding error
+        log_data          - Dump full request/response
     """
 
     def __init__(self, logger):
@@ -248,7 +251,7 @@ class LocalDNSLogger(object):
 
 
 class DNSServerThread(QThread):
-    """ Simple DNS server UDP resolver """
+    """Simple DNS server UDP resolver"""
 
     sendRequests = pyqtSignal(object)  # I'll use this object in future feature
 
@@ -281,11 +284,11 @@ class DNSServerThread(QThread):
             pass
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return "thread"
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def stop(self):

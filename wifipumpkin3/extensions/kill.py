@@ -20,7 +20,7 @@ from wifipumpkin3.core.utility.printer import setcolor, display_messages
 
 
 class Kill(ExtensionUI):
-    """ terminate a module in background by id """
+    """terminate a module in background by id"""
 
     Name = "kill"
 

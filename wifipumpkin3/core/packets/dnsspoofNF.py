@@ -26,7 +26,7 @@ from netfilterqueue import NetfilterQueue
 
 class DnsSpoofNetFilter(object):
     def __init__(self):
-        """ implementation Dnsspoof with Netfilterqueue modules"""
+        """implementation Dnsspoof with Netfilterqueue modules"""
         description = "Module DNS spoofing v0.1"
         usage = "Usage: use --help for futher information"
         parser = argparse.ArgumentParser(description=description, usage=usage)

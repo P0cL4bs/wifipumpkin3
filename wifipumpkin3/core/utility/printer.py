@@ -133,7 +133,10 @@ def display_messages(
                 len(string) * "=",
             )
         elif header:
-            return "\n{}\n{}\n".format(string, len(string) * "=",)
+            return "\n{}\n{}\n".format(
+                string,
+                len(string) * "=",
+            )
     else:
         if error:
             return "{}{}[-]{} {}".format(

@@ -35,9 +35,11 @@ with open("requirements.txt") as fp:
 
 folders = ["config", "logs", "helps", "scripts", "exceptions"]
 
+config_dir = "/usr/share/wifipumpkin3"
+
 
 def create_user_dir_config():
-    user_config_dir = os.path.expanduser("~") + "/.config/wifipumpkin3"
+    user_config_dir = config_dir
     if not os.path.isdir(user_config_dir):
         os.makedirs(user_config_dir, exist_ok=True)
     # force copy all files `config` to user_config_dir
@@ -61,17 +63,23 @@ setup(
     license="apache 2.0",
     long_description=open("README.md").read(),
     install_requires=required,
-    scripts=["bin/sslstrip3", "bin/captiveflask"],
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     python_requires=">=3.7",
     classifiers=[
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3",
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Environment :: Console",
     ],
-    entry_points={"console_scripts": ["wifipumpkin3=wifipumpkin3.__main__:main",],},
+    entry_points={
+        "console_scripts": [
+            "wifipumpkin3=wifipumpkin3.__main__:main",
+            "wp3=wifipumpkin3.__main__:main",
+            "captiveflask=wifipumpkin3.plugins.bin.captiveflask:main",
+            "sslstrip3=wifipumpkin3.plugins.bin.sslstrip3:main",
+        ],
+    },
 )

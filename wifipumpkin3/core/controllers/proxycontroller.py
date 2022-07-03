@@ -110,7 +110,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
 
     @property
     def ActiveLoad(self):
-        """ load all proxies type checkbox UI in tab plugins """
+        """load all proxies type checkbox UI in tab plugins"""
         proxies = []
         for act in self.proxies.values():
             if act.isChecked():
