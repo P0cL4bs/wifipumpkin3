@@ -121,7 +121,7 @@ class Dump(ExtensionUI):
                 return
             self.targets = [self.options.get("target")[0]]
         else:
-            self.targets = list(Refactor.readFileDataToJson(C.CLIENTS_CONNECTED).keys())
+            self.targets = self.getDHCPMode.getStaClients
 
         self.output_commands = {}
         self.iface = self.conf.get("accesspoint", "interface")
