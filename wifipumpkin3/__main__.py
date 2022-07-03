@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from logging import getLogger, ERROR
 
+from wifipumpkin3.core.config.setup import create_user_dir_config
 getLogger("scapy.runtime").setLevel(ERROR)
 import argparse
 import sys
@@ -21,6 +22,7 @@ from os import getuid
 # disable RestAPI
 from wifipumpkin3.core.servers.rest.application import RestControllerAPI
 import threading
+
 
 
 def parser_args_func(parse_args, config):
@@ -74,6 +76,10 @@ def wp3_header():
 def main():
 
     app = QtCore.QCoreApplication(sys.argv)
+    
+    # create config dir if not have 
+    create_user_dir_config()
+
     config = SettingsINI.getInstance()
 
     # settings default values that change on

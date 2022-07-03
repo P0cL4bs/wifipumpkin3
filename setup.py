@@ -4,6 +4,7 @@ import os
 import re
 from distutils.dir_util import copy_tree
 import sys
+from itertools import chain
 
 # check version the python install
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
@@ -33,13 +34,20 @@ with open("requirements.txt") as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
 
 
-folders = ["config", "logs", "helps", "scripts", "exceptions"]
+folders = ["config"]
 
-config_dir = "/usr/share/wifipumpkin3"
+def generate_data_files():
+    data_files = []
+    data_dirs = ('config', 'exceptions','helps', 'scripts')
+    for path, dirs, files in chain.from_iterable(os.walk(data_dir) for data_dir in data_dirs):
+        install_dir = os.path.join('wifipumpkin3/data/' + path)    
+        list_entry = (install_dir, [os.path.join(path, f) for f in files if not f.startswith('.')])
+        data_files.append(list_entry)
 
+    return data_files
 
 def create_user_dir_config():
-    user_config_dir = config_dir
+    user_config_dir = os.path.expanduser("~") + "/.config/wifipumpkin3"
     if not os.path.isdir(user_config_dir):
         os.makedirs(user_config_dir, exist_ok=True)
     # force copy all files `config` to user_config_dir
@@ -63,6 +71,7 @@ setup(
     license="apache 2.0",
     long_description=open("README.md").read(),
     install_requires=required,
+    data_files=generate_data_files(),
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     python_requires=">=3.7",
