@@ -36,7 +36,7 @@ DOT11_REQUEST_SUBTYPE = 2
 
 
 class ModPump(ModuleUI):
-    """ Sends deauthentication packets to a wifi network AP """
+    """Sends deauthentication packets to a wifi network AP"""
 
     name = "wifideauth"
 
@@ -71,41 +71,33 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
 
     def do_show_scan(self, args):
-        """ show result scanner wireless network """
+        """show result scanner wireless network"""
         if not self.aps:
-            print(
-                display_messages(
-                    "Scanner result not found", error=True
-                )
-            )  
+            print(display_messages("Scanner result not found", error=True))
             return
         self.showDataOutputScanNetworks()
-        
+
     def do_targets(self, args):
-        """ show device targets to Deauth Atack """
+        """show device targets to Deauth Atack"""
         if not self._mac_blacklist:
             print(display_messages("required: no targets found", error=True))
             return
         print(display_messages("Targets:", info=True, sublime=True))
         table_targets = []
-        table_headers_targets = [ 
-            "BSSID"
-        ]
+        table_headers_targets = ["BSSID"]
         for bssid in self._mac_blacklist:
-                table_targets.append(
-                    [setcolor(bssid, color="red")]
-                )
+            table_targets.append([setcolor(bssid, color="red")])
         display_tabulate(table_headers_targets, table_targets)
         print("\n")
-        
+
     def do_add(self, args):
-        """ add target by mac address (bssid) """
+        """add target by mac address (bssid)"""
         try:
-            mac_address =  args.split()[0]
+            mac_address = args.split()[0]
         except IndexError:
             print(display_messages("required: no arguments found", error=True))
             return
-        
+
         if "." in mac_address:
             for target in self.aps.keys():
                 if Linux.check_is_mac(target):
@@ -117,34 +109,31 @@ class ModPump(ModuleUI):
                 display_messages("No valid mac address".format(mac_address), error=True)
             )
             return
-        
-        
+
         self._mac_blacklist.add(mac_address)
-        
+
     def complete_add(self, text, args, start_index, end_index):
         if text:
             return [
-                command
-                for command in list(self.aps.keys())
-                if command.startswith(text)
+                command for command in list(self.aps.keys()) if command.startswith(text)
             ]
         else:
             return list(self.aps.keys())
-        
+
     def help_add(self):
         self.show_help_command("help_wifideauth_add_command")
-        
+
     def do_rm(self, args):
-        """ remove target by mac address (bssid) """
+        """remove target by mac address (bssid)"""
         try:
-            mac_address =  args.split()[0]
+            mac_address = args.split()[0]
         except IndexError:
             print(display_messages("required: no arguments found:", error=True))
             return
         if "." in mac_address:
             self._mac_blacklist.clear()
             return
-        
+
         if not Linux.check_is_mac(mac_address):
             print(
                 display_messages("No valid mac address".format(mac_address), error=True)
@@ -152,28 +141,27 @@ class ModPump(ModuleUI):
             return
         if mac_address not in self._mac_blacklist:
             print(
-                display_messages("Target MAC address not found".format(mac_address), error=True)
+                display_messages(
+                    "Target MAC address not found".format(mac_address), error=True
+                )
             )
             return
-
 
         self._mac_blacklist.remove(mac_address)
 
     def complete_rm(self, text, args, start_index, end_index):
         if text:
             return [
-                command
-                for command in list(self.aps.keys())
-                if command.startswith(text)
+                command for command in list(self.aps.keys()) if command.startswith(text)
             ]
         else:
             return list(self.aps.keys())
-        
+
     def help_rm(self):
         self.show_help_command("help_wifideauth_rm_command")
 
     def do_scan(self, args):
-        """ start scanner wireless networks AP"""
+        """start scanner wireless networks AP"""
         print(
             display_messages(
                 "setting interface: {} monitor momde".format(
@@ -202,7 +190,7 @@ class ModPump(ModuleUI):
         print(display_messages("thread sniffing successfully stopped", info=True))
 
     def do_start(self, args):
-        """ execute deauth module attack """
+        """execute deauth module attack"""
         if self._background_mode:
             print(
                 display_messages(
@@ -220,17 +208,17 @@ class ModPump(ModuleUI):
                 )
             )
             return
-        
+
         print(
             display_messages(
                 "enable interface: {} to monitor mode".format(interface), info=True
             )
         )
-        
+
         print(
             display_messages("Wi-Fi deauthentication attack", info=True, sublime=True)
         )
-        
+
         print(
             display_messages(
                 "the MAC address: {} of the client to be deauthenticated".format(
@@ -239,7 +227,7 @@ class ModPump(ModuleUI):
                 info=True,
             )
         )
-        
+
         for target_mac in self._mac_blacklist:
             info_target = self.aps.get(target_mac)
             if info_target:
@@ -261,7 +249,7 @@ class ModPump(ModuleUI):
                     info=True,
                 )
             )
-            
+
         self.set_monitor_mode("monitor")
         self.thread_deauth = ThreadDeauth(self._mac_blacklist, client_mac, interface)
         self.thread_deauth.setObjectName("wifideauth")
@@ -270,7 +258,7 @@ class ModPump(ModuleUI):
         self.set_background_mode(True)
 
     def do_stop(self, args):
-        """ stop attack deauth module """
+        """stop attack deauth module"""
         if self.is_running:
             self.thread_deauth.stop()
             self.set_background_mode(False)
@@ -442,7 +430,6 @@ class ModPump(ModuleUI):
                 )
         if len(self.table_station) > 0:
             display_tabulate(self.table_headers_STA, self.table_station)
-            
 
     def sniffAp(self, pkt):
         self.getStationTrackFrame(pkt)

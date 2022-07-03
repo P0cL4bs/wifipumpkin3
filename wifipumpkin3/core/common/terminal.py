@@ -25,17 +25,18 @@ import weakref
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 class ConsoleUIBase(Cmd):
-    """ shell console UI base model """
-    
+    """shell console UI base model"""
+
     def setOptions(self):
         if self.parse_args.pulp:
             self.loadPulpFiles(self.parse_args.pulp)
         elif self.parse_args.xpulp:
             self.onecmd(self.parse_args.xpulp, ";")
-            
+
     def default(self, args: str):
-        """ run commands system allow by tool """
+        """run commands system allow by tool"""
         for goodArgs in C.SYSTEMCOMMAND:
             if args.startswith(goodArgs):
                 output = popen(args).read()
@@ -51,9 +52,10 @@ class ConsoleUIBase(Cmd):
             print(
                 display_messages(
                     "wp3: command not found: {}".format(setcolor(args, "red", False)),
-                    error=True
-            ))
-            
+                    error=True,
+                )
+            )
+
     @property
     def getCommmandsNames(self):
         names = self.get_names()
@@ -66,7 +68,7 @@ class ConsoleUIBase(Cmd):
         return tuple(cmds_do)
 
     def emptyline(self):
-        """ Do nothing on empty input line"""
+        """Do nothing on empty input line"""
         pass
 
     def precmd(self, line):
@@ -78,34 +80,34 @@ class ConsoleUIBase(Cmd):
 
     def postcmd(self, stop, line):
         return stop
-    
+
     def onecmd(self, commands, separator=";"):
-        """ load command separate for ; file or string"""
+        """load command separate for ; file or string"""
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
-                
+
     def show_help_command(self, filename):
-        """read content file help command """
+        """read content file help command"""
         print(Linux.readFileHelp(filename))
-    
+
     def loadPulpFiles(self, file, data=None):
         raise NotImplementedError()
-    
+
     def set_prompt(self):
         raise NotImplementedError()
-    
+
     def do_help(self, args):
         raise NotImplementedError()
 
 
 class ConsoleUI(ConsoleUIBase):
-    """ shell console UI """
+    """shell console UI"""
 
     def __init__(self, parse_args=None):
         self.parse_args = parse_args
         Cmd.__init__(self)
         self.conf = SettingsINI.getInstance()
-        self.set_prompt() 
+        self.set_prompt()
         self.initialize_core()
         self.setOptions()
 
@@ -124,7 +126,7 @@ class ConsoleUI(ConsoleUIBase):
         raise NotImplementedError()
 
     def loadPulpFiles(self, file, data=None):
-        """ load and execute all commands in file pulp separate for \n """
+        """load and execute all commands in file pulp separate for \n"""
         print(
             "\n"
             + display_messages(
@@ -161,7 +163,7 @@ class ConsoleUI(ConsoleUIBase):
     ## Override methods in Cmd object ##
     def preloop(self):
         """Initialization before prompting user for commands.
-           Despite the claims in the Cmd documentaion, Cmd.preloop() is not a stub.
+        Despite the claims in the Cmd documentaion, Cmd.preloop() is not a stub.
         """
         Cmd.preloop(self)  ## sets up command completion
         self._hist = []  ## No history yet
@@ -169,7 +171,7 @@ class ConsoleUI(ConsoleUIBase):
         self._globals = {}
 
     def do_help(self, args):
-        """core: show this help """
+        """core: show this help"""
         if args:
             try:
                 func = getattr(self, "help_" + args)
@@ -221,13 +223,13 @@ class ConsoleUI(ConsoleUIBase):
             print("\n")
 
     def do_exit(self, args):
-        """ exit the program."""
+        """exit the program."""
         print("Quitting.")
         raise SystemExit
 
 
 class ModuleUI(ConsoleUIBase):
-    """ shell console UI """
+    """shell console UI"""
 
     _name_module = None
     completions = None
@@ -291,7 +293,7 @@ class ModuleUI(ConsoleUIBase):
         self._name_module = name
 
     def do_back(self, args):
-        """ go back one level"""
+        """go back one level"""
         try:
             self.check_is_background_mode()
             if self._background_mode:
@@ -303,7 +305,7 @@ class ModuleUI(ConsoleUIBase):
             sys.exit(0)
 
     def do_set(self, args):
-        """ set options for module """
+        """set options for module"""
         try:
             command, value = args.split()[0], args.split()[1]
             if command in self.options.keys():
@@ -317,7 +319,7 @@ class ModuleUI(ConsoleUIBase):
             pass
 
     def do_options(self, line):
-        """ show options of current module"""
+        """show options of current module"""
         headers_table, output_table = ["Option", "Value", "Description"], []
         for option, value in self.options.items():
             output_table.append([option, value[0], value[1]])
@@ -325,7 +327,7 @@ class ModuleUI(ConsoleUIBase):
         return display_tabulate(headers_table, output_table)
 
     def do_help(self, args):
-        """ show this help """
+        """show this help"""
         if args:
             try:
                 func = getattr(self, "help_" + args)
@@ -362,7 +364,7 @@ class ModuleUI(ConsoleUIBase):
             print("\n")
 
     def loadPulpFiles(self, file, data=None):
-        """ load and execute all commands in file pulp separate for \n """
+        """load and execute all commands in file pulp separate for \n"""
         if path.isfile(file):
             with open(file, "r") as f:
                 data = f.read()
@@ -377,7 +379,7 @@ class ModuleUI(ConsoleUIBase):
         return [s[offs:] for s in self.completions if s.startswith(mline)]
 
     def onecmd(self, commands, separator=";"):
-        """ load command separate for ; file or string"""
+        """load command separate for ; file or string"""
         for command in commands.split(separator):
             if not str(command).startswith("use"):
                 Cmd.onecmd(self, command)
@@ -387,7 +389,7 @@ class ModuleUI(ConsoleUIBase):
 
 
 class ExtensionUI(ConsoleUIBase):
-    """ native extension console UI """
+    """native extension console UI"""
 
     _name_module = None
     completions = None
@@ -408,5 +410,5 @@ class ExtensionUI(ConsoleUIBase):
         self._name_module = name
 
     def register_command(self, name_func, func):
-        """register a command on super class Pumpkinshell """
+        """register a command on super class Pumpkinshell"""
         setattr(self.root.__class__, name_func, staticmethod(func))

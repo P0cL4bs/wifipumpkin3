@@ -54,7 +54,7 @@ class DefaultController(Qt.QObject):
         self.intialize_controllers(self.parent)
 
     def intialize_controllers(self, parent):
-        """ initialize all controllers"""
+        """initialize all controllers"""
         WirelessModeController(parent)
         DHCPController(parent)
         DNSController(parent)
@@ -66,11 +66,11 @@ class DefaultController(Qt.QObject):
         return cls.instances[0]
 
     def addController(self, instance):
-        """ add controller instance app """
+        """add controller instance app"""
         self._controllers[instance.getID()] = instance
 
     def getController(self, name):
-        """ get controller instance app """
+        """get controller instance app"""
         if name:
             return self._controllers.get(name)
         return self._controllers

@@ -48,11 +48,11 @@ class DHCPServerProcess(QThread):
             self._ProcssOutput.emit(self.queue.get())
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procDHCP.pid
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def stop(self):
@@ -82,11 +82,11 @@ class ProcessThread(QThread):
             pass
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procThread.pid()
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def start(self):
@@ -171,18 +171,12 @@ class ProcessHostapd(QObject):
         self.started = False
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return self.procHostapd.pid()
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
-
-    def removeInactivityClient(self, client_mac):
-        all_clients = Refactor.readFileDataToJson(C.CLIENTS_CONNECTED)
-        if client_mac in all_clients.keys():
-            del all_clients[client_mac]
-        Refactor.writeFileDataToJson(C.CLIENTS_CONNECTED, all_clients)
 
     def read_OutputCommand(self):
         self.data = str(self.procHostapd.readAllStandardOutput(), encoding="ascii")
@@ -190,7 +184,6 @@ class ProcessHostapd(QObject):
             "AP-STA-DISCONNECTED" in self.data.rstrip()
             or "inactivity (timer DEAUTH/REMOVE)" in self.data.rstrip()
         ):
-            self.removeInactivityClient(self.data.split()[2])
             self.statusAP_connected.emit(self.data.split()[2])
         # check error hostapd log
         for error in self.errorAPDriver:

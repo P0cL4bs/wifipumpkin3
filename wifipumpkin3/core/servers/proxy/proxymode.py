@@ -189,7 +189,7 @@ class ProxyMode(Widget, ComponentBlueprint):
         pass
 
     def optionsRules(self, type):
-        """ add rules iptable by type plugins"""
+        """add rules iptable by type plugins"""
         return self.search[type]
 
     def ClearRules(self):

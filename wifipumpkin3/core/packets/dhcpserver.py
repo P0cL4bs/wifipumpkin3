@@ -25,7 +25,7 @@ from wifipumpkin3.core.utility.printer import display_messages
 
 
 class IpAddressClass(object):
-    """ class for generator ipaddress """
+    """class for generator ipaddress"""
 
     def __init__(self, range):
         self.range = range
@@ -197,11 +197,11 @@ class DHCPThread(QThread):
                 print(display_messages("socket error: {}".format(e), error=True))
 
     def getpid(self):
-        """ return the pid of current process in background"""
+        """return the pid of current process in background"""
         return "thread"
 
     def getID(self):
-        """ return the name of process in background"""
+        """return the name of process in background"""
         return self.objectName()
 
     def stop(self):

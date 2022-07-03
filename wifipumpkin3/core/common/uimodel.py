@@ -39,7 +39,7 @@ class CoreSettings(Linux):
         self.conf = SettingsINI(C.CONFIG_INI)
 
     def deleteObject(self, obj):
-        """ reclaim memory """
+        """reclaim memory"""
         del obj
 
     def apply_dhcp_config_leases_config(self, settingsAP):

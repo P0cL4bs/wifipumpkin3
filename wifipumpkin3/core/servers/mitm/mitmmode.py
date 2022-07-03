@@ -59,6 +59,7 @@ class MitmMode(Widget):
     sendSingal_disable = QtCore.pyqtSignal(object)
     config = None
     TypeButton = 1  # 0 for Switch, 1 for Radio
+    Binary_exec = None  # binary name of execuble command
 
     def __init__(self, parent=None):
         super(MitmMode, self).__init__(parent)
@@ -113,6 +114,10 @@ class MitmMode(Widget):
                 "unknown sintax command: {}\n".format(proxy_name), error=True
             )
         )
+
+    @property
+    def getBinaryExecPath(self):
+        return Linux.getBinaryPath(self.Binary_exec)
 
     @property
     def getPlugins(self):

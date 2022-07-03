@@ -24,15 +24,15 @@ import wifipumpkin3.core.utility.constants as C
 
 
 class NetCredential(DockableWidget):
-    id = "Responder3"
-    title = "Responder3"
+    id = "Responder"
+    title = "Responder"
 
     def __init__(self, parent=None, title="", info={}):
         super(NetCredential, self).__init__(parent, title, info)
         self.setObjectName(self.title)
 
     def writeModeData(self, data):
-        """ get data output and add on QtableWidgets """
+        """get data output and add on QtableWidgets"""
         print(data)
         # self.THeaders['Username'].append(data['POSTCreds']['User'])
         # self.THeaders['Password'].append(data['POSTCreds']['Pass'])
@@ -43,12 +43,12 @@ class NetCredential(DockableWidget):
         pass
 
 
-class Responder3(MitmMode):
-    Name = "Responder 3"
-    ID = "responder3"
+class Responder(MitmMode):
+    Name = "Responder"
+    ID = "responder"
     Author = "PumpkinDev"
     Description = "LLMNR, NBT-NS and MDNS poisoner, with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication server "
-    LogFile = C.LOG_RESPONDER3
+    LogFile = C.LOG_RESPONDER
     Hidden = False
     ConfigMitmPath = None
     _cmd_array = []
@@ -56,9 +56,10 @@ class Responder3(MitmMode):
     ModType = "server"  # proxy or server
     config = None
     TypeButton = 0  # 0 for Switch, 1 for Radio
+    Binary_exec = "responder"
 
     def __init__(self, parent, FSettingsUI=None, main_method=None, **kwargs):
-        super(Responder3, self).__init__(parent)
+        super(Responder, self).__init__(parent)
         self.setID(self.ID)
         self.setModType(self.ModType)
         self.dockwidget = NetCredential(None, title=self.Name)
@@ -66,19 +67,22 @@ class Responder3(MitmMode):
     @property
     def CMD_ARRAY(self):
         iface = self.conf.get("accesspoint", "interface")
-        config_responder3_path = C.user_config_dir + self.conf.get(
-            "mitm_modules", "responder3_config"
-        )
-        self._cmd_array = ["-I", iface, "-4", "-p", config_responder3_path]
+        self._cmd_array = ["-I", iface, "-wd"]
         return self._cmd_array
 
     def boot(self):
-        if self.CMD_ARRAY:
-            self.reactor = ProcessThread({"responder3": self.CMD_ARRAY})
+        binary_path = self.getBinaryExecPath
+        if binary_path:
+            self.reactor = ProcessThread({binary_path: self.CMD_ARRAY})
             self.reactor._ProcssOutput.connect(self.LogOutput)
-            self.reactor.setObjectName(self.ID)
+            return self.reactor.setObjectName(self.ID)
+        print(
+            display_messages(
+                "command not found: {}".format(self.Binary_exec), error=True
+            )
+        )
 
-    def parser_set_responder3(self, status, plugin_name):
+    def parser_set_responder(self, status, plugin_name):
         try:
             # plugin_name = pumpkinproxy.no-cache
             name_plugin, key_plugin = (
@@ -89,7 +93,7 @@ class Responder3(MitmMode):
                 self.config.set("plugins", key_plugin, status)
                 print(
                     display_messages(
-                        "responder3: {} status: {}".format(key_plugin, status),
+                        "responder: {} status: {}".format(key_plugin, status),
                         sucess=True,
                     )
                 )

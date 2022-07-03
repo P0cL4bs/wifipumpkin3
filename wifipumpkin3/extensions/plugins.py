@@ -24,7 +24,7 @@ from wifipumpkin3.core.utility.printer import (
 
 
 class Plugins(ExtensionUI):
-    """ show all available plugins """
+    """show all available plugins"""
 
     Name = "plugins"
 
@@ -41,7 +41,7 @@ class Plugins(ExtensionUI):
         self.show_help_command("help_plugins_command")
 
     def do_plugins(self, args=str):
-        """network: show all available plugins """
+        """network: show all available plugins"""
         headers_table, output_table = ["Name", "Active", "Description"], []
         headers_plugins, output_plugins = ["Name", "Active"], []
         all_plugins, config_instance = None, None

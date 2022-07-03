@@ -37,7 +37,7 @@ from wifipumpkin3.plugins.pumpkinproxy import *
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI
 
-import sys, getopt, logging, traceback, string, os
+import sys, getopt, logging
 
 gVersion = "0.9"
 
@@ -133,7 +133,7 @@ def parseOptions(argv):
         sys.exit(2)
 
 
-def main(argv):
+def init(argv):
     (
         logFile,
         logLevel,
@@ -166,5 +166,5 @@ def main(argv):
     reactor.run()
 
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
+def main():
+    init(sys.argv[1:])

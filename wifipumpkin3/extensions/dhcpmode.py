@@ -24,7 +24,7 @@ from wifipumpkin3.core.utility.printer import (
 
 
 class DhcpMode(ExtensionUI):
-    """ show/set all available dhcp server """
+    """show/set all available dhcp server"""
 
     Name = "dhcpmode"
 
@@ -73,7 +73,7 @@ class DhcpMode(ExtensionUI):
             return list(self.root.dhcp_controller.getInfo().keys())
 
     def do_dhcpmode(self, args):
-        """ap: show/set all available dhcp server """
+        """ap: show/set all available dhcp server"""
         if args:
             try:
                 id_dhcp = args.split()[0]

@@ -20,7 +20,7 @@ import wifipumpkin3 as wp3
 
 dir_of_executable = os.path.dirname(__file__)
 dir_path = os.getcwd()
-user_config_dir = os.path.expanduser("~")
+config_dir = "/usr/share/wifipumpkin3"
 wp3_setup_packager_path = wp3.__path__[0]
 
 SYSTEMCOMMAND = [
@@ -34,19 +34,17 @@ SYSTEMCOMMAND = [
     "nano",
 ]
 
-HELPFILESPATH = user_config_dir + "/.config/wifipumpkin3/helps/"
-EXCEPTFILESPATH = user_config_dir + "/.config/wifipumpkin3/exceptions/"
-APIRESTPATH = user_config_dir + "/.config/wifipumpkin3/api/"
+HELPFILESPATH = config_dir + "/helps/"
+EXCEPTFILESPATH = config_dir + "/exceptions/"
+APIRESTPATH = config_dir + "/api/"
 
 # DHCP logger connected
-CLIENTS_CONNECTED = (
-    user_config_dir + "/.config/wifipumpkin3/config/session/connected.json"
-)
+CLIENTS_CONNECTED = config_dir + "/config/session/connected.json"
 
 DHCPSERVERBINARY = "core/packets/binary/dhcpserver"
 
 # DNS file hosts
-DNSHOSTS = user_config_dir + "/.config/wifipumpkin3/config/app/dns_hosts.ini"
+DNSHOSTS = config_dir + "/config/app/dns_hosts.ini"
 
 # donation button
 # TODO: add donation in readme
@@ -57,13 +55,11 @@ DONATE_TXT = (
 
 # settings DHCP
 DHCPLEASES_PATH = "/var/lib/dhcp/dhcpd.leases"
-DHCPCONF_PATH = user_config_dir + "/.config/wifipumpkin3/config/dhcpd.conf"
+DHCPCONF_PATH = config_dir + "/config/dhcpd.conf"
 
 # settings HOSTAPD
-HOSTAPDCONF_PATH = user_config_dir + "/.config/wifipumpkin3/config/hostapd/hostapd.conf"
-HOSTAPDCONF_PATH2 = (
-    user_config_dir + "/.config/wifipumpkin3/config/hostapd/hostapd+.conf"
-)
+HOSTAPDCONF_PATH = config_dir + "/config/hostapd/hostapd.conf"
+HOSTAPDCONF_PATH2 = config_dir + "/config/hostapd/hostapd+.conf"
 ALGORITMS = ("TKIP", "CCMP", "TKIP + CCMP")
 
 # system configs
@@ -75,17 +71,17 @@ DOCKERIPTABLESPATH = "/etc/iptables.ipv4.nat"
 DOCKERHOSTAPDCONF_PATH = "/etc/hostapd/hostapd.conf"
 
 # logging
-LOG_PUMPKINPROXY = user_config_dir + "/.config/wifipumpkin3/logs/ap/pumpkin_proxy.log"
-LOG_PYDNSSERVER = user_config_dir + "/.config/wifipumpkin3/logs/ap/pydns_server.log"
-LOG_PYDHCPSERVER = user_config_dir + "/.config/wifipumpkin3/logs/ap/pydhcp_server.log"
-LOG_SNIFFKIN3 = user_config_dir + "/.config/wifipumpkin3/logs/ap/sniffkin3.log"
-LOG_CAPTIVEPO = user_config_dir + "/.config/wifipumpkin3/logs/ap/captiveportal.log"
-LOG_RESPONDER3 = user_config_dir + "/.config/wifipumpkin3/logs/ap/responder3.log"
-LOG_HOSTAPD = user_config_dir + "/.config/wifipumpkin3/logs/ap/hostapd.log"
-LOG_ALL = user_config_dir + "/.config/wifipumpkin3/logs/everything.log"
+LOG_PUMPKINPROXY = config_dir + "/logs/ap/pumpkin_proxy.log"
+LOG_PYDNSSERVER = config_dir + "/logs/ap/pydns_server.log"
+LOG_PYDHCPSERVER = config_dir + "/logs/ap/pydhcp_server.log"
+LOG_SNIFFKIN3 = config_dir + "/logs/ap/sniffkin3.log"
+LOG_CAPTIVEPO = config_dir + "/logs/ap/captiveportal.log"
+LOG_RESPONDER = config_dir + "/logs/ap/responder.log"
+LOG_HOSTAPD = config_dir + "/logs/ap/hostapd.log"
+LOG_ALL = config_dir + "/logs/everything.log"
 
 
-LOG_BASE = user_config_dir + "/.config/wifipumpkin3/logs/ap"
+LOG_BASE = config_dir + "/logs/ap"
 
 
 ALL_LOGSPATH = (
@@ -95,17 +91,17 @@ ALL_LOGSPATH = (
     LOG_SNIFFKIN3,
     LOG_SNIFFKIN3,
     LOG_CAPTIVEPO,
-    LOG_RESPONDER3,
+    LOG_RESPONDER,
     LOG_HOSTAPD,
     LOG_ALL,
 )
 
 # APP SETTINGS
-CONFIG_INI = user_config_dir + "/.config/wifipumpkin3/config/app/config.ini"
-CONFIG_SK_INI = user_config_dir + "/.config/wifipumpkin3/config/app/sniffkin3.ini"
-CONFIG_PP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/pumpkinproxy.ini"
-CONFIG_CP_INI = user_config_dir + "/.config/wifipumpkin3/config/app/captive-portal.ini"
-CONFIG_CP_INI_ROOT = "config/app/captive-portal.ini"
+CONFIG_INI = config_dir + "/config/app/config.ini"
+CONFIG_SK_INI = config_dir + "/config/app/sniffkin3.ini"
+CONFIG_PP_INI = config_dir + "/config/app/pumpkinproxy.ini"
+CONFIG_CP_INI = config_dir + "/config/app/captive-portal.ini"
+CONFIG_CP_INI_ROOT = config_dir + "/config/app/captive-portal.ini"
 
 
 ALL_CONFIGSINI = {
@@ -129,7 +125,7 @@ SOURCE_URL = "https://github.com/P0cL4bs/WiFi-Pumpkin.git"
 
 
 # settings template
-TEMPLATES_FLASK = user_config_dir + "/.config/wifipumpkin3/config/"
+TEMPLATES_FLASK = config_dir + "/config/"
 TEMP_CUSTOM = dir_path + "/templates/phishing/custom"
 TEMP_Win = dir_path + "/templates/fakeupdate/Windows_Update"
 TEMP_Java = dir_path + "/templates/fakeupdate/Java_Update"

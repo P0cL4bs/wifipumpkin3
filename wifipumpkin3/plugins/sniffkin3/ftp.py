@@ -20,7 +20,7 @@ from wifipumpkin3.plugins.sniffkin3.default import PSniffer
 
 
 class ftp(PSniffer):
-    """ this script capture credentials of service ftp request HTTP """
+    """this script capture credentials of service ftp request HTTP"""
 
     _activated = False
     _instance = None

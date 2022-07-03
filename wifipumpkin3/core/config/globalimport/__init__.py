@@ -36,7 +36,7 @@ from wifipumpkin3.core.widgets.default.logger_manager import StandardLog, Logger
 
 
 def deleteObject(obj):
-    """ reclaim memory """
+    """reclaim memory"""
     del obj
 
 
@@ -50,7 +50,7 @@ def ProgramPath(executablename):
 
 
 def get_mac_vendor(mac):
-    """ discovery mac vendor by mac address """
+    """discovery mac vendor by mac address"""
     try:
         d_vendor = EUI(mac)
         d_vendor = d_vendor.oui.registration().org
@@ -60,7 +60,7 @@ def get_mac_vendor(mac):
 
 
 def exec_bash(command):
-    """ run command on background hide output"""
+    """run command on background hide output"""
     os.popen(command)
 
 
