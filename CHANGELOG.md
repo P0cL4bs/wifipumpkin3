@@ -1,6 +1,35 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+## [Unreleased]
+
+## [1.1.3] 
+
+### Added 
+- improve: module extra_captiveflask to install without reinstall the tool
+- added: binary exec mode plugin options
+- added: debian package for build .deb
+- added: ignore venv from .gitignore
+- update: screenshot for version 1.1.3
+- update: readme information about version
+
+### Changed
+- changed: control user login and logout with python object
+- moved: captiveflask and pumpkinproxy to console script on setup.py installation
+
+### Deprecated
+
+### Removed
+- removed: responder3 depedencies now responder need to installed by default for use 
+- removed: extensions for update from CLI ui
+
+### Fixed
+- fixed: set python3 version on binary sslstrip3 and captiveflask
+- fixed: set path default config files to /usr/share/wifipumpkin3
+- fixed: improves code with black format
+- fixed: Werkzeug depedency flask 2.0
+
 ## [Released]
 
 ## [1.1.2] 
