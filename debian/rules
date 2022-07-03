@@ -13,12 +13,7 @@ override_dh_auto_clean:
 override_dh_auto_build:
 	python3 setup.py build --force
 
-override_dh_auto_install:
-	dh_install config/ /usr/share/wifipumpkin3
-	dh_install logs/ /usr/share/wifipumpkin3
-	dh_install helps/ /usr/share/wifipumpkin3
-	dh_install scripts/ /usr/share/wifipumpkin3
-	dh_install exceptions/ /usr/share/wifipumpkin3   
+override_dh_auto_install: 
 	python3 setup.py install --force --root=debian/wifipumpkin3 --no-compile -O0 --install-layout=deb  
 
 override_dh_python2:

@@ -22,7 +22,8 @@ def create_user_dir_config():
         os.makedirs(user_config_dir, exist_ok=True)
         # force copy all files `config` to user_config_dir
         for folder in C.config_dir_packager_data:
-            copy_tree(folder, user_config_dir + "/config")
+            if os.path.isdir(folder):
+                copy_tree(folder, user_config_dir + "/config")
         exit(print(
             display_messages(
                 "the user config has been create {}, please restart the wp3!".format(
