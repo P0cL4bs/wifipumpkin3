@@ -13,10 +13,12 @@ All notable changes to this project will be documented in this file.
 - added: ignore venv from .gitignore
 - update: screenshot for version 1.1.3
 - update: readme information about version
+- added: support to install configdir from .deb package 
 
 ### Changed
 - changed: control user login and logout with python object
 - moved: captiveflask and pumpkinproxy to console script on setup.py installation
+- moved: exceptions helps to wifipumpkin3/data 
 
 ### Deprecated
 
@@ -29,6 +31,8 @@ All notable changes to this project will be documented in this file.
 - fixed: set path default config files to /usr/share/wifipumpkin3
 - fixed: improves code with black format
 - fixed: Werkzeug depedency flask 2.0
+- fixed: restore config dir folder and apply patch if config not exit #189 
+- fixed: dump command error
 
 ## [Released]
 

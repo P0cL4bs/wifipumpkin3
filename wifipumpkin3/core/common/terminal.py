@@ -1,5 +1,6 @@
 from cmd import Cmd
 from distutils.log import error
+from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 from wifipumpkin3.core.utility.printer import *
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
@@ -412,3 +413,7 @@ class ExtensionUI(ConsoleUIBase):
     def register_command(self, name_func, func):
         """register a command on super class Pumpkinshell"""
         setattr(self.root.__class__, name_func, staticmethod(func))
+
+    @property
+    def getDHCPMode(self) -> DHCPServers:
+        return self.root.getDefault.getController("dhcp_controller").Active
