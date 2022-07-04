@@ -14,7 +14,7 @@ def create_user_dir_config():
         print(
             display_messages(
                 "creating config user dir on: {}".format(
-                    setcolor(user_config_dir, color="red")
+                    setcolor(user_config_dir, color="orange")
                 ),
                 info=True,
             )
