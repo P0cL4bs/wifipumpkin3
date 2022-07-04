@@ -25,8 +25,8 @@ wp3_setup_packager_path = wp3.__path__[0]
 wp3_path_data = f"{wp3_setup_packager_path}/data"
 
 config_dir_packager_data = [
-    f"{wp3_path_data}/config"
-    f"/usr/share/wifipumpkin3/config", # for .deb kali linux
+    f"{wp3_path_data}/config",
+    f"/usr/share/wifipumpkin3/data/config", # for .deb kali linux
     f"/usr/wifipumpkin3/data/config", # for .deb debian general
 ]
 
