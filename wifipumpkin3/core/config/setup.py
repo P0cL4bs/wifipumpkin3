@@ -14,7 +14,7 @@ def create_user_dir_config():
         print(
             display_messages(
                 "creating config user dir on: {}".format(
-                    setcolor(user_config_dir, color="red")
+                    setcolor(user_config_dir, color="orange")
                 ),
                 info=True,
             )
@@ -24,11 +24,23 @@ def create_user_dir_config():
         for folder in C.config_dir_packager_data:
             if os.path.isdir(folder):
                 copy_tree(folder, user_config_dir + "/config")
-        exit(print(
-            display_messages(
-                "the user config has been create {}, please restart the wp3!".format(
-                    setcolor("sucessfully", color="green")
-                ),
-                sucess=True,
+                
+        if os.path.isdir(user_config_dir):
+            print(
+                display_messages(
+                    "the user config has been create {}, please restart the wp3!".format(
+                        setcolor("sucessfully", color="green")
+                    ),
+                    sucess=True,
+                )
             )
-        ))
+            exit(0)
+        print(
+            display_messages(
+                "the user config has {} been created, please investigate!".format(
+                    setcolor("not", color="red")
+                ),
+                error=True,
+            )
+        )
+        exit(1)
