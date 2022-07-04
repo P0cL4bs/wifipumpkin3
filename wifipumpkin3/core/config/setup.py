@@ -25,7 +25,7 @@ def create_user_dir_config():
             if os.path.isdir(folder):
                 os.makedirs(user_config_dir, exist_ok=True)
                 copy_tree(folder, user_config_dir + "/config")
-                copy_sucessful = true
+                copy_sucessful=True
 
         if (copy_sucessful):
             exit(print(
