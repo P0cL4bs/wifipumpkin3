@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - update: screenshot for version 1.1.3
 - update: readme information about version
 - added: support to install configdir from .deb package 
+- added: better color information path folder
 
 ### Changed
 - changed: control user login and logout with python object
@@ -33,6 +34,9 @@ All notable changes to this project will be documented in this file.
 - fixed: Werkzeug depedency flask 2.0
 - fixed: restore config dir folder and apply patch if config not exit #189 
 - fixed: dump command error
+- typos in the config_dir_packager_data 
+- fixed: setuptools warnings detected unnecessary files #189 
+- fixed: check if copy_tree was sucessful #189 
 
 ## [Released]
 
