@@ -1,5 +1,6 @@
 from tabulate import tabulate
 from netaddr import EUI
+import urwid
 from wifipumpkin3.core.servers.dhcp.dhcp import DHCPServers
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.config.globalimport import *

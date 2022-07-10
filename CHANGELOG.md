@@ -38,7 +38,7 @@ All notable changes to this project will be documented in this file.
 - fixed: setuptools warnings detected unnecessary files #189 
 - fixed: check if copy_tree was sucessful #189 
 - fixed: bug try install extracaptiveflask variable not found
-
+- fixed: import error urwid module 
 ## [Released]
 
 ## [1.1.2] 
