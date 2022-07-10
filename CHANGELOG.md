@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - typos in the config_dir_packager_data 
 - fixed: setuptools warnings detected unnecessary files #189 
 - fixed: check if copy_tree was sucessful #189 
+- fixed: bug try install extracaptiveflask variable not found
 
 ## [Released]
 

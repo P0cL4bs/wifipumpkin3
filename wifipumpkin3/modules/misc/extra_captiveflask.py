@@ -149,12 +149,12 @@ class ModPump(ModuleUI):
 
         folder_plugin = "{}/templates/{}".format(self.extracted_filepath, plugin_name)
         copy_tree(
-            folder_plugin, C.config_dir + "/config/templates/{}".format(plugin_name)
+            folder_plugin, C.user_config_dir + "/config/templates/{}".format(plugin_name)
         )
         print(
             display_messages(
                 "copy content directory to {}".format(
-                    "{}/config/templates/{}".format(C.config_dir, plugin_name)
+                    "{}/config/templates/{}".format(C.user_config_dir, plugin_name)
                 ),
                 info=True,
             )
