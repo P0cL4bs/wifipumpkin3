@@ -1,0 +1,63 @@
+#!/bin/bash
+
+OPTS=`getopt \
+-o n --long no-model \
+-o d --long dev \
+-o p --long pip \
+-- "$@"`
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+eval set -- "$OPTS"
+
+NO_MODEL=false
+DEV=false
+DEBIAN=true
+while true; do
+  case "$1" in
+    -n | --no-model )
+      NO_MODEL=true;
+      shift
+    ;;
+    -d | --dev )
+      DEV=true;
+      shift
+    ;;
+    -p | --pip )
+      DEBIAN=false;
+      shift
+    ;;
+    -- )
+      shift;
+      break
+    ;;
+    * )
+      break
+    ;;
+  esac
+done
+
+apt-get update
+
+if [ "$DEV" = true ] ; then
+  apt-get -y install debhelper dpkg
+fi
+apt-get -y install python3 python3-all-dev 
+apt-get -y install python3-minimal ${misc:Pre-Depends}
+apt-get -y install ${python3:Depends} ${misc:Depends} 
+
+python3 -m pip install --upgrade pip
+
+#DEBHELPER#
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' 
+
+WIFIPUMPKIN3_DIR=/usr/share/wifipumpkin3
+if [ ! -d "$WIFIPUMPKIN3_DIR" ]; then
+  mkdir $WIFIPUMPKIN3_DIR
+fi
+
+echo -e "${GREEN}install wifipumpkin3 dependencies ${NC}"
+python3 -m pip install 'netifaces>=0.10.9' 'netaddr>=0.7.19' 'dhcplib==0.1.1' 'tabulate>=0.8.5' 'urwid==2.1.2' 'termcolor>=1.1.0' 'twisted>=19.7.0' 'PyQt5>=5.14' 'PyQt5-sip' 'pyOpenSSL==19.0.0' 'dnslib==0.9.17' 'loguru>=0.4.0' 'scapy>=2.4.4' 'isc_dhcp_leases>=0.9.1' 'dnspython==1.16.0' 'Flask>=1.1.1' 'requests>=2.18.4' 'beautifulsoup4>=4.9.1' 'PyJWT==2.1.0' 'flask-restx>=0.5.1' 'markupsafe==2.0.1' 'Werkzeug'
+
+
+echo -e "${GREEN}wifipumpkin3 is successfully installed.${NC}\n"
