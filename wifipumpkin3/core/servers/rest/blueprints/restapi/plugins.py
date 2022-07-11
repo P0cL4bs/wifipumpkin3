@@ -1,7 +1,7 @@
 from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3 import PumpkinShell
-from flask_restx import Resource
+from flask_restful import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
 from wifipumpkin3.core.servers.rest.ext.exceptions import exception

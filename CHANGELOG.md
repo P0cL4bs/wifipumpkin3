@@ -13,13 +13,18 @@ All notable changes to this project will be documented in this file.
 - added: ignore venv from .gitignore
 - update: screenshot for version 1.1.3
 - update: readme information about version
+
 - added: support to install configdir from .deb package 
 - added: better color information path folder
+- added: improvements .deb package install python requirements
+- updated: Changelog commits
 
 ### Changed
 - changed: control user login and logout with python object
 - moved: captiveflask and pumpkinproxy to console script on setup.py installation
 - moved: exceptions helps to wifipumpkin3/data 
+- changed: replace flask-restx to flask-r
+estful backend api
 
 ### Deprecated
 
@@ -37,6 +42,12 @@ All notable changes to this project will be documented in this file.
 - typos in the config_dir_packager_data 
 - fixed: setuptools warnings detected unnecessary files #189 
 - fixed: check if copy_tree was sucessful #189 
+
+- fixed: bug try install extracaptiveflask variable not found
+- fixed: import error urwid module 
+- fixed: error: MarkupSafe 2.0.1 is installed but MarkupSafe>=2.1.1 is required by {'Werkzeug'}
+- fixed: update flask dependencies to version >= 2.0
+- fixed: debian packager postinst python3 depedencies
 
 ## [Released]
 

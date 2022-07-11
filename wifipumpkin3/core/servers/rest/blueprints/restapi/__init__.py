@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_restx import Api
+from flask_restful import Resource, Api
 import wifipumpkin3.core.servers.rest.blueprints.restapi.accesspoint as res_ap
 import wifipumpkin3.core.servers.rest.blueprints.restapi.authenticate as res_auth
 import wifipumpkin3.core.servers.rest.blueprints.restapi.logger as res_logger

@@ -1,4 +1,4 @@
-from flask_restx import Resource
+from flask_restful import Resource
 from flask import request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
