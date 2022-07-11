@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from wifipumpkin3 import PumpkinShell
-from flask_restx import Resource
+from flask_restful import Resource
 from io import StringIO
 import sys
 from wifipumpkin3.core.servers.rest.ext.auth import token_required
