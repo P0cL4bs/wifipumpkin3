@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - update: readme information about version
 - added: support to install configdir from .deb package 
 - added: better color information path folder
+- added: improvements .deb package install python requirements
 
 ### Changed
 - changed: control user login and logout with python object
@@ -39,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - fixed: check if copy_tree was sucessful #189 
 - fixed: bug try install extracaptiveflask variable not found
 - fixed: import error urwid module 
+
 ## [Released]
 
 ## [1.1.2] 
