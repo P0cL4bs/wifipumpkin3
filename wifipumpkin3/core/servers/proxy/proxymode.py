@@ -179,7 +179,11 @@ class ProxyMode(Widget, ComponentBlueprint):
         self.reactor.setObjectName(self.ID)
 
     def shutdown(self):
-        pass
+        if self.reactor is not None:
+            self.reactor.stop()
+            if hasattr(self.reactor, "wait"):
+                if not self.reactor.wait(msecs=500):
+                    self.reactor.terminate()
 
     @property
     def isEnabled(self):
