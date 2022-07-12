@@ -47,6 +47,14 @@ class DhcpMode(ExtensionUI):
                 info=True,
             )
         )
+        print(
+            display_messages(
+                "use the command `set {}.[variable] [value]` for set options DNS.".format(
+                    setcolor("dhcpmode", color="orange")
+                ),
+                info=True,
+            )
+        )
         print(display_messages("Info: ", info=True, sublime=True))
         print(
             display_messages(
@@ -74,23 +82,6 @@ class DhcpMode(ExtensionUI):
 
     def do_dhcpmode(self, args):
         """ap: show/set all available dhcp server"""
-        if args:
-            try:
-                id_dhcp = args.split()[0]
-                if not id_dhcp in self.root.dhcp_controller.getInfo().keys():
-                    print(
-                        display_messages(
-                            "the parameter id {} was not found.".format(
-                                setcolor(args, color="orange")
-                            ),
-                            error=True,
-                        )
-                    )
-                    return
-                self.root.dhcp_controller.setDhcpMode(id_dhcp)
-                return
-            except IndexError:
-                pass
 
         headers_table, output_table = (
             ["ID", "Status", "Description"],
@@ -108,3 +99,18 @@ class DhcpMode(ExtensionUI):
                 ]
             )
         display_tabulate(headers_table, output_table)
+
+        if self.conf.get("accesspoint", "pydns_server", format=bool):
+            print(display_messages("Settings DNS:", info=True, sublime=True))
+            options = [
+                key for key in self.conf.get_all_childname("accesspoint") 
+                if str(key).startswith('pydns')
+            ] 
+            for config in options:
+                print(
+                    " {}={}".format(
+                        setcolor(config, color="purple"), 
+                        self.conf.get("accesspoint", config)
+                    )
+                )
+            print('\n')

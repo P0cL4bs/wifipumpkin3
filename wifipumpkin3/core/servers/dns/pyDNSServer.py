@@ -29,6 +29,9 @@ class PyDNSServer(DNSBase):
 
     def __init__(self, parent):
         super(PyDNSServer, self).__init__(parent)
+        if not self.conf.get("accesspoint", "pydns_zone_file", format=str):
+            self.conf.set("accesspoint", "pydns_zone_file", C.DNSHOSTS)
+        self.root = parent
 
     @property
     def commandargs(self):
@@ -45,3 +48,38 @@ class PyDNSServer(DNSBase):
             self.reactor = DNSServerThread(self.conf)
             self.reactor.sendRequests.connect(self.LogOutput)
             self.reactor.setObjectName(self.ID)
+
+    def parser_set_dhcpmode(self, status, command):
+        if len(command.split(".")) == 2:
+            try:
+                # command = dhcpmode.pydns_verbose true
+                dhcpmode, key_setting = (
+                    command.split(".")[0],
+                    command.split(".")[1].split()[0],
+                )
+                if key_setting in self.conf.get_all_childname("accesspoint"):
+                    self.conf.set("accesspoint", key_setting, status)
+                else:
+                    print(
+                        display_messages(
+                            "unknown setting: {}".format(key_setting), error=True
+                        )
+                    )
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
+        else:
+            try:
+                id_dhcp = command.split()[1]
+                if not id_dhcp in self.root.dhcp_controller.getInfo().keys():
+                    print(
+                        display_messages(
+                            "the parameter id {} was not found.".format(
+                                setcolor(id_dhcp, color="red")
+                            ),
+                            error=True,
+                        )
+                    )
+                    return
+                self.root.dhcp_controller.setDhcpMode(id_dhcp)
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
