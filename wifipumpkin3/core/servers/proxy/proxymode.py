@@ -132,6 +132,8 @@ class ProxyMode(Widget, ComponentBlueprint):
         self.RunningPort = value
 
     def getRunningPort(self):
+        if self.config:
+            return self.config.get("settings", "proxy_port")
         return self.RunningPort
 
     def getTypePlugin(self):

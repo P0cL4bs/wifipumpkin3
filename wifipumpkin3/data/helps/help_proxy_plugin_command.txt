@@ -1,0 +1,14 @@
+help settings
+=============
+ 
+ Usage: set [proxy_name].[settings] [value]
+
+ param [proxy_name]: The proxy name
+ param [settings]: The settings optiion name
+ param [value]: The value name (true or false or string_path)
+
+ Description:
+    set setttings variable for especific proxy 
+
+Referencies:
+   https://wifipumpkin3.github.io/docs/getting-started#core-commands

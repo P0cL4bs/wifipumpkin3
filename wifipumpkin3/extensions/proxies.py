@@ -38,7 +38,7 @@ class Proxies(ExtensionUI):
         super(Proxies, self).__init__(parse_args=self.parse_args, root=self.root)
 
     def help_proxies(self):
-        self.show_help_command("help_proxies_command")
+        self.show_help_command("help_proxies_command", True)
 
     def do_proxies(self, args):
         """network: show all available proxies"""
@@ -75,30 +75,43 @@ class Proxies(ExtensionUI):
 
         print(display_messages("Available proxies:", info=True, sublime=True))
         display_tabulate(headers_table, output_table)
+        
         # check plugin none
-        if not plugin_info_activated:
-            return
-        # check if plugin selected is iquals the plugin config
-        if plugin_info_activated["ID"] != self.root.conf.get_name_activated_plugin(
-            "proxy_plugins"
-        ):
-            return
-        all_plugins = plugin_info_activated["Config"].get_all_childname("plugins")
-        for plugin_name in all_plugins:
-            status_plugin = config_instance.get("plugins", plugin_name, format=bool)
-            output_plugins.append(
-                [
-                    plugin_name,
-                    setcolor("True", color="green")
-                    if status_plugin
-                    else setcolor("False", color="red"),
-                ]
+        if plugin_info_activated:
+            # check if plugin selected is iquals the plugin config
+            if plugin_info_activated["ID"] != self.root.conf.get_name_activated_plugin(
+                "proxy_plugins"
+            ):
+                return
+            all_plugins = plugin_info_activated["Config"].get_all_childname("plugins")
+            for plugin_name in all_plugins:
+                status_plugin = config_instance.get("plugins", plugin_name, format=bool)
+                output_plugins.append(
+                    [
+                        plugin_name,
+                        setcolor("True", color="green")
+                        if status_plugin
+                        else setcolor("False", color="red"),
+                    ]
+                )
+            print(
+                display_messages(
+                    "{} plugins:".format(plugin_info_activated["Name"]),
+                    info=True,
+                    sublime=True,
+                )
             )
-        print(
-            display_messages(
-                "{} plugins:".format(plugin_info_activated["Name"]),
-                info=True,
-                sublime=True,
-            )
-        )
-        return display_tabulate(headers_plugins, output_plugins)
+            display_tabulate(headers_plugins, output_plugins)
+            
+            print(display_messages("Settings:", info=True, sublime=True))
+            plugin_settings = plugin_info_activated["Config"].get_all_childname("settings")
+            for config in plugin_settings:
+                print(
+                    " {}={}".format(
+                        setcolor(config, color="purple"), 
+                        plugin_info_activated["Config"].get("settings", config)
+                    )
+                )
+            print('\n')
+            self.show_help_command("help_proxy_plugin_command", True)
+            
