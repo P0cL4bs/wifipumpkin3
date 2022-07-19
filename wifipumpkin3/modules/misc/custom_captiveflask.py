@@ -94,7 +94,7 @@ class ModPump(ModuleUI):
             print(display_messages("copy content file to {}".format(dest), info=True))
 
             copy_tree(
-                temp_templates_path, C.config_dir + "/config/templates/{}".format(plugin_name)
+                temp_templates_path, C.user_config_dir + "/config/templates/{}".format(plugin_name)
             )
             print(
                 display_messages(
