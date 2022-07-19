@@ -82,6 +82,10 @@ class CaptivePortal(ProxyMode):
             self.tamplate.StaticPath,
             "-f",
             self.config.get("settings", "force_redirect_sucessful_template"),
+            "-rU",
+            self.config.get("settings", "force_redirect_to_url"),
+            "-p",
+            self.config.get("settings", "proxy_port"),
         ]
         return self._cmd_array
 
@@ -174,7 +178,7 @@ class CaptivePortal(ProxyMode):
                 pass
 
     def parser_set_captiveflask(self, status, plugin_name):
-        if len(plugin_name.split(".")) == 2:
+        if len(plugin_name.split()[0].split(".")) == 2:
             try:
                 # plugin_name = captiveflask.FlaskDemo.En true
                 name_plugin, key_plugin = (
@@ -193,7 +197,7 @@ class CaptivePortal(ProxyMode):
                     )
             except IndexError:
                 print(display_messages("unknown sintax command", error=True))
-        elif len(plugin_name.split(".")) == 3:
+        elif len(plugin_name.split()[0].split(".")) == 3:
             try:
                 # plugin_name = captiveflask.FlaskDemo.En true
                 name_plugin, key_plugin = (
