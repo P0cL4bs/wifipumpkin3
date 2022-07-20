@@ -1,5 +1,7 @@
-from flask import Flask, request, redirect, render_template, make_response
+from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode, unquote
+from wifipumpkin3.core.utility.collection import SettingsINI
+import wifipumpkin3.core.utility.constants as C
 import sys
 import subprocess
 import argparse
@@ -12,13 +14,14 @@ REDIRECT = None
 FORCE_REDIRECT = None
 URL_REDIRECT = None
 PORT = 80
+config = None
 
 
-def login_user(ip):
+def login_user(ip, iptables_binary_path):
     subprocess.call(
-        ["iptables", "-t", "nat", "-I", "PREROUTING", "1", "-s", ip, "-j", "ACCEPT"]
+        [iptables_binary_path, "-t", "nat", "-I", "PREROUTING", "1", "-s", ip, "-j", "ACCEPT"]
     )
-    subprocess.call(["iptables", "-I", "FORWARD", "-s", ip, "-j", "ACCEPT"])
+    subprocess.call([iptables_binary_path, "-I", "FORWARD", "-s", ip, "-j", "ACCEPT"])
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -38,9 +41,9 @@ def login():
                 }
             )
         )
-        global FORCE_REDIRECT, URL_REDIRECT
+        global FORCE_REDIRECT, URL_REDIRECT, config
         sys.stdout.flush()
-        login_user(request.remote_addr)
+        login_user(request.remote_addr, config.get("iptables", "path_binary"))
         if URL_REDIRECT:
             return redirect(URL_REDIRECT, code=302) 
         if FORCE_REDIRECT:
@@ -90,7 +93,7 @@ _version = "1.0.2"
 
 
 def main():
-    global REDIRECT, FORCE_REDIRECT, URL_REDIRECT, PORT
+    global REDIRECT, FORCE_REDIRECT, URL_REDIRECT, PORT, config
     print("[*] CaptiveFlask v{} - subtool from wifipumpkin3".format(_version))
     parser = argparse.ArgumentParser(
         description="CaptiveFlask - \
@@ -136,9 +139,11 @@ def main():
     FORCE_REDIRECT = args.force_redirect
     URL_REDIRECT = args.redirect_url
     PORT = args.port
+    
+    config = SettingsINI(C.CONFIG_INI)
 
     app.static_url_path = "\{}".format(args.static)
     app.static_folder = "{}".format(args.static)
     app.template_folder = args.template
 
-    app.run("0.0.0.0", port=args.port)
+    app.run(REDIRECT, port=args.port)
