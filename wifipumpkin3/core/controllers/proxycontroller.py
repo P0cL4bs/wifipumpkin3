@@ -1,8 +1,8 @@
+from typing import Dict
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.servers.proxy import *
 from wifipumpkin3.core.utility.component import ControllerBlueprint
-import copy
 from wifipumpkin3.exceptions.errors.iptablesException import IptablesPathError
 
 # This file is part of the wifipumpkin3 Open Source Project.
@@ -28,9 +28,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     Caption = "Enable Proxy Server"
     ID = "proxy_controller"
     proxies = {}
-    proxies_infor = {}
-    SetNoProxy = QtCore.pyqtSignal(object)
-    dockMount = QtCore.pyqtSignal(bool)
 
     @staticmethod
     def getID():
@@ -44,15 +41,26 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         self.conf = SuperSettings.getInstance()
 
         # load all plugin proxy
-        __proxlist = [
+        self.__proxlist = [
             prox(parent=self.parent) for prox in proxymode.ProxyMode.__subclasses__()
         ]
 
-        # Keep Proxy in a dictionary
-        for k in __proxlist:
+        for k in self.__proxlist:
             self.proxies[k.Name] = k
 
-            self.proxies_infor[k.ID] = {
+        # set all proxy plugin as child class
+        for n, p in self.proxies.items():
+            if hasattr(p, "ID"):
+                setattr(self, p.ID, p)
+
+        self.resolverIPtablesVersion()
+
+    @property
+    def getProxyInfo(self) -> Dict:
+        # Keep Proxy in a dictionary
+        proxies_infor = dict()
+        for k in self.__proxlist:
+            proxies_infor[k.ID] = {
                 "ID": k.ID,
                 "Name": k.Name,
                 "Port": k.getRunningPort(),
@@ -64,13 +72,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 "Config": k.getConfig,
                 "TypeButton": k.TypeButton,
             }
-
-        # set all proxy plugin as child class
-        for n, p in self.proxies.items():
-            if hasattr(p, "ID"):
-                setattr(self, p.ID, p)
-
-        self.resolverIPtablesVersion()
+        return proxies_infor
 
     def resolverIPtablesVersion(self):
         iptables_path = Refactor.checkIfIptablesVersion()
@@ -80,10 +82,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
 
     def isChecked(self):
         return self.conf.get("plugins", self.ID, format=bool)
-
-    @property
-    def ActiveDocks(self):
-        return self.Active.dockwidget
 
     @property
     def ActiveReactor(self):
@@ -104,7 +102,6 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
         for act in self.proxies.values():
             # exclude tcp proxy log
             if act.getTypePlugin() != 2:
-                # print(act.isChecked(),act.Name)
                 if act.isChecked():
                     return act
 
@@ -121,24 +118,8 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
     def get(self):
         return self.proxies
 
-    def getInfo(self, excluded=()):
-        if not excluded:
-            return self.proxies_infor
-        result = {}
-        for item in self.proxies_infor:
-            result[item] = {}
-            for subItem in self.proxies_infor[item]:
-                if not subItem in excluded:
-                    result[item][subItem] = self.proxies_infor[item][subItem]
-        return result
-
-    @classmethod
-    def disable(cls, val=True):
-        pass
-
-    @property
-    def disableproxy(self, name):
-        pass
+    def getInfo(self, excluded=()) -> dict:
+        return {k:v for k,v in self.getProxyInfo.items() if k not in excluded}
 
     def Start(self):
         self.Active.Initialize()

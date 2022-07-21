@@ -87,9 +87,11 @@ class ConsoleUIBase(Cmd):
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
 
-    def show_help_command(self, filename):
+    def show_help_command(self, filename, newline: bool = False):
         """read content file help command"""
         print(Linux.readFileHelp(filename))
+        if newline:
+            print("\n")
 
     def loadPulpFiles(self, file, data=None):
         raise NotImplementedError()

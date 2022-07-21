@@ -32,6 +32,7 @@ class DNSController(ControllerBlueprint):
         super(DNSController, self).__init__()
         self.parent = parent
         # append controller in DefaultWidget
+        self.conf = SuperSettings.getInstance()
         self.parent.getDefault.addController(self)
         self.DNSSettings = DNSBase.DNSSettings.getInstance()
         for dns in self.DNSSettings.dnslist:
@@ -61,3 +62,15 @@ class DNSController(ControllerBlueprint):
                 "PID": self.ActiveReactor.getpid(),
             }
         return info_reactor
+
+    @property
+    def getCommandsDhcpMode(self):
+        commands_host = [
+            key for key in self.conf.get_all_childname("accesspoint") 
+            if str(key).startswith('pydns')
+        ] 
+        list_commands = []
+        list_commands.append("dhcpmode")
+        for command in commands_host:
+            list_commands.append("dhcpmode" + "." + command)
+        return list_commands

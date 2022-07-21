@@ -92,6 +92,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_security": self.wireless_controller.Settings,
             "parser_set_hostapd_config": self.wireless_controller.Settings,
             "parser_set_dhcpconf": self.wireless_controller.Settings,
+            "parser_set_dhcpmode": self.dns_controller.Active,
         }
         self.parser_autcomplete_func = {}
 
@@ -109,6 +110,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         self.parser_autcomplete_func[
             "parser_set_dhcpconf"
         ] = self.wireless_controller.Settings.getCommandsDhcpConf
+        self.parser_autcomplete_func[
+            "parser_set_dhcpmode"
+        ] = self.dns_controller.getCommandsDhcpMode
 
         self.commands = {
             "interface": "interface",
@@ -119,6 +123,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "plugin": None,  # only for settings plugin
             "mode": None,  # only for settings mdoe
             "dhcpconf": None,  # only for settings dhcpconf
+            "dhcpmode": None,  # only for settings dhcpmode
             "security": "enable_security",
             "hostapd_config": "enable_hostapd_config",
         }

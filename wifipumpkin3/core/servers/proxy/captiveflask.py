@@ -82,6 +82,10 @@ class CaptivePortal(ProxyMode):
             self.tamplate.StaticPath,
             "-f",
             self.config.get("settings", "force_redirect_sucessful_template"),
+            "-rU",
+            self.config.get("settings", "force_redirect_to_url"),
+            "-p",
+            self.config.get("settings", "proxy_port"),
         ]
         return self._cmd_array
 
@@ -89,7 +93,7 @@ class CaptivePortal(ProxyMode):
         # settings iptables for add support captive portal
         IFACE = self.conf.get("accesspoint", "interface")
         IP_ADDRESS = self.conf.get("dhcp", "router")
-        PORT = 80
+        PORT = self.config.get("settings", "proxy_port")
 
         print(display_messages("settings for captive portal:", info=True))
         print(display_messages("allow FORWARD UDP DNS", info=True))
@@ -98,24 +102,36 @@ class CaptivePortal(ProxyMode):
                 iptables=self.getIptablesPath, iface=IFACE
             )
         )
+        
         print(display_messages("allow traffic to captive portal", info=True))
         self.add_default_rules(
             "{iptables} -A FORWARD -i {iface} -p tcp --dport {port} -d {ip} -j ACCEPT".format(
                 iptables=self.getIptablesPath, iface=IFACE, port=PORT, ip=IP_ADDRESS
             )
         )
+        
         print(display_messages("block all other traffic in access point", info=True))
         self.add_default_rules(
             "{iptables} -A FORWARD -i {iface} -j DROP ".format(
                 iptables=self.getIptablesPath, iface=IFACE
             )
         )
+        
         print(display_messages("redirecting HTTP traffic to captive portal", info=True))
         self.add_default_rules(
             "{iptables} -t nat -A PREROUTING -i {iface} -p tcp --dport 80 -j DNAT --to-destination {ip}:{port}".format(
                 iptables=self.getIptablesPath, iface=IFACE, ip=IP_ADDRESS, port=PORT
             )
         )
+        
+        if self.config.get("settings", "force_redirect_https_connection", format=bool):
+            print(display_messages("redirecting HTTPS traffic to captive portal", info=True))
+            self.add_default_rules(
+                "{iptables} -t nat -A PREROUTING -i {iface} -p tcp --dport 443 -j DNAT --to-destination {ip}:{port}".format(
+                    iptables=self.getIptablesPath, iface=IFACE, ip=IP_ADDRESS, port=PORT
+                )
+            )
+            
         self.runDefaultRules()
 
     def boot(self):
@@ -162,7 +178,7 @@ class CaptivePortal(ProxyMode):
                 pass
 
     def parser_set_captiveflask(self, status, plugin_name):
-        if len(plugin_name.split(".")) == 2:
+        if len(plugin_name.split()[0].split(".")) == 2:
             try:
                 # plugin_name = captiveflask.FlaskDemo.En true
                 name_plugin, key_plugin = (
@@ -181,7 +197,7 @@ class CaptivePortal(ProxyMode):
                     )
             except IndexError:
                 print(display_messages("unknown sintax command", error=True))
-        elif len(plugin_name.split(".")) == 3:
+        elif len(plugin_name.split()[0].split(".")) == 3:
             try:
                 # plugin_name = captiveflask.FlaskDemo.En true
                 name_plugin, key_plugin = (

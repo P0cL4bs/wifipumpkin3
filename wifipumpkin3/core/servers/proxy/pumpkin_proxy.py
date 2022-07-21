@@ -70,14 +70,14 @@ class PumpKinProxy(ProxyMode):
         self.add_default_rules(
             "{} -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port {}".format(
                 self.getIptablesPath,
-                self.conf.get("proxy_plugins", "pumpkinproxy_config_port"),
+                self.config.get("settings", "proxy_port"),
             )
         )
         self.runDefaultRules()
 
     @property
     def CMD_ARRAY(self):
-        port_ssltrip = self.conf.get("proxy_plugins", "pumpkinproxy_config_port")
+        port_ssltrip = self.config.get("settings", "proxy_port")
         self._cmd_array = ["-l", port_ssltrip]
         return self._cmd_array
 
@@ -95,6 +95,11 @@ class PumpKinProxy(ProxyMode):
             # find all plugin from pumpkinproxy
             for sub_plugin in self.config.get_all_childname("set_{}".format(command)):
                 list_commands.append("{}.{}.{}".format(self.ID, command, sub_plugin))
+        # load all settings extra plugin
+        settings = self.config.get_all_childname("settings")
+        for config in settings:
+            list_commands.append("{}.{}".format(self.ID, config))
+            
         return list_commands
 
     def LogOutput(self, data):
@@ -111,6 +116,8 @@ class PumpKinProxy(ProxyMode):
                 )
                 if key_plugin in self.config.get_all_childname("plugins"):
                     self.config.set("plugins", key_plugin, status)
+                elif key_plugin in self.config.get_all_childname("settings"):
+                    self.config.set("settings", key_plugin, status)
                 else:
                     print(
                         display_messages(

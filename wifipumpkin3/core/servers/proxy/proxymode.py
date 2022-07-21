@@ -132,6 +132,8 @@ class ProxyMode(Widget, ComponentBlueprint):
         self.RunningPort = value
 
     def getRunningPort(self):
+        if self.config:
+            return self.config.get("settings", "proxy_port")
         return self.RunningPort
 
     def getTypePlugin(self):
@@ -179,7 +181,11 @@ class ProxyMode(Widget, ComponentBlueprint):
         self.reactor.setObjectName(self.ID)
 
     def shutdown(self):
-        pass
+        if self.reactor is not None:
+            self.reactor.stop()
+            if hasattr(self.reactor, "wait"):
+                if not self.reactor.wait(msecs=500):
+                    self.reactor.terminate()
 
     @property
     def isEnabled(self):
