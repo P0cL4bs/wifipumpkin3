@@ -44,9 +44,9 @@ class ModPump(ModuleUI):
         "interface": ["wlanx", "Name network interface wireless "],
         "client": [
             "ff:ff:ff:ff:ff:ff",
-            "the device MAC Address from client to desconnect",
+            "the device MAC Address from client to disconnect",
         ],
-        "timeout": [0, "Time duration of scan network wireless (ex: 0 infinty)"],
+        "timeout": [0, "Time duration of scan network wireless (ex: 0 infinity)"],
     }
     completions = list(options.keys())
 
@@ -164,7 +164,7 @@ class ModPump(ModuleUI):
         """start scanner wireless networks AP"""
         print(
             display_messages(
-                "setting interface: {} monitor momde".format(
+                "setting interface: {} monitor mode".format(
                     setcolor(self.options.get("interface")[0], color="green")
                 ),
                 info=True,
@@ -451,7 +451,7 @@ class ModPump(ModuleUI):
 
     def set_monitor_mode(self, mode="manager"):
         if not self.options.get("interface")[0] in Linux.get_interfaces().get("all"):
-            print(display_messages("the interface not found!", error=True))
+            print(display_messages("the interface was not found!", error=True))
             sys.exit(1)
         os.system("ifconfig {} down".format(self.options.get("interface")[0]))
         os.system("iwconfig {} mode {}".format(self.options.get("interface")[0], mode))
