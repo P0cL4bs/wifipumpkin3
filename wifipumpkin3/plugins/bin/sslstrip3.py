@@ -161,6 +161,7 @@ def init(argv):
     all_plugins = base.BasePumpkin.__subclasses__()
     for p in all_plugins:
         if config.get("plugins", p.getName(), format=bool):
+            print("plugin: {} [enabled]".format(p.getName()))
             plugins_manager.plugins = p
 
     reactor.run()

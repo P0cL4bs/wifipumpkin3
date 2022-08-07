@@ -81,9 +81,9 @@ class ServerConnection(HTTPClient):
         print(
             self.getPostPrefix()
             + " Data ("
-            + self.headers["host"]
+            + self.headers.get("host") if self.headers.get("host") else ' '
             + "):\n"
-            + str(self.postData)
+            + str(self.postData) if self.postData else ''
         )
         self.transport.write(self.postData)
 
@@ -92,7 +92,7 @@ class ServerConnection(HTTPClient):
         self.sendRequest()
         self.sendHeaders()
 
-        if self.command == "POST":
+        if self.command.decode() == "POST":
             self.sendPostData()
 
     def handleStatus(self, version, code, message):
@@ -113,15 +113,15 @@ class ServerConnection(HTTPClient):
                 pass
 
         if key.decode().lower() == "content-encoding":
-            if value.decode().find("gzip") != -1:
+            if "gzip" in value.decode():
                 self.isCompressed = True
 
-        if key.lower() == "location":
+        if key.decode().lower() == "location":
             value = self.replaceSecureLinks(value)
             self.urlMonitor.addRedirection(self.client.uri, value)
 
-        if key.lower() == "content-type":
-            if value.find("image") != -1:
+        if key.decode().lower() == "content-type":
+            if "image" in value.decode():
                 self.isImageRequest = True
                 print("Response is image content, not scanning...")
 
@@ -185,7 +185,7 @@ class ServerConnection(HTTPClient):
         self.shutdown()
 
     def replaceSecureLinks(self, data):
-        iterator = re.finditer(ServerConnection.urlExpression, data)
+        iterator = re.finditer(ServerConnection.urlExpression, data.decode())
 
         for match in iterator:
             url = match.group()
@@ -196,7 +196,7 @@ class ServerConnection(HTTPClient):
             url = url.replace("&amp;", "&")
             self.urlMonitor.addSecureLink(self.client.getClientIP(), url)
 
-        data = re.sub(ServerConnection.urlExplicitPort, r"http://\1/", data)
+        data = re.sub(ServerConnection.urlExplicitPort, r"http://\1/", data.decode())
         return re.sub(ServerConnection.urlType, "http://", data)
 
     def shutdown(self):
