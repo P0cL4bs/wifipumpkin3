@@ -69,7 +69,7 @@ class Mode(Qt.QObject):
             print(
                 display_messages(
                     "{} is not installed in the system".format(
-                        setcolor("hostapd", color="orange")
+                        setcolor(self.getHostapdPath, color="orange")
                     ),
                     error=True,
                 )
