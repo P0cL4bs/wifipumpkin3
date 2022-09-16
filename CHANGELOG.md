@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Released]
 
+## [1.1.4] 
+
+### Added 
+- added: pydnsserver on verbose mode and settings dhcpmode variable
+- added: new feature captiveflask force redirect user after login to any website
+- added: karma wireless mode hostapd-wpe
+
+### Changed
+- changed: replace flask-restx to flask-restful backend api
+- updated: changelog version with new commits
+- changed: redirect to login_sucessful.html by default
+- Create PULL_REQUEST_TEMPLATE.md
+
+### Deprecated
+
+### Removed
+- removed: plugin replace image from pumpkinproxy
+
+### Fixed
+- fixed: bug try install extracaptiveflask variable not found
+- fixed: import error urwid module
+- fixed: error: MarkupSafe 2.0.1 is installed but MarkupSafe>=2.1.1 is required by {'Werkzeug'}
+- fixed: update flask dependencies to version >= 2.0 
+- fixed: debian packager postinst python3 depedencies
+- bugfix configuser and improvements .deb packager
+- fixed: override shutdown function for finish any proxy when stop AP
+- hotfix: impoves captiveflask and pumpkinproxy settings
+- Fix custom_captiveflask installation
+- fixed: iptables binary path for captiveflask allow user internet connection
+- fixed: iptables binary path on restapi mode
+- hotfix: proxies settings config from CLI
+- fix typo on  wifideauth module
+- fixed: builtins.KeyError: 'host' error from sslstrip3 plugin
+
+## [Released]
+
 ## [1.1.3] 
 
 ### Added 
