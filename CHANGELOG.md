@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added 
+- added: param -iNM or -ignore-from-networkmanager for ignore interface from network-manager #158
 
 ## [Released]
 

@@ -17,9 +17,8 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 from wifipumpkin3._version import __version__, __codename__, __branch__
 from wifipumpkin3._author import __author__
 import wifipumpkin3.core.utility.constants as C
+from wifipumpkin3.core.common.platforms import Linux
 from os import getuid
-
-# disable RestAPI
 from wifipumpkin3.core.servers.rest.application import RestControllerAPI
 import threading
 
@@ -29,6 +28,79 @@ def parser_args_func(parse_args, config):
     if parse_args.nocolors:
         set_nocolors()
 
+    if parse_args.rm_networkmanager:
+        if Linux.setNetworkManager(parse_args.rm_networkmanager, True):
+            print(
+                display_messages(
+                    "The interface {} has been removed successfully\n".format(
+                        setcolor(parse_args.rm_networkmanager, color="green")
+                    ),
+                    sucess=True,
+                )
+            )
+            exit(0)
+        print(
+            display_messages(
+                "The interface {} can't to ignore from Network-Manager\n".format(
+                    setcolor(parse_args.rm_networkmanager, color="red")
+                ),
+                error=True,
+            )
+        )
+        print(
+            display_messages(
+                "Please, check if you have Network-Manager installed",
+                info=True,
+            )
+        )
+        exit(1)
+        
+    if parse_args.ig_networkmanager:
+        manager_ifaces = Linux.get_interfaces()
+        if not parse_args.ig_networkmanager in manager_ifaces.get("all_wireless"):
+            print(
+                display_messages(
+                    "{} invalid interface name\n The param -iNM require a valid interface wireless adapter.".format(
+                        setcolor(parse_args.ig_networkmanager, color="red")
+                    ),
+                    error=True,
+                )
+            )
+            exit(1)
+        if Linux.setNetworkManager(parse_args.ig_networkmanager, False):
+            print(
+                display_messages(
+                    "The interface {} has been ignored successfully".format(
+                        setcolor(parse_args.ig_networkmanager, color="green")
+                    ),
+                    sucess=True,
+                )
+            )
+            print(
+                display_messages(
+                    "For restore the interface use the param {} for remove card from network-manager".format(
+                        setcolor("-rNM", color="yellow")
+                    ),
+                    info=True,
+                )
+            )
+            exit(0)
+        print(
+            display_messages(
+                "The interface {} can't to ignore from Network-Manager\n".format(
+                    setcolor(parse_args.rm_networkmanager, color="red")
+                ),
+                error=True,
+            )
+        )
+        print(
+            display_messages(
+                "Please, check if you have Network-Manager installed",
+                info=True,
+            )
+        )
+        exit(1)
+    
     if parse_args.wireless_mode:
         if parse_args.wireless_mode in config.get_all_childname("ap_mode"):
             config.set_one("ap_mode", parse_args.wireless_mode, True)
@@ -145,6 +217,20 @@ def main():
         "--password",
         dest="password",
         help="Start the RESTful API with the specified password instead of pulling from wp3.db",
+        default=None,
+    )
+    parser.add_argument(
+        "-iNM",
+        "--ignore-from-networkmanager",
+        dest="ig_networkmanager",
+        help="set interface for ignore from Network-Manager",
+        default=None,
+    )
+    parser.add_argument(
+        "-rNM",
+        "--remove-from-networkmanager",
+        dest="rm_networkmanager",
+        help="remove interface from Network-Manager",
         default=None,
     )
     parser.add_argument(

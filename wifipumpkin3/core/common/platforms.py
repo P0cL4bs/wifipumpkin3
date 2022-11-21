@@ -3,7 +3,7 @@ from random import randint
 from os import popen, path, walk, stat, remove
 from subprocess import check_output, STDOUT
 from re import search, compile, VERBOSE, IGNORECASE
-import netifaces
+import netifaces, configparser
 from scapy.all import *
 from PyQt5 import QtCore
 import wifipumpkin3.core.utility.constants as C
@@ -62,9 +62,11 @@ class Linux(QtCore.QObject):
             "activated": [None, None],
             "all": [],
             "gateway": None,
+            "all_wireless" : [],
             "IPaddress": None,
         }
         interfaces["all"] = netifaces.interfaces()
+        interfaces["all_wireless"] = [ x for x in netifaces.interfaces() if x[:2] in ["wl", "wi", "ra", "at"] ]
         try:
             interfaces["gateway"] = netifaces.gateways()["default"][netifaces.AF_INET][
                 0
@@ -88,6 +90,54 @@ class Linux(QtCore.QObject):
         except KeyError:
             pass
         return interfaces
+    
+    @staticmethod
+    def setNetworkManager(interface=str, remove=False):
+        """mac address of interface to exclude"""
+        networkmanager = C.NETWORKMANAGER
+        config = configparser.RawConfigParser()
+        MAC = Linux.get_interface_mac(interface)
+        exclude = {
+            "MAC": "mac:{}".format(MAC),
+            "interface": "interface-name:{}".format(interface),
+        }
+        if not remove:
+            if path.exists(networkmanager):
+                config.read(networkmanager)
+                try:
+                    config.add_section("keyfile")
+                except configparser.DuplicateSectionError:
+                    config.set(
+                        "keyfile",
+                        "unmanaged-devices",
+                        "{}".format(
+                            exclude["interface"] if MAC != None else exclude["MAC"]
+                        ),
+                    )
+                else:
+                    config.set(
+                        "keyfile",
+                        "unmanaged-devices",
+                        "{}".format(
+                            exclude["interface"] if MAC != None else exclude["MAC"]
+                        ),
+                    )
+                finally:
+                    with open(networkmanager, "w") as configfile:
+                        config.write(configfile)
+                return True
+            return False
+        else:
+            if path.exists(networkmanager):
+                config.read(networkmanager)
+                try:
+                    config.remove_option("keyfile", "unmanaged-devices")
+                    with open(networkmanager, "w") as configfile:
+                        config.write(configfile)
+                        return True
+                except configparser.NoSectionError:
+                    return True
+            return False
 
     @staticmethod
     def get_Ipaddr(card):
