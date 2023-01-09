@@ -106,6 +106,16 @@ class ModPump(ModuleUI):
             and "\x00".encode() not in pkt[Dot11ProbeReq].info
         ):
             essid = pkt[Dot11ProbeReq].info
+            try:
+                essid = pkt[Dot11ProbeReq].info.decode('utf8')
+            except UnicodeDecodeError:
+                try:
+                    essid = pkt[Dot11ProbeReq].info.decode('unicode-escape')
+                except Exception:
+                    try:
+                        essid = pkt[Dot11ProbeReq].info.decode('latin1')
+                    except Exception:
+                        essid = "Not decoded ssid"
         else:
             essid = "Hidden SSID"
         client = pkt[Dot11].addr2
