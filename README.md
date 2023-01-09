@@ -72,4 +72,4 @@ on discord: https://discord.gg/jywYskR
 
 ## License
 
-**Wp3** is licensed under the [Apche 2.0](./LICENSE.md).
+**Wp3** is licensed under the [Apache 2.0](./LICENSE.md).
