@@ -2,7 +2,6 @@ from wifipumpkin3.core.utility.collection import SettingsINI
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3 import PumpkinShell
 from wifipumpkin3.core.common.platforms import Linux as Refactor
-from netaddr import EUI
 from flask_restful import Resource
 from flask import jsonify, request
 from wifipumpkin3.core.servers.rest.ext.auth import token_required

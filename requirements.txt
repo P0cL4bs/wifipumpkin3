@@ -1,5 +1,4 @@
 netifaces>=0.10.9
-netaddr>=0.7.19
 dhcplib==0.1.1
 tabulate>=0.8.5
 urwid==2.1.2
@@ -18,3 +17,4 @@ requests>=2.18.4
 beautifulsoup4>=4.9.1
 PyJWT==2.1.0
 Flask-RESTful>=0.3.9
+aiofiles

@@ -8,7 +8,6 @@ import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.utility.collection import SettingsINI as SuperSettings
 from collections import OrderedDict
 from functools import partial
-from netaddr import EUI
 from wifipumpkin3.core.utility.printer import (
     display_messages,
     display_tabulate,
@@ -48,17 +47,6 @@ def ProgramPath(executablename):
     else:
         return False
 
-
-def get_mac_vendor(mac):
-    """discovery mac vendor by mac address"""
-    try:
-        d_vendor = EUI(mac)
-        d_vendor = d_vendor.oui.registration().org
-    except:
-        d_vendor = "unknown mac"
-    return d_vendor
-
-
 def exec_bash(command):
     """run command on background hide output"""
     os.popen(command)
@@ -86,7 +74,6 @@ __all__ = [
     "getgrnam",
     "getpwnam",
     "ProgramPath",
-    "get_mac_vendor",
 ]
 
 # root = QtCore.QCoreApplication.instance()

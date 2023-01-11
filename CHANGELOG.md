@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added 
 - added: param -iNM or -ignore-from-networkmanager for ignore interface from network-manager #158
 - fixed: Emoji crashes scans #104
+- fixed: command `clients` now show into logger real time view
 
 ## [Released]
 

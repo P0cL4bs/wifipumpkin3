@@ -1,6 +1,5 @@
 import weakref
 from re import *
-from netaddr import EUI
 from wifipumpkin3.core.config.globalimport import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.core.utility.component import ComponentBlueprint
@@ -109,14 +108,6 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
             return cmdpath
         raise DHCPdServerNotFound("DHCPServer", "The binary (dhcpd) not found")
 
-    def get_mac_vendor(self, mac):
-        """discovery mac vendor by mac address"""
-        try:
-            d_vendor = EUI(mac)
-            d_vendor = d_vendor.oui.registration().org
-        except:
-            d_vendor = "unknown mac"
-        return d_vendor
 
     def removeInactivityClient(self, mac: str):
         if mac in self._connected:
