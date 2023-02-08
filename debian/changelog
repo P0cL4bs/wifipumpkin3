@@ -1,3 +1,12 @@
+wifipumpkin3 (1.1.5) stable; urgency=medium
+
+  * added: param -iNM or -ignore-from-networkmanager for ignore interface from network-manager #158
+  * fixed: Emoji crashes scans #104
+  * fixed: command `clients` now show into logger real time view
+  * fixed: include lib mac_vendor_lookup sorce code into core
+
+ -- Marcos Bomfim (mh4x0f) - P0cL4bs Team <mh4root@gmail.com>  Tue, 07 Feb 2023 22:21:00 PM
+
 wifipumpkin3 (1.1.4) stable; urgency=medium
 
   * added: karma wireless mode hostapd-wpe
