@@ -32,10 +32,10 @@ exe_mimetypes = [
 ]
 
 
-class downSpoof(BasePumpkin):
+class downloadspoof(BasePumpkin):
 
     meta = {
-        "_name": "downSpoof",
+        "_name": "downloadspoof",
         "_version": "1.0",
         "_description": "replace download content-type for another binary malicius",
         "_author": "Marcos Nesster",
@@ -43,7 +43,7 @@ class downSpoof(BasePumpkin):
 
     @staticmethod
     def getName():
-        return downSpoof.meta["_name"]
+        return downloadspoof.meta["_name"]
 
     def __init__(self):
         for key, value in self.meta.items():
