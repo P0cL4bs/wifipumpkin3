@@ -47,7 +47,7 @@
 
 ## Supported platforms
 
-* **Python**: you need **Python 3.7 or later** to run Wp3.
+* **Python**: you need **Python 3.8 or later** to run Wp3.
 
 | :warning: NOTE: The Wp3 require hostapd installed by default |
 | --- |

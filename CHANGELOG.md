@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 ## [Released]
 ### Fixed
 - fixed: makefile python version 
+- fixed: version python support from workflows 
+
+### Changed
+- changed: update minimal version of Python to 3.8
 
 ## [1.1.5] 
 
