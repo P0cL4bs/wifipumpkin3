@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Released]
+### Fixed
+- fixed: makefile python version 
 
 ## [1.1.5] 
 
