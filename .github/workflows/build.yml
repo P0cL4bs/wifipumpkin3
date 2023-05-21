@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7]
+        python-version: [3.8]
         os: [ubuntu-latest]
 
     steps:
@@ -26,8 +26,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install
       run: |
-            python3.7 -m pip install PyQt5==5.14
-            python3.7 -c "from PyQt5.QtCore import QSettings; print('done')"
+            python3 -m pip install PyQt5==5.14
+            python3 -c "from PyQt5.QtCore import QSettings; print('done')"
             make install
     - name: Test
       run: make test
