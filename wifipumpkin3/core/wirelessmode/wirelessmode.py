@@ -119,17 +119,24 @@ class Mode(Qt.QObject):
         self.conf.set("accesspoint", "status_ap", value)
 
     def setIptables(self):
-        self.interfacesLink = Refactor.get_interfaces()
+        # get hostapd interface 
+        ifaceHostapd = self.conf.get("accesspoint", "interface")
+        # get interface for shared internet 
+        ifaceSharedNet = self.conf.get("accesspoint", "interface_net")
+        if not ifaceSharedNet:
+            self.interfacesLink = Refactor.get_interfaces()
+            ifaceSharedNet = self.interfacesLink["activated"][0]
+
         print(display_messages("sharing internet connection with NAT...", info=True))
-        self.ifaceHostapd = self.conf.get("accesspoint", "interface")
+        print(display_messages(f"setting interface for sharing internet: {ifaceSharedNet} ", info=True))
         self.threads_process = []
         for ech in self.conf.get_all_childname("iptables"):
             try:
                 ech = self.conf.get("iptables", ech)
-                if "$inet" in ech and self.interfacesLink["activated"][0] != None:
-                    ech = ech.replace("$inet", self.interfacesLink["activated"][0])
+                if "$inet" in ech and ifaceSharedNet != None:
+                    ech = ech.replace("$inet", ifaceSharedNet)
                 if "$wlan" in ech:
-                    ech = ech.replace("$wlan", self.ifaceHostapd)
+                    ech = ech.replace("$wlan", ifaceHostapd)
 
                 if not "$inet" in ech:
                     cmd = {self.getIptablesPath: ech.split()}

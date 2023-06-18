@@ -65,6 +65,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """this method is called in __init__"""
         # set current session unique id
         self.conf.set("accesspoint", "current_session", self.currentSessionID)
+        # set interface for shared connection from params
+        self.conf.set("accesspoint", "interface_net", self.parse_args.interface_net)
+            
         if self.parse_args.interface:
             self.conf.set("accesspoint", "interface", self.parse_args.interface)
 
@@ -116,6 +119,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
         self.commands = {
             "interface": "interface",
+            "interface_net": "interface_net",
             "ssid": "ssid",
             "bssid": "bssid",
             "channel": "channel",

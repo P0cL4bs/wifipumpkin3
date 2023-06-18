@@ -164,6 +164,9 @@ def main():
         "-i", dest="interface", help="set interface for create AP", default=""
     )
     parser.add_argument(
+        "-iNet", dest="interface_net", required=False, help="set interface for share internet to AP", default=None
+    )
+    parser.add_argument(
         "-s", dest="session", help="set session for continue attack", default=None
     )
     parser.add_argument(

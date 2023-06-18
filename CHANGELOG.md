@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - changed: update minimal version of Python to 3.8
 
+### Added 
+- added: optional to set shared interface internet connection 
+
 ## [1.1.5] 
 
 ### Added 
