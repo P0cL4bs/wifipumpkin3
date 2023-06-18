@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - fixed: makefile python version 
 - fixed: version python support from workflows 
+- fixed: incompatible version of pyOpenSSL pumpkinproxy 
 
 ### Changed
 - changed: update minimal version of Python to 3.8
