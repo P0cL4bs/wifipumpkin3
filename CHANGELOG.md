@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - fixed: makefile python version 
 - fixed: version python support from workflows 
 - fixed: incompatible version of pyOpenSSL pumpkinproxy 
+- fixed: AttributeError: 'DhcpdServer' object has no attribute 'get_mac_vendor'
 
 ### Changed
 - changed: update minimal version of Python to 3.8
