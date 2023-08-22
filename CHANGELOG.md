@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Released]
+## [unReleased]
 ### Fixed
 - fixed: makefile python version 
 - fixed: version python support from workflows 
@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added 
 - added: optional to set shared interface internet connection 
+- added: network core command for show information about connections
 
 ## [1.1.5] 
 

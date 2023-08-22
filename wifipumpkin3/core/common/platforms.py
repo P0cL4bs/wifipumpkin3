@@ -1,7 +1,7 @@
 from struct import pack
 from random import randint
 from os import popen, path, walk, stat, remove
-from subprocess import check_output, STDOUT
+from subprocess import CalledProcessError, check_output, STDOUT
 from re import search, compile, VERBOSE, IGNORECASE
 import netifaces, configparser
 from scapy.all import *
@@ -11,6 +11,7 @@ from glob import glob
 import warnings, json
 from uuid import uuid1
 from shutil import which
+import ping3
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -56,7 +57,7 @@ class Linux(QtCore.QObject):
         pass
 
     @staticmethod
-    def get_interfaces():
+    def get_interfaces() -> Dict:
         """get interfaces and check status connection"""
         interfaces = {
             "activated": [None, None],
@@ -264,7 +265,39 @@ class Linux(QtCore.QObject):
         if "nf_tables" in Linux.getCommandOutput("iptables --version"):
             return Linux.getBinaryPath("iptables-legacy")
         return Linux.getBinaryPath("iptables")
+    
+    @staticmethod
+    def checkInternetConnectionFromInterface(iface: str = None) -> bool: 
+        """check internet connection from interface name"""
+        ping3.EXCEPTIONS = True
+        try:
+            ping3.ping("google.com", interface=iface)
+            return True
+        except ping3.errors.HostUnknown:  # Specific error is catched.
+            print("Host unknown error raised.")
+        except ping3.errors.Timeout:  # All ping3 errors are subclasses of `PingError`.
+            print("Host Timeout error raised.") 
+        return False
 
+    @staticmethod
+    def get_supported_interface(dev):
+        """get all support mode from interface wireless"""
+        _iface = {"info": {}, "Supported": []}
+        try:
+            output = check_output(
+                ["iw", dev, "info"], stderr=STDOUT, universal_newlines=True
+            )
+            for line in output.split("\n\t"):
+                _iface["info"][line.split()[0]] = line.split()[1]
+            rulesfilter = '| grep "Supported interface modes" -A 10 | grep "*"'
+            supportMode = popen(
+                "iw phy{} info {}".format(_iface["info"]["wiphy"], rulesfilter)
+            ).read()
+            for mode in supportMode.split("\n\t\t"):
+                _iface["Supported"].append(mode.split("* ")[1])
+        except CalledProcessError:
+            return _iface
+        return _iface
 
 def is_hexadecimal(text):
     try:

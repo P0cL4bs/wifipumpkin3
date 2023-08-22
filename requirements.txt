@@ -18,3 +18,4 @@ beautifulsoup4>=4.9.1
 PyJWT==2.1.0
 Flask-RESTful>=0.3.9
 aiofiles
+ping3
