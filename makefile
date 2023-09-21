@@ -11,19 +11,19 @@ test_coverage:
 
 install:
 	find . -name '*.pyc' -delete
-	python3 setup.py install
+	python3 -m pip install .
 
 install_env:
 	python3 -m pip install PyQt5==5.14
 	python3 -c "from PyQt5.QtCore import QSettings; print('done')"
 	find . -name '*.pyc' -delete
-	python3 setup.py install
+	python3 -m pip install .
 
 
 install_dev:
 	pip3 uninstall wifipumpkin3
 	find . -name '*.pyc' -delete
-	python3 setup.py install
+	python3 -m pip install .
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info

@@ -82,6 +82,7 @@ LOG_PUMPKINPROXY = user_config_dir + "/logs/ap/pumpkin_proxy.log"
 LOG_PYDNSSERVER = user_config_dir + "/logs/ap/pydns_server.log"
 LOG_PYDHCPSERVER = user_config_dir + "/logs/ap/pydhcp_server.log"
 LOG_SNIFFKIN3 = user_config_dir + "/logs/ap/sniffkin3.log"
+LOG_PHISHKIN3 = user_config_dir + "/logs/ap/phishkin3.log"
 LOG_CAPTIVEPO = user_config_dir + "/logs/ap/captiveportal.log"
 LOG_RESPONDER = user_config_dir + "/logs/ap/responder.log"
 LOG_HOSTAPD = user_config_dir + "/logs/ap/hostapd.log"
@@ -96,7 +97,7 @@ ALL_LOGSPATH = (
     LOG_PYDNSSERVER,
     LOG_PYDHCPSERVER,
     LOG_SNIFFKIN3,
-    LOG_SNIFFKIN3,
+    LOG_PHISHKIN3,
     LOG_CAPTIVEPO,
     LOG_RESPONDER,
     LOG_HOSTAPD,
@@ -107,6 +108,7 @@ ALL_LOGSPATH = (
 CONFIG_INI = user_config_dir + "/config/app/config.ini"
 CONFIG_SK_INI = user_config_dir + "/config/app/sniffkin3.ini"
 CONFIG_PP_INI = user_config_dir + "/config/app/pumpkinproxy.ini"
+CONFIG_PK_INI = user_config_dir + "/config/app/phishkin3.ini"
 CONFIG_CP_INI = user_config_dir + "/config/app/captive-portal.ini"
 CONFIG_CP_INI_ROOT = user_config_dir + "/config/app/captive-portal.ini"
 
@@ -116,6 +118,7 @@ ALL_CONFIGSINI = {
     "sniffkin3": CONFIG_SK_INI,
     "pumpkinproxy": CONFIG_PP_INI,
     "captiveflask": CONFIG_CP_INI,
+    "phishkin3": CONFIG_PK_INI,
 }
 
 URL_EXTRA_CAPTIVEFLASK = (
