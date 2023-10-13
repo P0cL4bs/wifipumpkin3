@@ -28,12 +28,6 @@ class Widget(Qt.QObject):
     def __init__(self):
         Qt.QObject.__init__(self)
 
-
-class VBox(Qt.QObject):
-    def __init__(self):
-        Qt.QObject.__init__(self)
-
-
 class ProxyMode(Widget, ComponentBlueprint):
     Name = "Generic"
     Author = "Wahyudin Aziz"

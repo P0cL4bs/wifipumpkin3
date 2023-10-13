@@ -3,7 +3,7 @@ import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.common.uimodel import *
 from wifipumpkin3.plugins.captiveflask import *
-from ast import literal_eval
+from uuid import uuid4
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -23,16 +23,16 @@ from ast import literal_eval
 # limitations under the License.
 
 
-class Phishkin3(ProxyMode):
-    Name = "Phishkin3"
+class EvilQR3(ProxyMode):
+    Name = "EvilQR3"
     Author = "Pumpkin-Dev"
-    ID = "phishkin3"
+    ID = "evilqr3"
     Description = (
         "Proxy for create captive portal with external phishing page "
     )
     Hidden = False
-    LogFile = C.LOG_PHISHKIN3
-    CONFIGINI_PATH = C.CONFIG_PK_INI
+    LogFile = C.LOG_EVILQR3PROXY
+    CONFIGINI_PATH = C.CONFIG_EQ_INI
     _cmd_array = []
     ModSettings = True
     RunningPort = 80
@@ -40,19 +40,24 @@ class Phishkin3(ProxyMode):
     TypePlugin = 1
 
     def __init__(self, parent=None, **kwargs):
-        super(Phishkin3, self).__init__(parent)
+        super(EvilQR3, self).__init__(parent)
         self.setID(self.ID)
         self.setTypePlugin(self.TypePlugin)
+        self.config.set("settings","token_api", str(uuid4()))
 
     @property
     def CMD_ARRAY(self):
         self._cmd_array = [
-            "-r",
+            "-sa",
             self.conf.get("dhcp", "router"),
-            "-cU",
-            self.config.get("settings", "cloud_url_phishing"),
-            "-rU",
-            self.config.get("settings", "redirect_url_after_login"),
+            "-t",
+            C.TEMPLATES_FLASK + self.config.get("settings", "template_path"),
+            "-s",
+            C.TEMPLATES_FLASK + self.config.get("settings", "static_path"),
+            "-tp",
+            self.config.get("settings", "token_api"),
+            "-mu",
+            self.config.get("settings", "regex_match_useragent"),
             "-p",
             self.config.get("settings", "proxy_port"),
         ]
@@ -74,7 +79,7 @@ class Phishkin3(ProxyMode):
         IP_ADDRESS = self.conf.get("dhcp", "router")
         PORT = self.config.get("settings", "proxy_port")
 
-        print(display_messages("settings for Phishkin3 portal:", info=True))
+        print(display_messages("settings for EvilQR3 portal:", info=True))
         print(display_messages("allow FORWARD UDP DNS", info=True))
         self.add_default_rules(
             "{iptables} -A FORWARD -i {iface} -p tcp --dport 53 -j ACCEPT".format(
@@ -106,7 +111,7 @@ class Phishkin3(ProxyMode):
         self.runDefaultRules()
 
     def boot(self):
-        self.reactor = ProcessThread({"phishkin3": self.CMD_ARRAY})
+        self.reactor = ProcessThread({"evilqr3": self.CMD_ARRAY})
         self.reactor._ProcssOutput.connect(self.LogOutput)
         self.reactor.setObjectName(self.ID)
 
@@ -114,7 +119,7 @@ class Phishkin3(ProxyMode):
         if self.conf.get("accesspoint", "status_ap", format=bool):
             self.logger.info(data)
 
-    def parser_set_phishkin3(self, value, setting_line):
+    def parser_set_evilqr3(self, value, setting_line):
         if len(setting_line.split()[0].split(".")) == 2:
             try:
                 # plugin_name = phishkin3.proxy_port true

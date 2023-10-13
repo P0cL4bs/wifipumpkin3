@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - added: optional to set shared interface internet connection 
 - added: network core command for show information about connections
 - added: phishkin3 proxy for perform custom phishing attack using captive portal 
+- added: new proxy plugin evilQR3 for perform attack with QR Phishing
 
 ## [1.1.5] 
 

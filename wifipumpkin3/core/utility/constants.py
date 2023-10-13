@@ -79,6 +79,7 @@ DOCKERHOSTAPDCONF_PATH = "/etc/hostapd/hostapd.conf"
 
 # logging
 LOG_PUMPKINPROXY = user_config_dir + "/logs/ap/pumpkin_proxy.log"
+LOG_EVILQR3PROXY = user_config_dir + "/logs/ap/evilqr3_proxy.log"
 LOG_PYDNSSERVER = user_config_dir + "/logs/ap/pydns_server.log"
 LOG_PYDHCPSERVER = user_config_dir + "/logs/ap/pydhcp_server.log"
 LOG_SNIFFKIN3 = user_config_dir + "/logs/ap/sniffkin3.log"
@@ -109,6 +110,7 @@ CONFIG_INI = user_config_dir + "/config/app/config.ini"
 CONFIG_SK_INI = user_config_dir + "/config/app/sniffkin3.ini"
 CONFIG_PP_INI = user_config_dir + "/config/app/pumpkinproxy.ini"
 CONFIG_PK_INI = user_config_dir + "/config/app/phishkin3.ini"
+CONFIG_EQ_INI = user_config_dir + "/config/app/evilqr3.ini"
 CONFIG_CP_INI = user_config_dir + "/config/app/captive-portal.ini"
 CONFIG_CP_INI_ROOT = user_config_dir + "/config/app/captive-portal.ini"
 

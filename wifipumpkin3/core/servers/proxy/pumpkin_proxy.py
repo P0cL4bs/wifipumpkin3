@@ -1,11 +1,7 @@
 from wifipumpkin3.core.config.globalimport import *
-from collections import OrderedDict
-from scapy.all import *
-import logging, os
 import wifipumpkin3.core.utility.constants as C
 from wifipumpkin3.core.servers.proxy.proxymode import *
 from wifipumpkin3.core.common.uimodel import *
-from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -23,26 +19,6 @@ from wifipumpkin3.core.widgets.docks.dock import DockableWidget
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-class TCPProxyDock(DockableWidget):
-    id = "TCPProxy"
-    title = "TCPProxy"
-
-    def __init__(self, parent=0, title="", info={}):
-        super(TCPProxyDock, self).__init__(parent, title, info={})
-        self.setObjectName(self.title)
-        self.THeaders = OrderedDict([("Plugin", []), ("Logging", [])])
-
-    def writeModeData(self, data):
-        """get data output and add on QtableWidgets"""
-        self.THeaders["Plugin"].append(data.keys()[0])
-        self.THeaders["Logging"].append(data[data.keys()[0]])
-        Headers = []
-        print(data)
-
-    def stopProcess(self):
-        pass
 
 
 class PumpKinProxy(ProxyMode):
