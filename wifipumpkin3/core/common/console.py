@@ -191,6 +191,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """core: select module for modules"""
         if args in self.all_modules.keys():
             if module_list()[args].ModPump.getInstance() != None:
+                module_list()[args].ModPump.getInstance().initialize()
                 return (
                     module_list()[args]
                     .ModPump.getInstance()
@@ -201,6 +202,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     )
                 )
             module = module_list()[args].ModPump(self.parse_args, globals())
+            module.initialize()
             return module.cmdloop()
         print(
             display_messages(
