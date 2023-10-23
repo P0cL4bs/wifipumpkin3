@@ -95,7 +95,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_security": self.wireless_controller.Settings,
             "parser_set_hostapd_config": self.wireless_controller.Settings,
             "parser_set_dhcpconf": self.wireless_controller.Settings,
-            "parser_set_dhcpmode": self.dns_controller.Active,
+            "parser_set_dhcpmode": self.dhcp_controller.Active,
         }
         self.parser_autcomplete_func = {}
 
