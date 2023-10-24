@@ -130,15 +130,12 @@ class ConsoleUI(ConsoleUIBase):
         self.setOptions()
 
     def cmdloop(self, intro=None):
-        print(intro)
         doQuit = False
         while doQuit != True:
             try:
                 super(ConsoleUI, self).cmdloop(intro="")
-                doQuit = True
             except KeyboardInterrupt:
-                print("caught ctrl+c, press return to exit")
-                self.do_exit([])
+                pass
 
     def initialize_core(self):
         raise NotImplementedError()
@@ -406,8 +403,13 @@ class ModuleUI(ConsoleUIBase):
             if not str(command).startswith("use"):
                 Cmd.onecmd(self, command)
 
-    def do_exit(self, args):
-        sys.exit(0)
+    def cmdloop(self, intro=None):
+        doQuit = False
+        while doQuit != True:
+            try:
+                super(ModuleUI, self).cmdloop(intro="")
+            except KeyboardInterrupt:
+                pass
 
 
 class ExtensionUI(ConsoleUIBase):

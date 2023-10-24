@@ -475,6 +475,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_exit(self, args):
         """core: exit program and all threads"""
-        self.killThreads()
+        if len(self.threads["RogueAP"]) > 0:
+            user_input = input("Do you really want to quit? [y/n]: ").lower()
+            if user_input == 'y':
+                self.killThreads()
         print("Exiting...")
         raise SystemExit
