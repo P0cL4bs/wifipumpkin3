@@ -70,7 +70,7 @@ class ProxyModeController(PluginsUI, ControllerBlueprint):
                 "ConfigPath": k.CONFIGINI_PATH,
                 "Description": k.Description,
                 "Config": k.getConfig,
-                "TypeButton": k.TypeButton,
+                "TypePlugin": k.TypePlugin,
             }
         return proxies_infor
 

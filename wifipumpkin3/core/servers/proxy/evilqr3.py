@@ -28,7 +28,7 @@ class EvilQR3(ProxyMode):
     Author = "Pumpkin-Dev"
     ID = "evilqr3"
     Description = (
-        "Proxy for create captive portal with external phishing page "
+        "Proxy for create captive portal QR phishing WhatsApp,Discord, etc... "
     )
     Hidden = False
     LogFile = C.LOG_EVILQR3PROXY
@@ -43,7 +43,8 @@ class EvilQR3(ProxyMode):
         super(EvilQR3, self).__init__(parent)
         self.setID(self.ID)
         self.setTypePlugin(self.TypePlugin)
-        self.config.set("settings","token_api", str(uuid4()))
+        if not self.config.get("settings","token_api", format=str):
+            self.config.set("settings","token_api", str(uuid4()))
 
     @property
     def CMD_ARRAY(self):
