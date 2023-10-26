@@ -65,7 +65,7 @@ def login():
 
 @app.route("/mobile/login", methods=["GET", "POST"])
 def Mobilelogin():
-    global SERVER
+    global SERVER, PORT
     if (
         request.method == "POST"
         and "login" in request.form
@@ -94,7 +94,7 @@ def Mobilelogin():
             return render_template("templates/login_successful.html")
     else:
         return render_template(
-            "templates/mobile.html", server_address=SERVER
+            "templates/mobile.html", server_address=SERVER, server_port=PORT
         )
         
 def response_json(message: str, reponse_code: int = 200):
@@ -116,7 +116,7 @@ def qrcode(token_id: str):
     if session_data.get('session_info'):
         if updateTime > 0:
             if updateTime >= session_data["session_info"].get("update_time"):
-                max_timeout = 30
+                max_timeout = 20
                 if session_data.get('session_info'):
                     while not session_data["session_info"].get("update_qrcode") or max_timeout >= 0:
                         max_timeout -= 5
