@@ -31,7 +31,7 @@ def login_user(ip, iptables_binary_path):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    global SERVER
+    global SERVER,PORT
     if (
         request.method == "POST"
         and "login" in request.form
@@ -60,12 +60,15 @@ def login():
             return render_template("templates/login_successful.html")
     else:
         return render_template(
-            "templates/login.html", server_address=SERVER
+            "templates/login.html", 
+            server_address=SERVER, 
+            server_port=PORT,
+            ap_name=config.get("accesspoint", "ssid")
         )
 
 @app.route("/mobile/login", methods=["GET", "POST"])
 def Mobilelogin():
-    global SERVER, PORT
+    global SERVER, PORT, config
     if (
         request.method == "POST"
         and "login" in request.form
@@ -94,7 +97,10 @@ def Mobilelogin():
             return render_template("templates/login_successful.html")
     else:
         return render_template(
-            "templates/mobile.html", server_address=SERVER, server_port=PORT
+            "templates/mobile.html", 
+            server_address=SERVER,
+            server_port=PORT,
+            ap_name=config.get("accesspoint", "ssid")
         )
         
 def response_json(message: str, reponse_code: int = 200):
