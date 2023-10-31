@@ -6,7 +6,7 @@
 [![build status](https://github.com/mh4x0f/wifipumpkin3/workflows/Build/badge.svg)](https://github.com/mh4x0f/wifipumpkin3/actions)
 [![license](https://img.shields.io/badge/license-apache%202-orange)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/LICENSE.md)
 [![changelog](https://img.shields.io/badge/change-log-yellow)](https://github.com/mh4x0f/wifipumpkin3/blob/dev/CHANGELOG.md)
-[![changelog](https://img.shields.io/badge/version-1.1.5-blue)](https://github.com/mh4x0f/wifipumpkin3/)
+[![changelog](https://img.shields.io/badge/version-1.1.7-blue)](https://github.com/mh4x0f/wifipumpkin3/)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 ![AKUANDUBA](/docs/screenshot.png)
@@ -26,6 +26,8 @@
 - **WiFi** networks scanning
 - **DNS** monitoring service
 - Credentials harvesting
+- Phishkin3 (Support MFA phishing attack via captive portal)
+- EvilQR3 (Support Phishing QR code attack)
 - Transparent Proxies
 - RestFulAPI (new) 
 - and **more**!
@@ -53,7 +55,7 @@
 | --- |
 
 * **Operating System**:
-  * a recent version of Linux (we tested on **Ubuntu 18.04 LTS**);
+  * a recent version of Linux (we tested on **Ubuntu 22.04 LTS**);
   * please note: **Windows** is not **supported**.
 
 ## Installation & Documentation

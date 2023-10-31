@@ -1,3 +1,4 @@
+from fcntl import ioctl
 from struct import pack
 from random import randint
 from os import popen, path, walk, stat, remove

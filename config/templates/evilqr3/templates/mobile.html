@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 5%;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #0074d9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056a0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login com QR Code</h2>
+        <img id="qrcode" src="{{ url_for('static', filename='images/devices.png') }}" alt="QR Code de Exemplo">
+        <p>Scan the QR Code using your social network on your notebook.</p>
+        <form action="https://web.whatsapp.com/send?phone=1234">
+            <button type="submit" class="button">Connect</button>
+        </form>
+
+        <p>Get 50 minutes of free internet!</p>
+    </div>
+</body>
+</html>

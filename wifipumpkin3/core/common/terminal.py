@@ -29,12 +29,16 @@ import weakref
 
 class ConsoleUIBase(Cmd):
     """shell console UI base model"""
+    commands_stack: list = []
 
     def setOptions(self):
-        if self.parse_args.pulp:
+        if self.parse_args.pulp and not self.commands_stack:
             self.loadPulpFiles(self.parse_args.pulp)
-        elif self.parse_args.xpulp:
-            self.onecmd(self.parse_args.xpulp, ";")
+        elif self.parse_args.xpulp and not self.commands_stack:
+            self.commands_stack = self.parse_args.xpulp.split(";")
+            
+        if self.commands_stack: 
+            return self.exec_cmdcommads_stack()
 
     def default(self, args: str):
         """run commands system allow by tool"""
@@ -87,6 +91,17 @@ class ConsoleUIBase(Cmd):
         for command in commands.split(separator):
             Cmd.onecmd(self, command)
 
+    def load_cmdcommands(self, commands, separator=";"):
+        """load command separate for ; file or string"""
+        for command in commands.split(separator):
+            self.commands_stack.append(command)
+            
+    def exec_cmdcommads_stack(self):
+        """Exec command separate for ; file or string"""
+        for command in self.commands_stack[:]:
+            self.commands_stack.remove(command)
+            Cmd.onecmd(self, command)
+
     def show_help_command(self, filename, newline: bool = False):
         """read content file help command"""
         print(Linux.readFileHelp(filename))
@@ -115,15 +130,12 @@ class ConsoleUI(ConsoleUIBase):
         self.setOptions()
 
     def cmdloop(self, intro=None):
-        print(intro)
         doQuit = False
         while doQuit != True:
             try:
                 super(ConsoleUI, self).cmdloop(intro="")
-                doQuit = True
             except KeyboardInterrupt:
-                print("caught ctrl+c, press return to exit")
-                self.do_exit([])
+                pass
 
     def initialize_core(self):
         raise NotImplementedError()
@@ -144,7 +156,7 @@ class ConsoleUI(ConsoleUIBase):
                 print(
                     display_messages("plugin: {}".format(file), info=True, sublime=True)
                 )
-                return self.onecmd(data, separator="\n")
+                return self.load_cmdcommands(data, separator="\n")
         print(
             display_messages(
                 "script {} not found! ".format(file), error=True, sublime=True
@@ -253,11 +265,14 @@ class ModuleUI(ConsoleUIBase):
         self.setOptions()
         self.set_prompt_modules()
 
+
+    def initialize(self):
+        pass
+    
     def setOptions(self):
-        if self.parse_args.pulp:
-            self.loadPulpFiles(self.parse_args.pulp)
-        elif self.parse_args.xpulp:
-            self.onecmd(self.parse_args.xpulp, ";")
+        if self.root["PumpkinShell"].getInstance().commands_stack:
+            self.commands_stack = self.root["PumpkinShell"].getInstance().commands_stack
+            self.exec_cmdcommads_stack()
 
     def set_background_mode(self, boolean):
         self._background_mode = boolean
@@ -303,7 +318,8 @@ class ModuleUI(ConsoleUIBase):
                 self.root["PumpkinShell"].getInstance().threads["Modules"][
                     self._name_module
                 ] = self.getInstance()
-            self.root["PumpkinShell"].getInstance().cmdloop("Starting prompt...")
+            self.root["PumpkinShell"].getInstance().setOptions()
+            self.root["PumpkinShell"].getInstance().cmdloop("")
         except IndexError as e:
             sys.exit(0)
 
@@ -387,8 +403,13 @@ class ModuleUI(ConsoleUIBase):
             if not str(command).startswith("use"):
                 Cmd.onecmd(self, command)
 
-    def do_exit(self, args):
-        sys.exit(0)
+    def cmdloop(self, intro=None):
+        doQuit = False
+        while doQuit != True:
+            try:
+                super(ModuleUI, self).cmdloop(intro="")
+            except KeyboardInterrupt:
+                pass
 
 
 class ExtensionUI(ConsoleUIBase):

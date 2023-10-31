@@ -60,7 +60,7 @@ class ModPump(ModuleUI):
 
     domains = []
 
-    def __init__(self, parse_args=None, root=None):
+    def __init__(self, parse_args=None, root: dict =None):
         self.parse_args = parse_args
         self.root = root
         self.name_module = self.name
@@ -69,6 +69,9 @@ class ModPump(ModuleUI):
         super(ModPump, self).__init__(parse_args=self.parse_args, root=self.root)
         self.options["redirectTo"][0] = self.conf.get("dhcp", "router")
 
+    def initialize(self):
+        self.options["redirectTo"][0] = self.conf.get("dhcp", "router")
+        
     def do_add(self, args):
         """add domain for perform attack dns spoof"""
         if not self.options.get("domains")[0]:

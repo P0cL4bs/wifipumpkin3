@@ -95,7 +95,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
             "parser_set_security": self.wireless_controller.Settings,
             "parser_set_hostapd_config": self.wireless_controller.Settings,
             "parser_set_dhcpconf": self.wireless_controller.Settings,
-            "parser_set_dhcpmode": self.dns_controller.Active,
+            "parser_set_dhcpmode": self.dhcp_controller.Active,
         }
         self.parser_autcomplete_func = {}
 
@@ -191,6 +191,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
         """core: select module for modules"""
         if args in self.all_modules.keys():
             if module_list()[args].ModPump.getInstance() != None:
+                module_list()[args].ModPump.getInstance().initialize()
                 return (
                     module_list()[args]
                     .ModPump.getInstance()
@@ -201,6 +202,7 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
                     )
                 )
             module = module_list()[args].ModPump(self.parse_args, globals())
+            module.initialize()
             return module.cmdloop()
         print(
             display_messages(
@@ -473,6 +475,9 @@ class PumpkinShell(Qt.QObject, ConsoleUI):
 
     def do_exit(self, args):
         """core: exit program and all threads"""
-        self.killThreads()
+        if len(self.threads["RogueAP"]) > 0:
+            user_input = input("Do you really want to quit? [y/n]: ").lower()
+            if user_input == 'y':
+                self.killThreads()
         print("Exiting...")
         raise SystemExit

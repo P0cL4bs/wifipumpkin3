@@ -28,12 +28,6 @@ class Widget(Qt.QObject):
     def __init__(self):
         Qt.QObject.__init__(self)
 
-
-class VBox(Qt.QObject):
-    def __init__(self):
-        Qt.QObject.__init__(self)
-
-
 class ProxyMode(Widget, ComponentBlueprint):
     Name = "Generic"
     Author = "Wahyudin Aziz"
@@ -47,7 +41,6 @@ class ProxyMode(Widget, ComponentBlueprint):
     _cmd_array = []
     Hidden = True
     plugins = []
-    TypeButton = 0  # 0 for Switch, 1 for Radio
     sendError = QtCore.pyqtSignal(str)
     sendSingal_disable = QtCore.pyqtSignal(object)
     addDock = QtCore.pyqtSignal(object)
