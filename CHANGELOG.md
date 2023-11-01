@@ -2,20 +2,35 @@
 All notable changes to this project will be documented in this file.
 
 ## [unReleased]
+
+## [1.1.7] 
+
 ### Fixed
+- Delete download_spoof.py
 - fixed: makefile python version 
 - fixed: version python support from workflows 
 - fixed: incompatible version of pyOpenSSL pumpkinproxy 
 - fixed: AttributeError: 'DhcpdServer' object has no attribute 'get_mac_vendor'
+- fixed: bug when try load module command 'use' with params -x or -p
+- fixed: command set dhcpmode console ref.
+- fixed: console cmdloop KeyboardInterrupt
+- fixed: description evilqr3 and remove TypeButton variable not used this project
+- fixed: evilqr3 max_timeout when change phishing page and fix proxy API proxy
 
 ### Changed
 - changed: update minimal version of Python to 3.8
+- changed: version to pre-release 1.1.7
+- changed: CHANGELOG.md
 
 ### Added 
 - added: optional to set shared interface internet connection 
 - added: network core command for show information about connections
 - added: phishkin3 proxy for perform custom phishing attack using captive portal 
 - added: new proxy plugin evilQR3 for perform attack with QR Phishing
+- added: options for set endpoint to allow user access internet before atfer redirect cloud  phishing page
+- added: ap_name on evilqr3 phishing page
+
+## [Released]
 
 ## [1.1.5] 
 
