@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [unReleased]
+## [Released]
 
 ## [1.1.7] 
 
