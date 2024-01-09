@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - fixed: dockerfile Could not find suitable distribution for Requirement.parse('zope-interface>=5')
+- fixed: ERROR: Package 'wifipumpkin3' requires a different Python: 3.7.5 not in '>=3.8'
 
 ## [Released]
 
