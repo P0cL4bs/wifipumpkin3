@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [unReleased]
+
+## [1.1.X] 
+
+### Fixed
+- fixed: dockerfile Could not find suitable distribution for Requirement.parse('zope-interface>=5')
+
 ## [Released]
 
 ## [1.1.7] 
